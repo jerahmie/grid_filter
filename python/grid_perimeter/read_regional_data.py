@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Read regional grid data.
 """
@@ -7,22 +6,22 @@ import sys
 import numpy as np
 from netCDF4 import Dataset
 
-def get_mesh_data(filename: str) -> np.ndarray:
+def mpas_cells(nc: Dataset) -> (np.ndarray, np.ndarray):
+    """ Return MPAS Cells
     """
-    get_mesh_data
-    Read netcdf regional array data 
+    nCells = nc.dimensions['nCells'].size
+    latCell = nc.variables['latCell']
+    lonCell = nc.variables['lonCell']
+
+    return np.array(latCell[:], dtype=float), np.array(lonCell[:], dtype=float)
+
+def get_mpas_grid(filename: str) -> (np.ndarray, np.ndarray):
+    """ Read netcdf regional array data 
     """
-    print(os.path.exists(filename))
-    return np.zeros(10)
+    grid_ds = Dataset(filename, 'r')
+    nCells = grid_ds.dimensions['nCells'].size
+    nEdges = grid_ds.dimensions['nEdges'].size
+    nVertices = grid_ds.dimensions['nVertices'].size
+    cell_lat, cell_lon = mpas_cells(grid_ds)
+    return cell_lat, cell_lon
 
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("filename", help="regional grid data NetCDF file.")
-    args = parser.parse_args()
-    if not os.path.exists(args.filename):
-        err_txt = "Could not find NetCDF file: {filename}"
-        sys.exit(err_txt.format(filename=args.filename))
-    get_mesh_data(args.filename)
-    print("Done.")
