@@ -1,5 +1,5 @@
 from .grid_perimeter import *
-from .read_regional_data import get_mpas_grid
+from .read_regional_data import get_mpas_grid, get_grid_lat_lon
 from .grid_util import *
 from visualization.plot_grid import plot_mpas_grid
 
