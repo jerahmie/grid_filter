@@ -25,7 +25,7 @@ if __name__ == "__main__":
     cell_lat, cell_lon = get_mpas_grid(args.filename)
     perim_cell_lat, perim_cell_lon = get_grid_lat_lon(args.filename, border_cell_ids)
     ax = plot_mpas_grid(cell_lat, cell_lon)
-    #overplot_mpas_grid(ax, perim_cell_lat, perim_cell_lon)
+    overplot_mpas_grid(ax, perim_cell_lat, perim_cell_lon)
     print("Saving plot.")
     plt.savefig('manitowoc_perim.png')
 

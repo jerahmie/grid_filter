@@ -4,7 +4,7 @@ Unittests for grid perimeter calculations
 import os
 import numpy as np
 import unittest
-from grid_perimeter import MpasGrid, len_non_zero, border_cell_ids
+from grid_perimeter import MpasGrid, len_non_zero, border_cell_ids_from_cells_per_vertices
 
 class TestGridPerimeter(unittest.TestCase):
     @classmethod
@@ -39,9 +39,8 @@ class TestGridPerimeter(unittest.TestCase):
         a = [1.0, 0.5, 0.6, 1.0]
         a_border = [1, 2]
         b = [(0,1.0), (1,0.5), (2,0.6), (3,1.0)]
-        self.assertEqual(border_cell_ids(a), a_border)
+        self.assertEqual(border_cell_ids_from_cells_per_vertices(a), a_border)
 
-    @unittest.skip
     def test_mpas_dataset_dimensions(self):
         """Test read MPAS Grid dataset"""
         self.assertTrue(os.path.exists(self.grid_file))
@@ -49,8 +48,7 @@ class TestGridPerimeter(unittest.TestCase):
         self.assertEqual(mpg.ncells, 441)
         self.assertEqual(mpg.nvertices, 957)
         self.assertEqual(mpg.nedges, 1397)
-        self.assertEqual(mpg.mpas_interior_cell(0), 0)
-
+ 
     def test_border_cell_helper(self):
         """Test the ratio of edges per vertices of cells"""
         a_grid = [1.0, 0.5, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.7,
@@ -77,14 +75,14 @@ class TestGridPerimeter(unittest.TestCase):
                     60, 61, 66, 79, 80, 91, 92, 93, 112, 119, 121,
                     122, 123, 134, 135, 138, 139, 142, 145, 158, 159,
                     166, 169, 189, 190, 192, 193]
-        self.assertEqual(border_cell_ids(a_grid), a_border)
+        self.assertEqual(border_cell_ids_from_cells_per_vertices(a_grid), a_border)
 
     def test_egde_cells(self):
         """Test edge cell calculations
         """
         mpg = MpasGrid(self.grid_file)
-        border_cells = mpg.border_cells_ids
-        self.assertEqual(len(border_cells), 0)
+        border_cells = mpg.border_cell_ids
+        self.assertEqual(len(border_cells), 71)
     
 
     def tearDown(self):
