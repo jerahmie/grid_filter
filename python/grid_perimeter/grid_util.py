@@ -4,6 +4,7 @@ grid perimeter caluculation
 import os
 import numpy as np
 from netCDF4 import Dataset
+from typing import List
 
 gt_zero = lambda x: x>0      # filter function for integers greater than zero 
 lt_one = lambda ix: ix[1]<1.0     # filter function for values under 1.0
@@ -27,7 +28,7 @@ class MpasGrid(object):
         self._ncells = 0
         self._nvertices = 0
         self._nedges = 0
-        self._edges_per_vertices = []
+        self._edges_per_vertices:List[float] = list()
         self._edge_cells = None
         if os.path.exists(filename):
             self._load_dataset()
