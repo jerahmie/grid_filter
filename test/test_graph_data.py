@@ -11,6 +11,7 @@ class TestGraphData(unittest.TestCase):
 
     def setUp(self):
         self.ncfile = 'Manitowoc.static.nc'
+        self.mp = graph_data.MpasGraph(self.ncfile)
 
     def testTestGraphDataConfig(self):
         """Test the unittest configuration.  This should always pass."""
@@ -30,7 +31,13 @@ class TestGraphData(unittest.TestCase):
         self.assertTrue(hasattr(mg, 'populate_edges'))
         self.assertTrue(hasattr(mg, '_nc_filename'))
         self.assertEqual(mg._nc_filename, self.ncfile)
+    
+    def test_populate_edges(self):
+        """Test MpasGraph populate edges"""
+        mpd = graph_data.MpasGraphData()
+        self.mp.populate_edges(mpd)
         
+
     def tearDown(self):
         pass
 
