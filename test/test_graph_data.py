@@ -10,19 +10,27 @@ class TestGraphData(unittest.TestCase):
         pass
 
     def setUp(self):
-        pass
+        self.ncfile = 'Manitowoc.static.nc'
 
     def testTestGraphDataConfig(self):
         """Test the unittest configuration.  This should always pass."""
         self.assertTrue(True)
 
-    def test_mpas_graph(self):
-        """Test that MPasGraph type can be instantiated and has correct type"""
-        mg = graph_data.MpasGraphData(np.zeros(100), np.zeros(100))
-        self.assertIsInstance(mg, graph_data.MpasGraphData)
-        self.assertIsInstance(mg.edges, np.ndarray)
-        self.assertTrue(np.equal(mg.edges, np.zeros(100)).all())
+    def test_mpas_graph_data(self):
+        """Test that MPasGraphData class can be instantiated and has correct type."""
+        mgd = graph_data.MpasGraphData(np.zeros(100), np.zeros(100))
+        self.assertIsInstance(mgd, graph_data.MpasGraphData)
+        self.assertIsInstance(mgd.edges, np.ndarray)
+        self.assertTrue(np.equal(mgd.edges, np.zeros(100)).all())
 
+    def test_mpas_graph(self):
+        """Test MPasGraph class can be instantiated and has correct type."""
+        mg = graph_data.MpasGraph(self.ncfile)
+        self.assertIsInstance(mg, graph_data.MpasGraph)
+        self.assertTrue(hasattr(mg, 'populate_edges'))
+        self.assertTrue(hasattr(mg, '_nc_filename'))
+        self.assertEqual(mg._nc_filename, self.ncfile)
+        
     def tearDown(self):
         pass
 

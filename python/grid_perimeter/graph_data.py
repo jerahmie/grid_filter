@@ -12,7 +12,11 @@ class MpasGraphData:
     nodes: np.ndarray
 
 class MpasGraph:
+    """ A class to contain functions that operate on  our MpasGraphData 
     """
-    """
-    def __init__(self):
+    def __init__(self, nc_file: str):
+        self._nc_filename = nc_file
+     
+
+    def populate_edges(mpas_data: MpasGraphData) -> None:
         pass
