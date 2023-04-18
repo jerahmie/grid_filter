@@ -16,6 +16,10 @@ Regional Grid | Regional Grid Perimeter Cells
 - geocat-viz
 - geometric_features
 
+# Mac OS
+:wq
+
+
 # Example
 
 An example of using the grid_perimeter module to generate the above plots:
