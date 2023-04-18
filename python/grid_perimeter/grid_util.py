@@ -23,7 +23,7 @@ class MpasGrid():
     """
     def __init__(self, filename: str=""):
         self._filename = filename
-        self._dataset = None
+        #self._dataset = None
         self._ncells = 0
         self._nvertices = 0
         self._nedges = 0
@@ -37,47 +37,47 @@ class MpasGrid():
         """Loads grid data from netCDF4 file
         """
         if os.path.exists(self._filename):
-            self._dataset = Dataset(self._filename, 'r')
-            self._read_ncells()
-            self._read_nvertices()
-            self._read_nedges()
-            self._cell_edges_per_vertices()
+            with Dataset(self._filename, 'r') as ds:
+                self._read_ncells(ds)
+                self._read_nvertices(ds)
+                self._read_nedges(ds)
+                self._cell_edges_per_vertices(ds)
         else:
             print("Warning: Could not file")
 
-    def _read_ncells(self):
+    def _read_ncells(self, ds: Dataset) -> None:
         """Read the number of Cells in grid"""
-        self._ncells = self._dataset.dimensions['nCells'].size
+        self._ncells = ds.dimensions['nCells'].size
 
     @property
     def ncells(self):
         """Return number of cells in regional grid."""
         return self._ncells
 
-    def _read_nvertices(self):
+    def _read_nvertices(self, ds: Dataset) -> None:
         """Read the number of Vertices in the grid"""
-        self._nvertices = self._dataset.dimensions['nVertices'].size
+        self._nvertices = ds.dimensions['nVertices'].size
 
     @property
-    def nvertices(self):
+    def nvertices(self) -> None:
         """Return number of vertices in regional grid."""
         return self._nvertices
 
-    def _read_nedges(self):
+    def _read_nedges(self, ds: Dataset) -> None:
         """Read the number of edges in the grid"""
-        self._nedges = self._dataset.dimensions['nEdges'].size
+        self._nedges = ds.dimensions['nEdges'].size
 
     @property
     def nedges(self):
         """Return number of edges in regional grid."""
         return self._nedges
 
-    def _cell_edges_per_vertices(self):
+    def _cell_edges_per_vertices(self, ds):
         """Returns a list of ratio of number of edges to vertices for each cell
         """
         for cell_id in range(self._ncells):
-            n_cells_on_cell = len_non_zero(self._dataset.variables["cellsOnCell"][cell_id])
-            n_vertices_on_cell = len_non_zero(self._dataset.variables["verticesOnCell"][cell_id])
+            n_cells_on_cell = len_non_zero(ds.variables["cellsOnCell"][cell_id])
+            n_vertices_on_cell = len_non_zero(ds.variables["verticesOnCell"][cell_id])
             self._edges_per_vertices.append(n_cells_on_cell/n_vertices_on_cell)
         self._border_cell_ids = list(border_cell_ids_from_cells_per_vertices(self._edges_per_vertices))
 
