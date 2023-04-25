@@ -8,7 +8,6 @@ from netCDF4 import Dataset
 def mpas_cells(nc: Dataset) -> Tuple[np.ndarray, np.ndarray]:
     """ Return MPAS Cells
     """
-    #n_cells = nc.dimensions['nCells'].size
     lat_cell = nc.variables['latCell']
     lon_cell = nc.variables['lonCell']
 
