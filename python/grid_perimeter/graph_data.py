@@ -19,7 +19,8 @@ class MpasGraph:
     """
     def __init__(self, nc_file: str):
         self._nc_filename = nc_file
-        self._dataset = Dataset()
+        self._dataset = Dataset(nc_file, 'r')
 
     def populate_edges(self, mpas_data: MpasGraphData) -> None:
         """Load edges from Dataset into graph data object"""
+        pass

@@ -1,6 +1,7 @@
 """Unittests for kdtree module"""
+import os
 import unittest
-from grid_perimeter import KDTree2D, sort_points, median_point_id, Node2D, build_tree
+from grid_perimeter import * 
 
 class TestKDTree2D(unittest.TestCase):
     """Test case for 2D KD Tree"""
@@ -11,6 +12,9 @@ class TestKDTree2D(unittest.TestCase):
     def setUp(self):
         # a non-trivial list of points
         self.p = [(1.1,-2.2), (3.3, 4.4), (-1.1, 2.2), (-6.6, 7.7)]
+        # netcdf regional grid file
+        this_dir = os.path.abspath(os.path.dirname(__file__))
+        self.grid_file = os.path.join(this_dir, 'Manitowoc.static.nc')
 
     def test_kdtree2d(self):
         """Test create kdtree"""
@@ -57,11 +61,13 @@ class TestKDTree2D(unittest.TestCase):
     def test_build_tree(self):
         """Test the construction of a kd tree."""
         pts = [(0.0, 1.1), (1.1, -1.0), (2.2, -1.1), (3.3, 4.4)]
-        #(med, idx) = median_point_id(pts)
-        #tree = build_tree(med)
         a = build_tree(pts)
-        self.assertEqual("", repr(a.right))
-        #self.assertTrue(False)
+        self.assertEqual("(Node2D, '(1.1, -1.0)', left=((0.0, 1.1)), right=((2.2, -1.1)))", repr(a))
+
+    def test_build_big_tree(self):
+        """Test building a meaningful tree from data."""
+        mpg = MpasGrid(self.grid_file)
+        
 
     def tearDown(self):
         pass

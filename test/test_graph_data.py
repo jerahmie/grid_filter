@@ -1,4 +1,5 @@
 """Unittests for graph_data module"""
+import os
 import numpy as np
 import unittest
 from grid_perimeter import graph_data
@@ -10,7 +11,8 @@ class TestGraphData(unittest.TestCase):
         pass
 
     def setUp(self):
-        self.ncfile = 'Manitowoc.static.nc'
+        this_dir = os.path.abspath(os.path.dirname(__file__))
+        self.ncfile = os.path.join(this_dir, 'Manitowoc.static.nc')
         self.mp = graph_data.MpasGraph(self.ncfile)
 
     def testTestGraphDataConfig(self):

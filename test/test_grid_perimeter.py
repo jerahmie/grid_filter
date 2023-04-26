@@ -12,7 +12,8 @@ class TestGridPerimeter(unittest.TestCase):
         pass 
 
     def setUp(self):
-        self.grid_file = "Manitowoc.static.nc"
+        this_dir = os.path.abspath(os.path.dirname(__file__))
+        self.grid_file = os.path.join(this_dir, "Manitowoc.static.nc")
         self.mpas_grid = MpasGrid()
 
     def test_install_setup(self):

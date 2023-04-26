@@ -16,19 +16,21 @@ def mpas_cells(nc: Dataset) -> Tuple[np.ndarray, np.ndarray]:
 def get_mpas_grid(filename: str) -> Tuple[np.ndarray, np.ndarray]:
     """ Read netcdf regional array data 
     """
-    grid_ds = Dataset(filename, 'r')
-    nCells = grid_ds.dimensions['nCells'].size
-    nEdges = grid_ds.dimensions['nEdges'].size
-    nVertices = grid_ds.dimensions['nVertices'].size
-    cell_lat, cell_lon = mpas_cells(grid_ds)
+    with Dataset(filename, 'r') as grid_ds:
+        nCells = grid_ds.dimensions['nCells'].size
+        nEdges = grid_ds.dimensions['nEdges'].size
+        nVertices = grid_ds.dimensions['nVertices'].size
+        cell_lat, cell_lon = mpas_cells(grid_ds)
+
     return cell_lat, cell_lon
 
 def get_grid_lat_lon(filename: str, cell_ids: list) -> Tuple[np.ndarray, np.ndarray]:
     """Get lats, lons of list of grid indices"""
-    grid_ds = Dataset(filename, 'r')
-    cell_lat = []
-    cell_lon = []
-    for cell_id in cell_ids:
-        cell_lat.append(grid_ds.variables['latCell'][cell_id])
-        cell_lon.append(grid_ds.variables['lonCell'][cell_id])
+    with Dataset(filename, 'r') as grid_ds:
+        cell_lat = []
+        cell_lon = []
+        for cell_id in cell_ids:
+            cell_lat.append(grid_ds.variables['latCell'][cell_id])
+            cell_lon.append(grid_ds.variables['lonCell'][cell_id])
+
     return np.array(cell_lat, dtype=float), np.array(cell_lon, dtype=float)
