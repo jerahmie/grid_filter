@@ -1,9 +1,10 @@
 """MPAS Grid class"""
 import os
 from netCDF4 import Dataset
+from typing import List, Tuple
 from .grid_util import len_non_zero, border_cell_ids_from_cells_per_vertices
 
-class MpasGrid():
+class MPASGrid():
     """ MPAS Grid class
     """
     def __init__(self, filename: str=""):
@@ -11,9 +12,11 @@ class MpasGrid():
         self._ncells = 0
         self._nvertices = 0
         self._nedges = 0
-        self._edges_per_vertices:List[float] = []
+        self._edges_per_vertices: List[float] = []
         self._edge_cells = None
-        self._border_cell_ids:List[int] = []
+        self._border_cell_ids: List[int] = []
+        self._cell_lat: List[float] = []
+        self._cell_lon: List[float] = []
         if os.path.exists(filename):
             self._load_dataset()
 
@@ -26,12 +29,19 @@ class MpasGrid():
                 self._read_nvertices(ds)
                 self._read_nedges(ds)
                 self._cell_edges_per_vertices(ds)
+                self._read_cell_lat_lon(ds)
         else:
             print("Warning: Could not file")
 
     def _read_ncells(self, ds: Dataset) -> None:
         """Read the number of Cells in grid"""
         self._ncells = ds.dimensions['nCells'].size
+
+    def _read_cell_lat_lon(self, ds: Dataset) -> None:
+        """Read the latitude and longitude values of cells in mesh"""
+        for cell_id in range(self._ncells):
+            self._cell_lat.append(float(ds.variables['latCell'][cell_id]))
+            self._cell_lon.append(float(ds.variables['lonCell'][cell_id]))
 
     @property
     def ncells(self):
@@ -66,7 +76,11 @@ class MpasGrid():
         self._border_cell_ids = list(border_cell_ids_from_cells_per_vertices(self._edges_per_vertices))
 
     @property
-    def border_cell_ids(self)->list:
+    def border_cell_ids(self)->List[int]:
         """Return edge cells in regional grid.
         """
         return self._border_cell_ids
+    
+    def cell_points(self)->List[Tuple[float, float]]:
+        cell_points = zip(self._cell_lat, self._cell_lon)
+        return list(cell_points)

@@ -66,8 +66,18 @@ class TestKDTree2D(unittest.TestCase):
 
     def test_build_big_tree(self):
         """Test building a meaningful tree from data."""
-        mpg = MpasGrid(self.grid_file)
-        
+        mpg = MPASGrid(self.grid_file)
+        pts = mpg.cell_points()
+        self.assertEqual(len(pts), 441)
+        kdtree = build_tree(pts)
+        self.assertEqual(repr(kdtree), '(Node2D, \'(0.7498185038566589, 4.627470970153809)\', left=((0.6799139380455017, 4.748469829559326)), right=((0.7500742673873901, 4.756713390350342)))')
+
+    def test_KDTree2D(self):
+        """Test the KDTree2D Class and methods"""
+        mpg = MPASGrid(self.grid_file)
+        pts = mpg.cell_points()
+        kd2 = KDTree2D(pts)
+        self.assertEqual(kd2.depth, 2)
 
     def tearDown(self):
         pass

@@ -43,13 +43,14 @@ class Node2D():
         """Define the repr string."""
         return f'(Node2D, \'{self.data}\', left={self.left}, right={self.right})'
 
-def build_tree(pts, depth=0) -> Node2D:
+def build_tree(pts, depth=0) -> Tuple[Node2D, int]:
     """helper function to build the kd tee"""
     if len(pts) == 1:
         return Node2D(pts[0])
     else:
         (med, idx) = median_point_id(pts)
         depth += 1
+        print(f'depth: {depth}')
         dim = depth%2
         if idx > 0:
             left_subtree = build_tree(sort_points(pts[:idx], dim), depth)
@@ -66,5 +67,12 @@ class KDTree2D():
     """
     def __init__(self, pts: List[Tuple[float, float]]):
         self._points = pts
-        self._root = None
+        self._depth = 0
+        self._root = build_tree(pts)
+
+    @property
+    def depth(self):
+        """Return the depth of the KD tree"""
+        return self._depth
+
     
