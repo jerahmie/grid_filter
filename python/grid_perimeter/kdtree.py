@@ -50,7 +50,6 @@ def build_tree(pts, depth=0) -> Tuple[Node2D, int]:
     else:
         (med, idx) = median_point_id(pts)
         depth += 1
-        print(f'depth: {depth}')
         dim = depth%2
         if idx > 0:
             left_subtree = build_tree(sort_points(pts[:idx], dim), depth)
@@ -62,17 +61,37 @@ def build_tree(pts, depth=0) -> Tuple[Node2D, int]:
             right_subtree = None
         return Node2D(med, left=left_subtree, right=right_subtree)
 
+
+def find_max_depth(node:Node2D, depth:int=0)-> int:
+    """find the maximum depth of tree
+    
+    """
+    depth += 1
+    left_depth = depth
+    right_depth = depth
+    if node.left is not None:
+        left_depth = find_max_depth(node.left, depth)
+    if node.right is not None:
+        right_depth = find_max_depth(node.right, depth)
+
+    return max(left_depth, right_depth)
+
 class KDTree2D():
     """ 2-Dimensional KD Tree.
     """
     def __init__(self, pts: List[Tuple[float, float]]):
         self._points = pts
-        self._depth = 0
+        self._max_depth = 0
         self._root = build_tree(pts)
+        self._find_max_depth()
+
+    def _find_max_depth(self):
+        """Traverse tree (dfs) to find max_depth"""
+        self._max_depth = find_max_depth(self._root)
 
     @property
-    def depth(self):
+    def max_depth(self):
         """Return the depth of the KD tree"""
-        return self._depth
+        return self._max_depth
 
-    
+    def _

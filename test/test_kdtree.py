@@ -74,10 +74,22 @@ class TestKDTree2D(unittest.TestCase):
 
     def test_KDTree2D(self):
         """Test the KDTree2D Class and methods"""
+        #pts = [(0.0, 1.1), (1.1, -1.0), (2.2, -1.1), (3.3, 4.4)]
+        pts1 = [(0.0, 1.1)]
+        kd2d1pt = KDTree2D(pts1)
+        self.assertTrue(isinstance(kd2d1pt, KDTree2D))
+        self.assertEqual(kd2d1pt.max_depth, 1)
+        
+        pts3 = [(0.0, 1.1), (1.1, -1.0), (2.2, -1.1)]
+        kd2d3pt = KDTree2D(pts3)
+        self.assertEqual(kd2d3pt.max_depth, 2)
+
+    def test_KDTree2D_medium(self):
+        """Test the KDTree2D Class and methods"""
         mpg = MPASGrid(self.grid_file)
         pts = mpg.cell_points()
         kd2 = KDTree2D(pts)
-        self.assertEqual(kd2.depth, 2)
+        self.assertEqual(kd2.max_depth, 9)
 
     def tearDown(self):
         pass
