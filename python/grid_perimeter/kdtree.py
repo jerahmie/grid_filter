@@ -2,12 +2,12 @@
 """
 from typing import List, Tuple
 
-def sort_points(pts: List[Tuple[float, float]], dim: int) -> List[Tuple[float, float]]:
+def sort_points(pts: List[Tuple[float, float, int]], dim: int) -> List[Tuple[float, float, int]]:
     """Return a list of sorted points by dimension.
 
     Keyword arguments:
-    pts -- list of (x, y) points 
-    dim -- dimension to sort over. (0 : x, 1 : y)
+    pts -- list of (lat, lon, cell_index) points 
+    dim -- dimension to sort over. (0 : lat, 1 : lon)
     """
     if dim == 0:
         pts = sorted(pts, key=lambda pt: pt[0])
@@ -17,11 +17,11 @@ def sort_points(pts: List[Tuple[float, float]], dim: int) -> List[Tuple[float, f
         raise RuntimeError("Could not sort on index: {dim}".format(dim=dim))
     return pts
 
-def median_point_id(pts: List[Tuple[float, float]]) -> Tuple[Tuple[float, float], int] :
-    """Return the index, point of the median point in list of points.
+def median_point_id(pts: List[Tuple[float, float, int]]) -> Tuple[Tuple[float, float, int], int] :
+    """Return the index, point of the median point in list of sorted points.
 
     Keyword arguments:
-    pts -- list of (x, y) points
+    pts -- list of (lat, lon, cell_index) points
     dim -- dimension to search for media (0 : x, 1 : y)
     """
     idx = int((len(pts) - 1) // 2) 
@@ -33,7 +33,7 @@ class Node2D():
     def __init__(self, data, left = None, right=None):
         self.left = left
         self.right = right
-        self.data = data
+        self.data = data  # cell position (lat, lon, cell_index)
 
     def __str__(self):
         """Pretty-print the node data"""
@@ -94,4 +94,3 @@ class KDTree2D():
         """Return the depth of the KD tree"""
         return self._max_depth
 
-    def _
