@@ -18,7 +18,7 @@ if __name__ == "__main__":
         ERR_TXT = "Could not find NetCDF file: {filename}"
         sys.exit(ERR_TXT.format(filename=args.filename))
 
-    mpg = gp.MpasGrid(args.filename)
+    mpg = gp.MPASGrid(args.filename)
     border_cell_ids = mpg.border_cell_ids
     cell_lat, cell_lon = gp.get_mpas_grid(args.filename)
     perim_cell_lat, perim_cell_lon = gp.get_grid_lat_lon(args.filename,
