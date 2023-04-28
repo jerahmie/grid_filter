@@ -81,6 +81,7 @@ class MPASGrid():
         """
         return self._border_cell_ids
     
-    def cell_points(self)->List[Tuple[float, float]]:
+    def cell_points(self)->List[Tuple[float, float, int]]:
+        """Return cell zipped list of cell points. Index order is same as grid mesh."""
         cell_points = zip(self._cell_lat, self._cell_lon)
         return list(cell_points)

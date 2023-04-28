@@ -49,8 +49,8 @@ def build_tree(pts, depth=0) -> Tuple[Node2D, int]:
         return Node2D(pts[0])
     else:
         (med, idx) = median_point_id(pts)
-        depth += 1
         dim = depth%2
+        depth += 1
         if idx > 0:
             left_subtree = build_tree(sort_points(pts[:idx], dim), depth)
         else: 

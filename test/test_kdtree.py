@@ -52,49 +52,48 @@ class TestKDTree2D(unittest.TestCase):
         self.assertEqual(((-1.1, 2.2, 2), 0), median_point_id([(-1.1, 2.2, 2)]))
         self.assertEqual(((0, 0, 0), 0), median_point_id([(0, 0, 0)]))
 
-    @unittest.skip
     def test_kdtree2d_node(self):
         """Test the constuction of kdtree node"""
-        nroot = Node2D((1.0, 2.0),0)
+        nroot = Node2D((1.0, 2.0, 0))
         self.assertTrue(isinstance(nroot, Node2D))
-        self.assertEqual('((1.0, 2.0))', str(nroot))
-        self.assertEqual('(Node2D, \'(1.0, 2.0)\', left=None, right=None)', repr(nroot))
+        self.assertEqual('((1.0, 2.0, 0))', str(nroot))
+        self.assertEqual('(Node2D, \'(1.0, 2.0, 0)\', left=None, right=None)', repr(nroot))
 
-    @unittest.skip
     def test_build_tree(self):
         """Test the construction of a kd tree."""
-        pts = [(0.0, 1.1), (1.1, -1.0), (2.2, -1.1), (3.3, 4.4)]
+        pts = [(0.0, 1.1, 0), (1.1, -1.0, 1), (2.2, -1.1, 2), (3.3, 4.4, 3)]
         a = build_tree(pts)
-        self.assertEqual("(Node2D, '(1.1, -1.0)', left=((0.0, 1.1)), right=((2.2, -1.1)))", repr(a))
+        self.assertEqual("(Node2D, '(1.1, -1.0, 1)', left=((0.0, 1.1, 0)), right=((2.2, -1.1, 2)))", repr(a))
 
-    @unittest.skip
     def test_build_big_tree(self):
         """Test building a meaningful tree from data."""
         mpg = MPASGrid(self.grid_file)
         pts = mpg.cell_points()
         self.assertEqual(len(pts), 441)
-        kdtree = build_tree(pts)
-        self.assertEqual(repr(kdtree), '(Node2D, \'(0.7498185038566589, 4.627470970153809)\', left=((0.6799139380455017, 4.748469829559326)), right=((0.7500742673873901, 4.756713390350342)))')
+        ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
+        kdtree = build_tree(ptsi)
+        print('kdtree: ', repr(kdtree))
+        print('kdtree.left: ', repr(kdtree.left))
+        print('kdtree.right: ', repr(kdtree.right))
+        self.assertEqual(repr(kdtree), '(Node2D, \'(0.7498185038566589, 4.627470970153809, 220)\', left=((0.6799139380455017, 4.748469829559326, 109)), right=((0.7500742673873901, 4.756713390350342, 330)))')
 
-    @unittest.skip
     def test_KDTree2D(self):
         """Test the KDTree2D Class and methods"""
-        #pts = [(0.0, 1.1), (1.1, -1.0), (2.2, -1.1), (3.3, 4.4)]
-        pts1 = [(0.0, 1.1)]
+        #pts = [(0.0, 1.1, 0), (1.1, -1.0, 1), (2.2, -1.1, 2), (3.3, 4.4, 3)]
+        pts1 = [(0.0, 1.1, 0)]
         kd2d1pt = KDTree2D(pts1)
         self.assertTrue(isinstance(kd2d1pt, KDTree2D))
         self.assertEqual(kd2d1pt.max_depth, 1)
-        
-        pts3 = [(0.0, 1.1), (1.1, -1.0), (2.2, -1.1)]
+        pts3 = [(0.0, 1.1, 0), (1.1, -1.0, 1), (2.2, -1.1, 2)]
         kd2d3pt = KDTree2D(pts3)
         self.assertEqual(kd2d3pt.max_depth, 2)
 
-    @unittest.skip
     def test_KDTree2D_medium(self):
         """Test the KDTree2D Class and methods"""
         mpg = MPASGrid(self.grid_file)
         pts = mpg.cell_points()
-        kd2 = KDTree2D(pts)
+        ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
+        kd2 = KDTree2D(ptsi)
         self.assertEqual(kd2.max_depth, 9)
 
     def tearDown(self):
