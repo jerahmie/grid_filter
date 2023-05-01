@@ -23,6 +23,11 @@ if __name__ == "__main__":
     cell_lat, cell_lon = gp.get_mpas_grid(args.filename)
     perim_cell_lat, perim_cell_lon = gp.get_grid_lat_lon(args.filename,
                                                           border_cell_ids)
+    print('max_lat: ', max(perim_cell_lat))
+    print('min_lat: ', min(perim_cell_lat))
+    print('max_lon: ', max(perim_cell_lon))
+    print('min_lat: ', min(perim_cell_lon))
+
     ax = gp.plot_mpas_grid(cell_lat, cell_lon)
     print("Saving region grid plot.")
     plt.savefig('regional_grid.png')

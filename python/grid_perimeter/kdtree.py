@@ -142,17 +142,21 @@ class KDTree2D():
         if (self._curr_node.left is None) and (self._curr_node.right is None):
             nearest_cell = self._curr_node.data[2]
         elif (self._curr_node.left is not None) and (self._curr_node.right is None):
-            if dsq_right < dsq:
-                self._curr_node = self._curr_node.right
+            if dsq_left < dsq:
+                self._curr_node = self._curr_node.left
                 nearest_cell = self._nearest_cell(point) 
             else:
                 nearest_cell = self._curr_node.data[2]
         elif (self._curr_node.left is None) and (self._curr_node.right is not None):
-            if dsq_left < dsq:
-                self._curr_node = self._curr_node.left
+            if dsq_right < dsq:
+                self._curr_node = self._curr_node.right
                 nearest_cell = self._nearest_cell(point)
-        else:
+            else:
+                nearest_cell = self._curr_node.data[2]
+            
+        else: # self._curr_node.left is not None and self._curr_node.right is not None
             if (dsq_left < dsq) and (dsq_right < dsq):
+                print("dsq_left, dsq_right: ", dsq_left, dsq_right)
                 if (dsq_left < dsq_right):
                     self._curr_node = self._curr_node.left
                     nearest_cell = self._nearest_cell(point)
@@ -163,11 +167,16 @@ class KDTree2D():
                 nearest_cell = self._curr_node.data[2]
             elif (dsq_left < dsq) and (dsq_right > dsq):
                 self._curr_node = self._curr_node.left
-                nearest_cell = self._nearest_cel(point)
+                nearest_cell = self._nearest_cell(point)
             else: # (dsq_left < dsq) and (dsq_right > dsq):
                 self._curr_node = self._curr_node.right
-                nearest_cell = self._nearest_cel(point)
+                nearest_cell = self._nearest_cell(point)
         return nearest_cell
+
+    @property
+    def root(self):
+        """Return the root node of the KDTree2D"""
+        return self._root
 
 
     def nearest_cell(self, point: Tuple[float, float]) -> int:

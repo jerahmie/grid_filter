@@ -109,6 +109,14 @@ class TestKDTree2D(unittest.TestCase):
         print(self.ptsi[nearest_cell_id], test_pt1)
         self.assertEqual(nearest_cell_id, 225)
 
+    def test_KDTree2D_root(self):
+        """KDTree2D.root should return the root node."""
+        kd2 = KDTree2D(self.ptsi)
+        # Root should be a Node2D object
+        self.assertTrue(isinstance(kd2.root, Node2D))
+        # Root should be data index 302
+        self.assertEqual(kd2.root.data[2], 302)
+
     def tearDown(self):
         pass
 
