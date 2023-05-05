@@ -6,14 +6,24 @@ import os
 import sys
 from typing import List, Tuple
 from random import uniform
-#import grid_perimeter as gp
+import numpy as np
+import matplotlib.pyplot as plt
+import grid_perimeter as gp
 from grid_perimeter import KDTree2D, Node2D, MPASGrid
 
 def gen_random_plots(kd2d: KDTree2D, pts: List[Tuple[float, float]], n: int)->None:
+    """Save out plots with random data."""
+    cell_lat = np.array([pts[i][0] for i in range(len(pts))], dtype=float)
+    cell_lon = np.array([pts[i][1] for i in range(len(pts))], dtype=float)
     for i in range(n):
+        ax = gp.plot_mpas_grid(cell_lat, cell_lon)
         test_pt = (uniform(0.6, 0.9), uniform(4.6, 4.9))
         nearest_cell_id = kd2d.nearest_cell(test_pt)
         print(i, test_pt, nearest_cell_id, pts[nearest_cell_id] )
+        gp.overplot_mpas_grid(ax, np.array([test_pt[0]]), np.array([test_pt[1]]))
+        gp.overplot_mpas_grid(ax, np.array([pts[nearest_cell_id][0]]),
+                                  np.array([pts[nearest_cell_id][1]]), color='blue')
+        plt.savefig('test_'+str(i)+'.png')
 
 if __name__ == "__main__":
     import argparse
@@ -32,4 +42,4 @@ if __name__ == "__main__":
     # cell grid points with index (lat, lon, i)
     ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
     kd2d = KDTree2D(ptsi)
-    gen_random_plots(kd2d, pts, 100)
+    gen_random_plots(kd2d, pts, 10)

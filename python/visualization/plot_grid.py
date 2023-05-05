@@ -59,7 +59,7 @@ def plot_mpas_grid(lats: np.ndarray, lons: np.ndarray) -> plt.axes:
 
     return ax
 
-def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, lons: np.ndarray) -> None:
+def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, lons: np.ndarray, color="red") -> None:
     """Plot points over an existing matplotlib axes.
     
     Keyword arguments:
@@ -71,7 +71,7 @@ def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, lons: np.ndarray) -> None
     lats_deg = 180.0/np.pi * lats
     lons_deg = 180.0/np.pi * lons
     for i in range(len(lats)):
-        ax.plot(lons_deg[i], lats_deg[i], color='red', marker='o',
+        ax.plot(lons_deg[i], lats_deg[i], color=color, marker='o',
                 markersize=2, transform=ccrs.Geodetic())
 
 if __name__ == "__main__":

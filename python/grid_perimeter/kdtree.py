@@ -112,9 +112,19 @@ class KDTree2D():
         self._root = build_tree(pts)
         self._find_max_depth()
         # state variables
-        self._curr_depth = 0 # current depth in tree
-        self._curr_dim = 0   # kd dimension 
-        self._curr_node = self._root # current tree node
+        #self._curr_depth = 0 # current depth in tree
+        #self._curr_dim = 0   # kd dimension 
+        #self._curr_node = self._root # current tree node
+
+
+    def __str__(self):
+        """Display string for KDTree2D class"""
+        return f'KDTree2D({self._max_depth})'
+
+    def __repr__(self):
+        """"""
+        return f'<KDTree2D size {len(self._points)} with depth {self._max_depth}>'
+
 
     def _find_max_depth(self):
         """Traverse tree (dfs) to find max_depth"""
@@ -125,66 +135,85 @@ class KDTree2D():
         """Return the depth of the KD tree"""
         return self._max_depth
     
-    def _nearest_cell(self, point: Tuple[float, float]) -> int:
-        """Descent tree find point closes to given 2D point."""
+    def _nearest_cell(self, qpt: Tuple[float, float], node: Node2D, w:float, depth:int) -> Tuple[float, int]:
+        """Descent tree find point closes to given 2D point.
+        Keyword arguments:
+        qpt -- query point
+        w -- min search dimension (i.e. radius), initially larger than domain
+        """
         # update state variable
-        self._curr_depth += 1
-        self._curr_dim = self._curr_depth%2
+        dim = depth%1
+        depth += 1
+
+        w_test = euclidean_2d_distance_sq(qpt, node.data)
+        nearest_cell = node.data[2]
 
         # calculate distances relevant to find nearest point
-        dsq = euclidean_1d_distance_sq(point,self._curr_node.data, self._curr_dim)
-        if self._curr_node.left is not None:
-            dsq_left = euclidean_1d_distance_sq(point, self._curr_node.left.data, self._curr_dim)
-        if self._curr_node.right is not None:
-            dsq_right = euclidean_1d_distance_sq(point, self._curr_node.right.data, self._curr_dim)
+#        dsq = euclidean_2d_distance_sq(qpt,self._curr_node.data)
+#        if self._curr_node.left is not None:
+#            #dsq_left = euclidean_1d_distance_sq(qpt, self._curr_node.left.data, self._curr_dim)
+#            dsq_left = euclidean_2d_distance_sq(qpt, self._curr_node.left.data)
+#        if self._curr_node.right is not None:
+#            #dsq_right = euclidean_1d_distance_sq(qpt, self._curr_node.right.data, self._curr_dim)
+#            dsq_right = euclidean_2d_distance_sq(qpt, self._curr_node.right.data)
 
         # Advance down the tree until closes point is found.
-        if (self._curr_node.left is None) and (self._curr_node.right is None):
-            nearest_cell = self._curr_node.data[2]
-        elif (self._curr_node.left is not None) and (self._curr_node.right is None):
-            if dsq_left < dsq:
-                self._curr_node = self._curr_node.left
-                nearest_cell = self._nearest_cell(point) 
-            else:
-                nearest_cell = self._curr_node.data[2]
-        elif (self._curr_node.left is None) and (self._curr_node.right is not None):
-            if dsq_right < dsq:
-                self._curr_node = self._curr_node.right
-                nearest_cell = self._nearest_cell(point)
-            else:
-                nearest_cell = self._curr_node.data[2]
+        if (node.left is None) and (node.right is None):
+            # leaf node
+            if w_test < w:
+                nearest_cell = node.data[2] # update nearest_cell
+                w = w_test # update min distance
+        elif (node.left is not None) and (node.right is None):
+            # Node has only left child
+            node = node.left
+            w_test_child, nearest_cell_child = self._nearest_cell(qpt, node, w_test, depth)
+            if w_test_child < w_test:
+                w = w_test_child
+                nearest_cell = nearest_cell_child
+        elif (node.left is None) and (node.right is not None):
+            # Node has only right child
+            node = node.right
+            w_test_child, nearest_cell_child = self._nearest_cell(qpt, node, w_test, depth)
+            if w_test_child < w_test:
+                w = w_test_child
+                nearest_cell = nearest_cell_child
             
-        else: # self._curr_node.left is not None and self._curr_node.right is not None
-            if (dsq_left < dsq) and (dsq_right < dsq):
-                print("dsq_left, dsq_right: ", dsq_left, dsq_right)
-                if (dsq_left < dsq_right):
-                    self._curr_node = self._curr_node.left
-                    nearest_cell = self._nearest_cell(point)
-                else:
-                    self._curr_node = self._curr_node.right
-                    nearest_cell = self._nearest_cell(point)
-            elif (dsq_left > dsq) and (dsq_right > dsq):
-                nearest_cell = self._curr_node.data[2]
-            elif (dsq_left < dsq) and (dsq_right > dsq):
-                self._curr_node = self._curr_node.left
-                nearest_cell = self._nearest_cell(point)
-            else: # (dsq_left < dsq) and (dsq_right > dsq):
-                self._curr_node = self._curr_node.right
-                nearest_cell = self._nearest_cell(point)
-        return nearest_cell
+        else: # node.left is not None and node.right is not None
+            """ Node has left and right child.  This requires a check for query point close to
+            dividing plane that could have close points.
+            """
+            if qpt[dim] < node.data[dim]: # left branch
+                w_test_child, nearest_cell_child = self._nearest_cell(qpt, node.left, w_test, depth)
+                # handle case where point is close to dividing plane 
+                if w_test > euclidean_1d_distance_sq(qpt, node.data, dim):
+                    w_test_child_alt, nearest_cell_child_alt = self._nearest_cell(qpt, node.right, w_test, depth)
+                    if w_test_child_alt < w_test_child:
+                        w_test_child = w_test_child_alt
+                        nearest_cell_child = nearest_cell_child_alt
+            else: # right branch
+                w_test_child, nearest_cell_child = self._nearest_cell(qpt, node.right, w_test, depth)
+                # handle case where point is close to dividing plane
+                if w_test > euclidean_1d_distance_sq(qpt, node.data, dim):
+                    w_test_child_alt, nearest_cell_child_alt = self._nearest_cell(qpt, node.left, w_test, depth)
+                    if w_test_child_alt < w_test_child:
+                        w_test_child = w_test_child_alt
+                        nearest_cell_child = nearest_cell_child_alt
+            if w_test_child < w_test:
+                w = w_test_child
+                nearest_cell = nearest_cell_child
+
+        return w, nearest_cell
 
     @property
     def root(self):
         """Return the root node of the KDTree2D"""
         return self._root
 
-
-    def nearest_cell(self, point: Tuple[float, float]) -> int:
+    def nearest_cell(self, qpoint: Tuple[float, float]) -> int:
         """Returns the cell nearest to the (lat, lon) point in tree."""
-        self._curr_depth = 0 # reset depth state variable
-        self._curr_dim = 0 # reset kd dimension state variable
-        self._curr_node = self._root
-        return self._nearest_cell(point)
+        w, cell = self._nearest_cell(qpoint, self._root, 10.0e10, 0)
+        print(f'p: {qpoint}, w: {w}, cell: {cell}')
+        return cell
     
-
+    
 
