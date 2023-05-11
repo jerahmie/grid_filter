@@ -30,6 +30,7 @@ class TestKDTree2DStats(unittest.TestCase):
         qpt = (0.75, 4.7)
         kd2 = KDTree2D(self.ptsi)
 
+
     def tearDown(self):
         pass
 

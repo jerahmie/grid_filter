@@ -131,7 +131,7 @@ class KDTree2D():
         """Return the depth of the KD tree"""
         return self._max_depth
     
-    def _nearest_cell(self, qpt: Tuple[float, float], node: Node2D, w:float, depth:int) -> Tuple[float, int]:
+    def _nearest_cell(self, qpt: Tuple[float, float], node: Node2D, depth:int) -> Tuple[float, int]:
         """Descent tree find point closes to given 2D point.
         Keyword arguments:
         qpt -- query point
@@ -142,62 +142,74 @@ class KDTree2D():
         # update compare counter
         self._compares += 1
         # update state variable
-        dim = depth%1
+        dim = depth%2
         depth += 1
+        dim_next = depth%2
 
-        w_test = euclidean_2d_distance_sq(qpt, node.data)
-        nearest_cell = node.data[2]
+        w_node = euclidean_2d_distance_sq(qpt, node.data)
 
         if node.left is None and node.right is None:
             """ leaf node """
-            #print('leaf node')
-            w = w_test
-            nearest_cell = node.data[2]
+            print(f'leaf_node: {node.data[2]}, w_node: {w_node}')
+            return w_node, node.data[2]
 
         elif node.left is not None and node.right is None:
             """Node with only right child node"""
-            #print(f'Left node {repr(node)}')
-            w_test, nearest_cell_test = self._nearest_cell(qpt, node.left, w_test, depth)
+            w_left, nearest_cell_left = self._nearest_cell(qpt, node.left, depth)
+            if w_left < w_node:
+                w = w_left
+                nearest_cell = nearest_cell_left
+            else:
+                w = w_node
+                nearest_cell = node.data[2]
+            print(f'Left only')
+            return w, nearest_cell
 
         elif node.left is None and node.right is not None:
             """Node with only left child node"""
-            #print(f'Right node{repr(node)}')
-            w_test, nearest_cell_test = self._nearest_cell(qpt, node.right, w_test, depth)
+            w_right, nearest_cell_right = self._nearest_cell(qpt, node.right, depth)
+            if w_right < w_node:
+                w = w_right
+                nearest_cell = nearest_cell_right
+            else:
+                w = w_node
+                nearest_cell = node.data[2]
+            print(f'Right only')
+            return w, nearest_cell
 
         else:
             if qpt[dim] < node.data[dim]:
                 #w_test_left = euclidean_2d_distance_sq(qpt, node.left.data)
-                w_test_left, nearest_cell_test = self._nearest_cell(qpt, node.left, w_test, depth)
-
-                if w_test_left < w_test:
-                    w_test = w_test_left
+                w_left, nearest_cell_test = self._nearest_cell(qpt, node.left, depth)
+                if w_left < w_node:
+                    w = w_left
                     nearest_cell = nearest_cell_test
                 else:
+                    w = w_node
                     nearest_cell = node.data[2]
 
-                #if euclidean_1d_distance_sq(qpt, node.data, dim) < w_test and node.right is not None:
-                #    w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.right, w_test, depth)
-                #    if w_test_alt < w_test:
-                #        w_test = w_test_alt
-                #        nearest_cell = nearest_cell_test_alt
+                if euclidean_1d_distance_sq(qpt, node.right.data, dim) < w_node and node.right is not None:
+                    w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.right, depth)
+                    if w_test_alt < w:
+                        w = w_test_alt
+                        nearest_cell = nearest_cell_test_alt
                 
             else: # qpt[dim] >= node.data[dim]
-                w_test_right, nearest_cell_test = self._nearest_cell(qpt, node.right, w_test, depth)
-                if w_test_right < w_test:
-                    w_test = w_test_right
+                w_right, nearest_cell_test = self._nearest_cell(qpt, node.right, depth)
+                if w_right < w_node:
+                    w = w_right
                     nearest_cell = nearest_cell_test
                 else:
+                    w = w_node
                     nearest_cell = node.data[2]
-                    #if euclidean_1d_distance_sq(qpt, node.data, dim) < w_test and node.left is not None:
-                    #    w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.left, w_test, depth)
-                    #    if w_test_alt < w_test:
-                    #        w_test = w_test_alt
-                    #        nearest_cell_test = nearest_cell_test_alt
-        if w_test < w:
-            w = w_test
-            nearest_cell = nearest_cell_test
-    
-        return w, nearest_cell
+
+                if euclidean_1d_distance_sq(qpt, node.left.data, dim) < w_node and node.left is not None:
+                    w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.left, depth)
+                    if w_test_alt < w:
+                        w = w_test_alt
+                        nearest_cell = nearest_cell_test_alt
+            #nearest_cell = nearest_cell_test
+            return w, nearest_cell
 
     @property
     def root(self):
@@ -213,7 +225,8 @@ class KDTree2D():
         """Returns the cell nearest to the (lat, lon) point in tree."""
         self._compares = 0
         w = euclidean_2d_distance_sq(qpoint, self._root.data)
-        w, cell = self._nearest_cell(qpoint, self._root, w, 0)
+        w, cell = self._nearest_cell(qpoint, self._root, 0)
+        print(f'Final: w = {w}, cell = {cell}')
         return cell
 
 

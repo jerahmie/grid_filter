@@ -46,4 +46,4 @@ if __name__ == "__main__":
     # cell grid points with index (lat, lon, i)
     ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
     kd2d = KDTree2D(ptsi)
-    gen_random_plots(kd2d, pts, 1)
+    gen_random_plots(kd2d, pts, 10)
