@@ -2,7 +2,7 @@
 import os
 import numpy as np
 import unittest
-from grid_perimeter import graph_data
+from grid_filter import graph_data
 
 class TestGraphData(unittest.TestCase):
     """Test case for graph_data"""

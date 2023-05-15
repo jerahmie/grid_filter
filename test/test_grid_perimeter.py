@@ -4,7 +4,7 @@ Unittests for grid perimeter calculations
 import os
 import numpy as np
 import unittest
-from grid_perimeter import MPASGrid, len_non_zero, border_cell_ids_from_cells_per_vertices
+from grid_filter import MPASGrid, len_non_zero, border_cell_ids_from_cells_per_vertices
 
 class TestGridPerimeter(unittest.TestCase):
     @classmethod

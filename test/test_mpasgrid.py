@@ -1,7 +1,7 @@
 """Unit testing for MPASGrid Class"""
 import os
 import unittest
-from grid_perimeter import MPASGrid
+from grid_filter import MPASGrid
 
 class TestMPASGrid(unittest.TestCase):
     """MPASGrid TestCase"""

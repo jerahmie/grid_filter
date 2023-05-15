@@ -2,7 +2,7 @@
 import os
 import unittest
 from random import uniform
-from grid_perimeter import * 
+from grid_filter import * 
 
 def dist2(p1, p2):
     """return 2D Euclidean squared distance between two points"""

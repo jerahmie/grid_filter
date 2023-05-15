@@ -2,7 +2,7 @@
 import os
 import unittest
 from random import uniform
-from grid_perimeter import MPASGrid, KDTree2D
+from grid_filter import MPASGrid, KDTree2D
 
 class TestKDTree2DStats(unittest.TestCase):
     """Test cases for compiling statistics about KD Tree."""

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import time
-from grid_perimeter import sum_of_squares_rs
+from grid_filter import sum_of_squares_rs
 
 if __name__ == "__main__":
     n = 1_000_001

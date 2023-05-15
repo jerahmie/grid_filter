@@ -17,7 +17,7 @@ fn sum_of_squares_rs(a: &PyList) -> PyResult<usize> {
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn grid_perimeter(_py: Python, m: &PyModule) -> PyResult<()> {
+fn grid_filter(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
     m.add_function(wrap_pyfunction!(sum_of_squares_rs, m)?)?;
     Ok(())
