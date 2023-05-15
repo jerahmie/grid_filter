@@ -29,6 +29,7 @@ class TestKDTree2DStats(unittest.TestCase):
         """
         qpt = (0.75, 4.7)
         kd2 = KDTree2D(self.ptsi)
+        self.assertEqual(kd2.nearest_cell(qpt), 0)
 
 
     def tearDown(self):

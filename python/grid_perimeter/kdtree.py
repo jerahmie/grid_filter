@@ -136,8 +136,7 @@ class KDTree2D():
         Keyword arguments:
         qpt -- query point
         node -- current node in KD-tree
-        w -- min search dimension (i.e. radius), initially larger than domain
-        d -- current depth in tree
+        depth -- current depth in tree
         """
         # update compare counter
         self._compares += 1
@@ -162,7 +161,6 @@ class KDTree2D():
             else:
                 w = w_node
                 nearest_cell = node.data[2]
-            print(f'Left only')
             return w, nearest_cell
 
         elif node.left is None and node.right is not None:
@@ -174,12 +172,10 @@ class KDTree2D():
             else:
                 w = w_node
                 nearest_cell = node.data[2]
-            print(f'Right only')
             return w, nearest_cell
 
         else:
             if qpt[dim] < node.data[dim]:
-                #w_test_left = euclidean_2d_distance_sq(qpt, node.left.data)
                 w_left, nearest_cell_test = self._nearest_cell(qpt, node.left, depth)
                 if w_left < w_node:
                     w = w_left
@@ -187,7 +183,6 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-
                 if euclidean_1d_distance_sq(qpt, node.right.data, dim) < w_node and node.right is not None:
                     w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.right, depth)
                     if w_test_alt < w:
@@ -202,13 +197,11 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-
                 if euclidean_1d_distance_sq(qpt, node.left.data, dim) < w_node and node.left is not None:
                     w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.left, depth)
                     if w_test_alt < w:
                         w = w_test_alt
                         nearest_cell = nearest_cell_test_alt
-            #nearest_cell = nearest_cell_test
             return w, nearest_cell
 
     @property
