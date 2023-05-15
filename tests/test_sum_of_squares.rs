@@ -1,4 +1,4 @@
-use grid_perimeter::sum_of_squares::*;
+use grid_filter::sum_of_squares::*;
 
 //fn sum_of_squares(arr: &[i32]) -> i32 {
 //    5

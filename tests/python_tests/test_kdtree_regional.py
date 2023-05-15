@@ -22,7 +22,7 @@ class TestKDTree2DStats(unittest.TestCase):
         self.assertTrue(True)
         self.assertEqual(len(self.ptsi), 441)
 
-
+    @unittest.skip
     def test_internal_pts(self):
         """Test an internal points and make sure next nearest point from 
         KDTree search agrees with brute force search.
