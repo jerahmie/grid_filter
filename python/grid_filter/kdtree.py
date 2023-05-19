@@ -143,13 +143,13 @@ class KDTree2D():
         # update state variable
         dim = depth%2
         depth += 1
-        dim_next = depth%2
+        #dim_next = depth%2
 
         w_node = euclidean_2d_distance_sq(qpt, node.data)
 
         if node.left is None and node.right is None:
             """ leaf node """
-            print(f'leaf_node: {node.data[2]}, w_node: {w_node}')
+            #print(f'leaf_node: {node.data[2]}, w_node: {w_node}')
             return w_node, node.data[2]
 
         elif node.left is not None and node.right is None:
@@ -183,13 +183,13 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-                if euclidean_1d_distance_sq(qpt, node.right.data, dim) < w_node and node.right is not None:
+                if euclidean_1d_distance_sq(qpt, node.data, dim) < w_node and node.right is not None:
                     w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.right, depth)
                     if w_test_alt < w:
                         w = w_test_alt
                         nearest_cell = nearest_cell_test_alt
                 
-            else: # qpt[dim] >= node.data[dim]
+            elif qpt[dim] > node.data[dim]: # qpt[dim] >= node.data[dim]
                 w_right, nearest_cell_test = self._nearest_cell(qpt, node.right, depth)
                 if w_right < w_node:
                     w = w_right
@@ -197,11 +197,15 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-                if euclidean_1d_distance_sq(qpt, node.left.data, dim) < w_node and node.left is not None:
+                if euclidean_1d_distance_sq(qpt, node.data, dim) < w_node and node.left is not None:
                     w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.left, depth)
                     if w_test_alt < w:
                         w = w_test_alt
                         nearest_cell = nearest_cell_test_alt
+
+            else:
+                print("!!!!! TODO: both search paths. qpt[dim] is at bisecion point !!!!")
+
             return w, nearest_cell
 
     @property

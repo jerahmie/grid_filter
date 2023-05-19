@@ -5,6 +5,8 @@ from .grid_util import *
 from .graph_data import *
 from visualization.plot_grid import plot_mpas_grid, overplot_mpas_grid
 from .kdtree import *
+from visualization.kdtree_display import KDTreeDisplay
+
 
 #__doc__ = grid_perimeter.__doc__
 #if hasattr(grid_perimeter, "__all__"):
