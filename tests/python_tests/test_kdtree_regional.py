@@ -36,14 +36,10 @@ class TestKDTree2DStats(unittest.TestCase):
         self.mpg = MPASGrid(self.grid_file)
         pts = self.mpg.cell_points()
         self.ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
-#        self.xmin = 1.5
-#        self.xmax = 1.0
-#        self.ymin = 3.7
-#        self.ymax = 5.7
-        self.xmin = 0.67
-        self.xmax = 0.75
-        self.ymin = 4.65
-        self.ymax = 4.75
+        self.xmin = 0.57
+        self.xmax = 0.85
+        self.ymin = 4.55
+        self.ymax = 4.85
         self.kd2 = KDTree2D(self.ptsi)
 
 
@@ -71,7 +67,6 @@ class TestKDTree2DStats(unittest.TestCase):
             cell_kd2 = self.kd2.nearest_cell(qpt)
             cell_bf = nearest_bf(qpt, self.ptsi)[2]
             if cell_kd2 != cell_bf:
-                print('----> ', qpt)
                 cell_lat = np.array([self.ptsi[i][0] for i in range(len(self.ptsi))], dtype=float)
                 cell_lon = np.array([self.ptsi[i][1] for i in range(len(self.ptsi))], dtype=float)
                 ax = gf.plot_mpas_grid(cell_lat, cell_lon)

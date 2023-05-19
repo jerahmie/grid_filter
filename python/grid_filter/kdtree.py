@@ -149,7 +149,6 @@ class KDTree2D():
 
         if node.left is None and node.right is None:
             """ leaf node """
-            #print(f'leaf_node: {node.data[2]}, w_node: {w_node}')
             return w_node, node.data[2]
 
         elif node.left is not None and node.right is None:
@@ -223,7 +222,6 @@ class KDTree2D():
         self._compares = 0
         w = euclidean_2d_distance_sq(qpoint, self._root.data)
         w, cell = self._nearest_cell(qpoint, self._root, 0)
-        print(f'Final: w = {w}, cell = {cell}')
         return cell
 
 
