@@ -28,4 +28,3 @@ An example of using the grid_perimeter module to generate the above plots:
 ```$ python3 examples/plot_grid_data.py test/Manitowoc.static.nc```
 
 
-```ctest --build-and-test . buildtree --build-generator Unix Makefiles --test-command ctesti```
