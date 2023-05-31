@@ -3,6 +3,7 @@
 from typing import List, Tuple
 
 def sort_points(pts: List[Tuple[float, float, int]], dim: int) -> List[Tuple[float, float, int]]:
+
     """Return a list of sorted points by dimension.
 
     Keyword arguments:
