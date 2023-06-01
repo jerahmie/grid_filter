@@ -11,11 +11,13 @@ class KDTreeNode2D {
   private:
     KDTreeNode2D* left;
     KDTreeNode2D* right;
-    nodeData data;
+    nodeData node_data;
   public:
     KDTreeNode2D(KDTreeNode2D*, KDTreeNode2D*,nodeData);
     KDTreeNode2D* getLeft(void);
     KDTreeNode2D* getRight(void);
+    nodeData getData(void);
+
     //~KDTreeNode2D();
 };
 
