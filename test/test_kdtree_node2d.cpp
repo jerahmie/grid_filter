@@ -15,9 +15,11 @@ TEST_CASE("CREATE Test Node Data", "[test_kdtree_node") {
 }
 
 TEST_CASE("Create KDTree node.", "[test_kdtree_node]") {
-  nodeData nd{0.12, 3.45, 1};
+  const nodeData nd{0.12, 3.45, 1};
   KDTreeNode2D kd2 {NULL, NULL, nd};
   REQUIRE(kd2.getLeft() == NULL);
   REQUIRE(kd2.getRight() == NULL);
-  
+  REQUIRE(kd2.getData().cell_index == 1); 
+  REQUIRE(kd2.getData().lat == 0.12);
+  REQUIRE(kd2.getData().lon == 3.45);
 }

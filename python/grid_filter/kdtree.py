@@ -59,8 +59,16 @@ class Node2D():
         """Return the right node"""
         return self._right
 
-def build_tree(pts, depth=0) -> Tuple[Node2D, int]:
-    """helper function to build the kd tee"""
+def build_tree(pts, depth=0) -> Node2D:
+    """Helper function to build a 2D kd tree.
+    
+    Recursive algorithm to create 2D KDTree from List of points.
+    List sorting dimension alternates according to current depth of tree.
+
+    Keyword Arguments:
+    pts   -- List of 2D points 
+    depth -- current depth of tree
+    """
     if len(pts) == 1:
         return Node2D(pts[0])
     else:
