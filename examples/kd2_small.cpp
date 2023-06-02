@@ -5,6 +5,14 @@
 
 int main(void) {
   std::cout << "<< Small 2D KD-tree example >>\n";
+  std::vector<double> dvec{3.59, 3.99, 4.88, 0.87, 3.33,
+                           0.21, 1.35, 0.54, 3.14, 0.48};
+ 
+  std::sort(dvec.begin(), dvec.end());
+  for (auto &elem : dvec) {
+    std::cout << elem;
+  }
+
 
   std::vector<nodeData> node_vec{{0.12, 3.45, 2},
                                    {0.24, 6.8, 1},
