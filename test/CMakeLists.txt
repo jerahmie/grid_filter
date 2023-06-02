@@ -24,7 +24,7 @@ catch_discover_tests(unit_tests)
 
 
 # Python unit tests
-##[=[
+#[=[
 find_package (Python COMPONENTS Interpreter Development)
 message("---> ${Python_Interpreter_FOUND}")
 message("---> ${Python_EXECUTABLE}")

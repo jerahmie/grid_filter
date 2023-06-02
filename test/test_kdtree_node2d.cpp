@@ -23,3 +23,5 @@ TEST_CASE("Create KDTree node.", "[test_kdtree_node]") {
   REQUIRE(kd2.getData().lat == 0.12);
   REQUIRE(kd2.getData().lon == 3.45);
 }
+
+
