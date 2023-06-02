@@ -1,14 +1,18 @@
 #ifndef _KDTREE_NODE_H_
 #define _KDTREE_NODE_H_
 
-//#include <iostream>
-
 struct nodeData {
   double lat;
   double lon;
   int cell_index;
   friend std::ostream& operator<<(std::ostream& os, const nodeData& nd);
 };
+
+// compare node data along dimension
+bool compare_node_lat(nodeData n1, nodeData n2);
+
+// compare node data along dimension
+bool compare_node_lon(nodeData n1, nodeData n2);
 
 class KDTreeNode2D {
   private:

@@ -1,6 +1,18 @@
 #include <iostream>
 #include "kdtree_node.h"
 
+
+// compare node data along dimension
+bool compare_node_lat(nodeData n1, nodeData n2) {
+  return (n1.lat < n2.lat);
+}
+
+// compare node data along dimension
+bool compare_node_lon(nodeData n1, nodeData n2) {
+  return (n1.lon < n2.lon);
+}
+
+
 std::ostream& operator<<(std::ostream& os, const nodeData& nd) {
   os << '(' << nd.lat << ", " << nd.lon << ", " << nd.cell_index << ')';
   return os;
