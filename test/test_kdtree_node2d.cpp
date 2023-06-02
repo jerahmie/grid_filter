@@ -53,8 +53,28 @@ TEST_CASE("Create KDTree node.", "[test_kdtree_node]") {
   REQUIRE(kd2.getData().lon == 3.45);
 }
 
-TEST_CASE("", "") {
-  ///
+TEST_CASE("Split vector by given dimension.", "[test_kdtree_node]") {
+  // Test split sorted array by median
+  int node_vec3_mid = node_vec3.size()/2;
+  REQUIRE(node_vec3_mid == 1);
+  int node_vec20_mid = node_vec20.size()/2;
+  REQUIRE(node_vec20_mid == 10);
+  std::sort(node_vec3.begin(), node_vec3.end(), compare_node_lat);
+  // sub vector from sorted vectornode_vec3
+  nodeData mid = node_vec3.at(node_vec3_mid);
+  REQUIRE(mid.cell_index == 1);
+  std::vector<nodeData>::const_iterator left_begin = node_vec3.begin();
+  std::vector<nodeData>::const_iterator left_end = node_vec3.begin() + node_vec3_mid;
+  std::vector<nodeData> left_data(left_begin, left_end);
+  REQUIRE(left_data.size() == 1);
+  REQUIRE(left_data.at(0).cell_index == 2);
+  std::vector<nodeData>::const_iterator right_begin = node_vec3.begin() + node_vec3_mid + 1;
+  std::vector<nodeData>::const_iterator right_end = node_vec3.end();
+  std::vector<nodeData> right_data(right_begin, right_end);
+  REQUIRE(right_data.size() == 1);
+  REQUIRE(right_data.at(0).cell_index == 0);
+
+
 }
 
 TEST_CASE("Test sorting list of node data.", "[test_kdtree_node]") {
