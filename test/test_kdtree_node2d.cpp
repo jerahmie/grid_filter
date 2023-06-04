@@ -73,8 +73,6 @@ TEST_CASE("Split vector by given dimension.", "[test_kdtree_node]") {
   std::vector<nodeData> right_data(right_begin, right_end);
   REQUIRE(right_data.size() == 1);
   REQUIRE(right_data.at(0).cell_index == 0);
-
-
 }
 
 TEST_CASE("Test sorting list of node data.", "[test_kdtree_node]") {
@@ -95,3 +93,10 @@ TEST_CASE("Test sorting list of node data.", "[test_kdtree_node]") {
     REQUIRE((*iter2).lat <= (*next_item).lat);
   }
 }
+TEST_CASE("Test node compare of nodes via == operator", "[test_kdtree_node]") {
+  const nodeData test_node1{0.35, 4.66, 0};
+  const nodeData test_node2{0.35, 4.66, 0};
+  REQUIRE(test_node1 == test_node2);
+  //REQUIRE(test_node1 != node_vec3[0]);
+  REQUIRE(test_node1 == node_vec3[2]);
+};

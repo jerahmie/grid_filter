@@ -12,6 +12,13 @@ bool compare_node_lon(nodeData n1, nodeData n2) {
   return (n1.lon < n2.lon);
 }
 
+// Overload operator== to compare if two nodeData are equal
+// TODO: overload!= 
+bool operator==(const nodeData& lhs, const nodeData& rhs) {
+  return (lhs.lat == rhs.lat) &&
+         (lhs.lon == rhs.lon) &&
+         (lhs.cell_index == rhs.cell_index);
+}
 
 std::ostream& operator<<(std::ostream& os, const nodeData& nd) {
   os << '(' << nd.lat << ", " << nd.lon << ", " << nd.cell_index << ')';
