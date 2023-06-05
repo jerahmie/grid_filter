@@ -45,7 +45,7 @@ TEST_CASE("Test median point helper function.", "[test_kdtree]") {
   int half_len_int = int(half_len_float);
   std::cout << "<-> " << std::get<1>(median_point_id(node_data1)) << '\n';
 //  REQUIRE(median_point_id(node_data0)) == 0);
-//  REQUIRE(std::get<0>(median_point_id(node_data1)) == node_data1[0]);
+  REQUIRE(std::get<0>(median_point_id(node_data1)) == node_data1[0]);
   REQUIRE(std::get<1>(median_point_id(node_data1)) == 0);
   REQUIRE(std::get<1>(median_point_id(node_data2)) == 1);
   REQUIRE(std::get<1>(median_point_id(node_data3)) == 1);
