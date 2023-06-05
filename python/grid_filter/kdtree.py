@@ -191,7 +191,7 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-                if euclidean_1d_distance_sq(qpt, node.data, dim) < w_node and node.right is not None:
+                if euclidean_1d_distance_sq(qpt, node.data, dim) < w and node.right is not None:
                     w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.right, depth)
                     if w_test_alt < w:
                         w = w_test_alt
@@ -205,7 +205,7 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-                if euclidean_1d_distance_sq(qpt, node.data, dim) < w_node and node.left is not None:
+                if euclidean_1d_distance_sq(qpt, node.data, dim) < w and node.left is not None:
                     w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.left, depth)
                     if w_test_alt < w:
                         w = w_test_alt
