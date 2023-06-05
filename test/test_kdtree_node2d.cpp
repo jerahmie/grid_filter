@@ -97,6 +97,7 @@ TEST_CASE("Test node compare of nodes via == operator", "[test_kdtree_node]") {
   const nodeData test_node1{0.35, 4.66, 0};
   const nodeData test_node2{0.35, 4.66, 0};
   REQUIRE(test_node1 == test_node2);
-  //REQUIRE(test_node1 != node_vec3[0]);
+  REQUIRE(test_node1 != node_vec3[0]);
+  REQUIRE(test_node1 != node_vec3[1]);
   REQUIRE(test_node1 == node_vec3[2]);
 };

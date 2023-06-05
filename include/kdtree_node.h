@@ -6,6 +6,7 @@ struct nodeData {
   double lon;
   int cell_index;
   friend bool operator==(const nodeData& lhs, const nodeData& rhs);
+  friend bool operator!=(const nodeData& lhs, const nodeData& rhs);
   friend std::ostream& operator<<(std::ostream& os, const nodeData& nd);
 };
 
