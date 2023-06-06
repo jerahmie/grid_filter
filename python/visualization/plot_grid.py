@@ -40,7 +40,7 @@ def plot_mpas_grid(lats: np.ndarray, lons: np.ndarray) -> plt.axes:
     ax.add_feature(cfeature.LAND, facecolor='lightgray')
     ax.add_feature(cfeature.COASTLINE, linewidth=0.5)
     ax.add_feature(cfeature.LAKES,
-                   facecolor='cyan',
+                   facecolor='gray',
                    edgecolor='black',
                    linewidth=0.5)
     ax.add_feature(cfeature.STATES,
@@ -54,7 +54,7 @@ def plot_mpas_grid(lats: np.ndarray, lons: np.ndarray) -> plt.axes:
     lats_max = pad_max(np.max(lats_deg), 0.05)
     ax.set_extent([lons_min, lons_max, lats_min, lats_max])
     for i in range(len(lats)):
-        ax.plot(lons_deg[i], lats_deg[i], color='black', marker='o',
+        ax.plot(lons_deg[i], lats_deg[i], color='gray', marker='o',
                 markersize=1, transform=ccrs.Geodetic())
 
     return ax
@@ -72,7 +72,7 @@ def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, lons: np.ndarray, color="
     lons_deg = 180.0/np.pi * lons
     for i in range(len(lats)):
         ax.plot(lons_deg[i], lats_deg[i], color=color, marker='o',
-                markersize=2, transform=ccrs.Geodetic())
+                markersize=2, linestyle='solid', linewidth=2, transform=ccrs.Geodetic())
 
 if __name__ == "__main__":
     print("Display MPAS grid...")
