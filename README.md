@@ -17,7 +17,6 @@ Regional Grid | Regional Grid Perimeter Cells
 - geometric_features
 
 # Mac OS
-:wq
 
 
 # Example
