@@ -121,6 +121,7 @@ class KDTree2D():
         self._root = build_tree(pts)
         self._find_max_depth()
         self._compares = 0
+        self._visited_points = []
 
     def __str__(self):
         """Display string for KDTree2D class"""
@@ -152,7 +153,7 @@ class KDTree2D():
         # update state variable
         dim = depth%2
         depth += 1
-        #dim_next = depth%2
+        self._visited_points.append(node._data[2])
 
         w_node = euclidean_2d_distance_sq(qpt, node.data)
 
@@ -226,9 +227,15 @@ class KDTree2D():
         """Return the number of compares from last nearest_cell call"""
         return self._compares
 
+    @property
+    def visited_points(self) -> List[int]:
+        """Return list of points in visited path"""
+        return self._visited_points
+
     def nearest_cell(self, qpoint: Tuple[float, float]) -> int:
         """Returns the cell nearest to the (lat, lon) point in tree."""
         self._compares = 0
+        self._visited_points = []
         w = euclidean_2d_distance_sq(qpoint, self._root.data)
         w, cell = self._nearest_cell(qpoint, self._root, 0)
         return cell
