@@ -17,7 +17,10 @@ Regional Grid | Regional Grid Perimeter Cells
 - geometric_features
 
 
-# Apptainer/Singularity Container
+# Build and Test
+```$ cmake -B buildtree && cmake --build buildtree``
+```$ cd buildtree``
+```$ ctest```
 
 # Example
 
@@ -26,5 +29,4 @@ An example of using the grid_perimeter module to generate the above plots:
 
 ```$ python3 examples/plot_random_nearest.py test/python_tests/Manitowoc.static.nc```
 
-
-```ctest --build-and-test . buildtree --build-generator Unix Makefiles --test-command ctesti```
+# Apptainer/Singularity Container
