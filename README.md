@@ -1,10 +1,10 @@
-# grid_perimeter
+#grid_perimeter
 
 Python module to extract the perimeter cells of a MPAS regional grid.
 
 Regional Grid | Regional Grid Perimeter Cells
 :---------:|:-----------:
-![](doc/regional_grid.png) | ![](doc/regional_grid_perimeter.png)
+![](doc/pt_exterior1.png) | ![](doc/pt_interior2.png)
 
 # Required Python modules
 - numpy
@@ -16,16 +16,15 @@ Regional Grid | Regional Grid Perimeter Cells
 - geocat-viz
 - geometric_features
 
-# Mac OS
-:wq
 
+# Apptainer/Singularity Container
 
 # Example
 
 An example of using the grid_perimeter module to generate the above plots:
 
 
-```$ python3 examples/plot_grid_data.py test/Manitowoc.static.nc```
+```$ python3 examples/plot_random_nearest.py test/python_tests/Manitowoc.static.nc```
 
 
 ```ctest --build-and-test . buildtree --build-generator Unix Makefiles --test-command ctesti```
