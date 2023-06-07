@@ -18,8 +18,8 @@ Regional Grid | Regional Grid Perimeter Cells
 
 
 # Build and Test
-```$ cmake -B buildtree && cmake --build buildtree``
-```$ cd buildtree``
+```$ cmake -B buildtree && cmake --build buildtree```
+```$ cd buildtree```
 ```$ ctest```
 
 # Example
