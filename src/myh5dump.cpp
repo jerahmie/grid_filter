@@ -1,6 +1,10 @@
 /*
  *
  */
+
+/*
+ * Dump the contents of an hdf5 file.
+ */
 #include <iostream>
 #include <sys/stat.h>
 #include <string>
