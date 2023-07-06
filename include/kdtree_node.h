@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <memory>
+
 struct nodeData {
   double lat;
   double lon;
@@ -25,10 +27,10 @@ class KDTreeNode2D {
     std::shared_ptr<KDTreeNode2D> node_right;
     std::shared_ptr<nodeData> node_data;
   public:
-    KDTreeNode2D(std::unique_ptr<KDTreeNode2D>, std::unique_ptr<KDTreeNode2D>,std::unique_ptr<nodeData>);
-    //std::shared_ptr<KDTreeNode2D> getLeft(void);
-    //std::shared_ptr<KDTreeNode2D> getRight(void);
-    nodeData getData(void);
+    KDTreeNode2D(std::shared_ptr<KDTreeNode2D>, std::shared_ptr<KDTreeNode2D>,std::shared_ptr<nodeData>);
+    std::shared_ptr<KDTreeNode2D> getLeft(void);
+    std::shared_ptr<KDTreeNode2D> getRight(void);
+    std::shared_ptr<nodeData> getData(void);
     friend std::ostream& operator<<(std::ostream& os, const KDTreeNode2D& kd2);
 
     //~KDTreeNode2D();

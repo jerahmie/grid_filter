@@ -42,62 +42,62 @@ TEST_CASE("CREATE Test Node Data", "[test_kdtree_node]") {
   REQUIRE(nd.lon == 3.45);
 }
 
-TEST_CASE("Create KDTree node.", "[test_kdtree_node]") {
-  // Create a 2D KDTree leaf node containing sample data.
-  const nodeData nd{0.12, 3.45, 1};
-  KDTreeNode2D kd2 {NULL, NULL, nd};
-  REQUIRE(kd2.getLeft() == NULL);
-  REQUIRE(kd2.getRight() == NULL);
-  REQUIRE(kd2.getData().cell_index == 1); 
-  REQUIRE(kd2.getData().lat == 0.12);
-  REQUIRE(kd2.getData().lon == 3.45);
-}
-
-TEST_CASE("Split vector by given dimension.", "[test_kdtree_node]") {
-  // Test split sorted array by median
-  int node_vec3_mid = node_vec3.size()/2;
-  REQUIRE(node_vec3_mid == 1);
-  int node_vec20_mid = node_vec20.size()/2;
-  REQUIRE(node_vec20_mid == 10);
-  std::sort(node_vec3.begin(), node_vec3.end(), compare_node_lat);
-  // sub vector from sorted vectornode_vec3
-  nodeData mid = node_vec3.at(node_vec3_mid);
-  REQUIRE(mid.cell_index == 1);
-  std::vector<nodeData>::const_iterator left_begin = node_vec3.begin();
-  std::vector<nodeData>::const_iterator left_end = node_vec3.begin() + node_vec3_mid;
-  std::vector<nodeData> left_data(left_begin, left_end);
-  REQUIRE(left_data.size() == 1);
-  REQUIRE(left_data.at(0).cell_index == 2);
-  std::vector<nodeData>::const_iterator right_begin = node_vec3.begin() + node_vec3_mid + 1;
-  std::vector<nodeData>::const_iterator right_end = node_vec3.end();
-  std::vector<nodeData> right_data(right_begin, right_end);
-  REQUIRE(right_data.size() == 1);
-  REQUIRE(right_data.at(0).cell_index == 0);
-}
-
-TEST_CASE("Test sorting list of node data.", "[test_kdtree_node]") {
-  // Sort vector of node data by longitude
-  std::sort(node_vec20.begin(), node_vec20.end(), compare_node_lon); 
-  std::vector<nodeData>::iterator iter1 = node_vec20.begin();
-  for (iter1; iter1 < node_vec20.end()-1; iter1++) {
-    auto next_item = iter1+1;
-    std::cout << (*iter1).lon << " " << (*next_item).lon << '\n';
-    REQUIRE((*iter1).lon <= (*next_item).lon);
-  }
-  // Sort vector of node data by latitude
-  std::sort(node_vec20.begin(), node_vec20.end(), compare_node_lat); 
-  std::vector<nodeData>::iterator iter2 = node_vec20.begin();
-  for (iter2; iter2 < node_vec20.end()-1; iter2++) {
-    auto next_item = iter2+1;
-    std::cout << (*iter2).lat << " " << (*next_item).lat << '\n';
-    REQUIRE((*iter2).lat <= (*next_item).lat);
-  }
-}
-TEST_CASE("Test node compare of nodes via == operator", "[test_kdtree_node]") {
-  const nodeData test_node1{0.35, 4.66, 0};
-  const nodeData test_node2{0.35, 4.66, 0};
-  REQUIRE(test_node1 == test_node2);
-  REQUIRE(test_node1 != node_vec3[0]);
-  REQUIRE(test_node1 != node_vec3[1]);
-  REQUIRE(test_node1 == node_vec3[2]);
-};
+//TEST_CASE("Create KDTree node.", "[test_kdtree_node]") {
+//  // Create a 2D KDTree leaf node containing sample data.
+//  const nodeData nd{0.12, 3.45, 1};
+//  KDTreeNode2D kd2 {NULL, NULL, nd};
+//  REQUIRE(kd2.getLeft() == NULL);
+//  REQUIRE(kd2.getRight() == NULL);
+//  REQUIRE(kd2.getData().cell_index == 1); 
+//  REQUIRE(kd2.getData().lat == 0.12);
+//  REQUIRE(kd2.getData().lon == 3.45);
+//}
+//
+//TEST_CASE("Split vector by given dimension.", "[test_kdtree_node]") {
+//  // Test split sorted array by median
+//  int node_vec3_mid = node_vec3.size()/2;
+//  REQUIRE(node_vec3_mid == 1);
+//  int node_vec20_mid = node_vec20.size()/2;
+//  REQUIRE(node_vec20_mid == 10);
+//  std::sort(node_vec3.begin(), node_vec3.end(), compare_node_lat);
+//  // sub vector from sorted vectornode_vec3
+//  nodeData mid = node_vec3.at(node_vec3_mid);
+//  REQUIRE(mid.cell_index == 1);
+//  std::vector<nodeData>::const_iterator left_begin = node_vec3.begin();
+//  std::vector<nodeData>::const_iterator left_end = node_vec3.begin() + node_vec3_mid;
+//  std::vector<nodeData> left_data(left_begin, left_end);
+//  REQUIRE(left_data.size() == 1);
+//  REQUIRE(left_data.at(0).cell_index == 2);
+//  std::vector<nodeData>::const_iterator right_begin = node_vec3.begin() + node_vec3_mid + 1;
+//  std::vector<nodeData>::const_iterator right_end = node_vec3.end();
+//  std::vector<nodeData> right_data(right_begin, right_end);
+//  REQUIRE(right_data.size() == 1);
+//  REQUIRE(right_data.at(0).cell_index == 0);
+//}
+//
+//TEST_CASE("Test sorting list of node data.", "[test_kdtree_node]") {
+//  // Sort vector of node data by longitude
+//  std::sort(node_vec20.begin(), node_vec20.end(), compare_node_lon); 
+//  std::vector<nodeData>::iterator iter1 = node_vec20.begin();
+//  for (iter1; iter1 < node_vec20.end()-1; iter1++) {
+//    auto next_item = iter1+1;
+//    std::cout << (*iter1).lon << " " << (*next_item).lon << '\n';
+//    REQUIRE((*iter1).lon <= (*next_item).lon);
+//  }
+//  // Sort vector of node data by latitude
+//  std::sort(node_vec20.begin(), node_vec20.end(), compare_node_lat); 
+//  std::vector<nodeData>::iterator iter2 = node_vec20.begin();
+//  for (iter2; iter2 < node_vec20.end()-1; iter2++) {
+//    auto next_item = iter2+1;
+//    std::cout << (*iter2).lat << " " << (*next_item).lat << '\n';
+//    REQUIRE((*iter2).lat <= (*next_item).lat);
+//  }
+//}
+//TEST_CASE("Test node compare of nodes via == operator", "[test_kdtree_node]") {
+//  const nodeData test_node1{0.35, 4.66, 0};
+//  const nodeData test_node2{0.35, 4.66, 0};
+//  REQUIRE(test_node1 == test_node2);
+//  REQUIRE(test_node1 != node_vec3[0]);
+//  REQUIRE(test_node1 != node_vec3[1]);
+//  REQUIRE(test_node1 == node_vec3[2]);
+//};

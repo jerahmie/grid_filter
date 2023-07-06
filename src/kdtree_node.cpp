@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include "kdtree_node.h"
 
 
@@ -29,20 +30,18 @@ std::ostream& operator<<(std::ostream& os, const nodeData& nd) {
   return os;
 }
 
-KDTreeNode2D::KDTreeNode2D(KDTreeNode2D* left_node, KDTreeNode2D* right_node, nodeData nd) {
-  left = left_node;
-  right = right_node;
-  node_data = nd;
-}
+KDTreeNode2D::KDTreeNode2D(std::shared_ptr<KDTreeNode2D> nl, 
+    std::shared_ptr<KDTreeNode2D> nr, 
+    std::shared_ptr<nodeData> nd) :  node_left{nl}, node_right{nr}, node_data{nd} {}
 
-KDTreeNode2D* KDTreeNode2D::getLeft(void) {
+std::shared_ptr<KDTreeNode2D> KDTreeNode2D::getLeft(void) {
   // Return pointer to the left child node
-  return left;
+  return node_left;
 }
 
-KDTreeNode2D* KDTreeNode2D::getRight(void) {
+std::shared_ptr<KDTreeNode2D> KDTreeNode2D::getRight(void) {
   // Return pointer to the right child node
-  return right;
+  return node_right;
 }
 
 std::ostream& operator<<(std::ostream& os, const KDTreeNode2D& kd2_node) {
@@ -50,7 +49,7 @@ std::ostream& operator<<(std::ostream& os, const KDTreeNode2D& kd2_node) {
   return os;
 }
 
-nodeData KDTreeNode2D::getData(void) {
+std::shared_ptr<nodeData> KDTreeNode2D::getData(void) {
   // Return node data
   return node_data;
 }

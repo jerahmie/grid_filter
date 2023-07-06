@@ -59,11 +59,11 @@ int main(void) {
     std::cout << elem.lon << ' ';
   }
   std::cout << '\n'; 
-  KDTreeNode2D nlc {NULL, NULL, node_vec[0]};
-  KDTreeNode2D nrc {NULL, NULL, node_vec[1]};
-  KDTreeNode2D root {&nlc, &nrc, node_vec[2]};
-  std::cout << root.getData().cell_index << '\n';
-  std::cout << root.getLeft()->getData().cell_index << '\n';
-  std::cout << root.getRight()->getData().cell_index << '\n';
+  //KDTreeNode2D nlc {NULL, NULL, node_vec[0]};
+  //KDTreeNode2D nrc {NULL, NULL, node_vec[1]};
+  //KDTreeNode2D root {&nlc, &nrc, node_vec[2]};
+  //std::cout << root.getData().cell_index << '\n';
+  //std::cout << root.getLeft()->getData().cell_index << '\n';
+  //std::cout << root.getRight()->getData().cell_index << '\n';
 }
 
