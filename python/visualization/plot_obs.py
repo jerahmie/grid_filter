@@ -39,7 +39,8 @@ def plot_obs(latc: np.ndarray, lonc: np.ndarray, mask: np.ndarray = None) -> plt
     print(f'latc: {min(latc):.2f}, {max(latc):.2f}')
     print(f'lonc: {min(lonc):.2f}, {max(lonc):.2f}')
     print("Generating plot...")
-    proj = ccrs.Orthographic(central_longitude=270, central_latitude=45)
+    #proj = ccrs.Orthographic(central_longitude=270, central_latitude=45)
+    proj = ccrs.PlateCarree(central_longitude=0.0)
     ax = plt.axes(projection=proj)
     ax.set_global()
 
