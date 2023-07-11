@@ -13,19 +13,6 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import grid_filter
 
-
-def read_h5data(filename: str, group: str, dataset: str)->np.ndarray:
-    """ Return the filtered mask as a numpy ndarray.
-
-    Keyword Arguments:
-    filename - string containing file path of hdf5 file
-    group - group name in hdf5 file
-    dataset - dataset name
-    """
-    with h5py.File(filename, 'r') as fobs:
-        dset = fobs[f'/{group}/{dataset}'][:]
-    return dset
-
 def plot_obs(latc: np.ndarray, lonc: np.ndarray, mask: np.ndarray = None) -> plt.axes:
     """ Returns a matplotlib axes that 
     """
@@ -69,9 +56,9 @@ def main(args)->None:
         raise FileNotFoundError( errno.ENOENT, os.strerror(errno.ENOENT), args.filename)
     print(type(args))
     print(args.filename)
-    filter_mask = read_h5data(args.filename, 'DerivedValue', 'LAMDomainCheck')
-    latc = read_h5data(args.filename, 'MetaData', 'latitude')
-    lonc = read_h5data(args.filename, 'MetaData', 'longitude')
+    filter_mask = grid_filter.read_h5data(args.filename, 'DerivedValue', 'LAMDomainCheck')
+    latc = grid_filter.read_h5data(args.filename, 'MetaData', 'latitude')
+    lonc = grid_filter.read_h5data(args.filename, 'MetaData', 'longitude')
     
     #ax = plot_obs(latc, lonc, filter_mask)
     ax = plot_obs(latc, lonc)

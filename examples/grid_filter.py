@@ -8,10 +8,11 @@ from typing import List, Tuple
 from random import uniform
 import numpy as np
 import matplotlib.pyplot as plt
+import h5py
 import grid_filter as gf
 from grid_filter import KDTree2D, Node2D, MPASGrid
 
-#def gen_random_plots(kd2d: KDTree2D, pts: List[Tuple[float, float]], n: int)->None:
+#def gen_r
 #    """Save out plots with random data."""
 #    cell_lat = np.array([pts[i][0] for i in range(len(pts))], dtype=float)
 #    cell_lon = np.array([pts[i][1] for i in range(len(pts))], dtype=float)
