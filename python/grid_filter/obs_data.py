@@ -21,8 +21,12 @@ def read_h5data(filename: str, group: str, dataset: str)->np.ndarray:
 
 def obs_points(file_name: str) -> np.ndarray:
     """Return the observation points from dataset as a 2 by N numpy array.2 by N numpy array. 
+
+    Keyword Arguments
+    file_name: String representing valid path to hdf5 file
     """
     latc = read_h5data(file_name, 'MetaData', 'latitude')
     lonc = read_h5data(file_name, 'MetaData', 'longitude')
-    return np.stack((latc, lonc))
+    return np.transpose(np.stack((latc, lonc)))
+
 

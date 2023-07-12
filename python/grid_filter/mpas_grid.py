@@ -17,6 +17,7 @@ class MPASGrid():
         self._border_cell_ids: List[int] = []
         self._cell_lat: List[float] = []
         self._cell_lon: List[float] = []
+        self._bdy_mask_cell: List[float] = []
         if os.path.exists(filename):
             self._load_dataset()
 
@@ -30,6 +31,7 @@ class MPASGrid():
                 self._read_nedges(ds)
                 self._cell_edges_per_vertices(ds)
                 self._read_cell_lat_lon(ds)
+                self._read_bdy_mask_cell(ds)
         else:
             print("Warning: Could not file")
 
@@ -42,6 +44,11 @@ class MPASGrid():
         for cell_id in range(self._ncells):
             self._cell_lat.append(float(ds.variables['latCell'][cell_id]))
             self._cell_lon.append(float(ds.variables['lonCell'][cell_id]))
+
+    def _read_bdy_mask_cell(self, ds: Dataset) -> None:
+        """Read the cell type""" 
+        for cell_id in range(self._ncells):
+            self._bdy_mask_cell.append(int(ds.variables['bdyMaskCell'][cell_id]))
 
     @property
     def ncells(self):
@@ -80,7 +87,13 @@ class MPASGrid():
         """Return edge cells in regional grid.
         """
         return self._border_cell_ids
-    
+   
+    @property
+    def bdy_mask_cells(self)->List[int]:
+        """Return the boundary mask cells.
+        """
+        return self._bdy_mask_cell
+
     def cell_points(self)->List[Tuple[float, float, int]]:
         """Return cell zipped list of cell points. Index order is same as grid mesh."""
         cell_points = zip(self._cell_lat, self._cell_lon)
