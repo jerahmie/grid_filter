@@ -20,7 +20,7 @@ def grid_filter(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray) -> np.nd
     kd2d -- 2D KDTree 
     obs  -- Numpy observation array.
     """
-    mask = np.zeros(np.shape(obs)[0])
+    mask = np.zeros(np.shape(obs)[0],dtype=int)
     print(f"[grid_filter] len(bdy_cells): {len(bdy_cells)}")
     for i, pt in enumerate(obs):
         if i%1000 == 0:
