@@ -4,7 +4,7 @@ Unittests for grid perimeter calculations
 import os
 import numpy as np
 import unittest
-from grid_filter import MPASGrid, len_non_zero, border_cell_ids_from_cells_per_vertices
+from grid_filter import MPASGrid, len_non_zero, border_cell_ids_from_cells_per_vertices, filter_bdy_mask_cell
 
 class TestGridPerimeter(unittest.TestCase):
     @classmethod
@@ -84,7 +84,16 @@ class TestGridPerimeter(unittest.TestCase):
         mpg = MPASGrid(self.grid_file)
         border_cells = mpg.border_cell_ids
         self.assertEqual(len(border_cells), 71)
-    
+
+    def test_filter_bdy_mask_cell(self):
+        """Test the filter_bdy_mask_cell routine.
+        """
+        mpg = MPASGrid(self.grid_file)
+        pts = mpg.cell_points()
+        ptsi = zip(pts, range(len(pts)))
+        bdy = mpg.bdy_mask_cells
+        fptsi, fbdy_mask = filter_bdy_mask_cell(ptsi, bdy, {6,7})
+        self.assertTrue(any(filter(lambda x: True if (x==6 or x==7) else False, fbdy_mask)))
 
     def tearDown(self):
         pass

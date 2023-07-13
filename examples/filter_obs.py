@@ -27,7 +27,6 @@ def grid_filter(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray) -> np.nd
             print(f"[grid_filter] {i}") 
         cell_id =  kd2d.nearest_cell(pt)
         cell_type = bdy_cells[cell_id]
-        print(f'i: {i}, cell_id: {cell_id}, cell_type: {cell_type}')
         if cell_type < 7:
             mask[i] = 1
     
@@ -66,7 +65,8 @@ def main(static_file: str, obs_file: str, save_file: str) -> None:
     print('Build KDTree2D')
     # cell grid points with index (lat, lon, i)
     ptsi = [(180.0/np.pi*pts[i][0], 180.0/np.pi*pts[i][1], i) for i in range(len(pts))]
-    kd2d = KDTree2D(ptsi)
+    ptsi_filtered, _ = gf.filter_bdy_mask_cell(ptsi, bdy_msk, {6,7})
+    kd2d = KDTree2D(ptsi_filtered)
     t4 = time.time()
     print(f"build kdtree: {t3-t2:.2f}")
 
