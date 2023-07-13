@@ -60,13 +60,12 @@ def main(static_file: str, obs_file: str, save_file: str) -> None:
     # cell grid points (lat, lon)
     pts = mpg.cell_points()
     bdy_msk = mpg.bdy_mask_cells
-    print(len(bdy_msk))
     t3 = time.time()
     print(f"prepare cell_points: {t2-t1:.2f}")
     
     print('Build KDTree2D')
     # cell grid points with index (lat, lon, i)
-    ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
+    ptsi = [(180.0/np.pi*pts[i][0], 180.0/np.pi*pts[i][1], i) for i in range(len(pts))]
     kd2d = KDTree2D(ptsi)
     t4 = time.time()
     print(f"build kdtree: {t3-t2:.2f}")
