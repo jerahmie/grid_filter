@@ -68,49 +68,24 @@ def overplot_points(ax: plt.axes, lats: np.ndarray, lons: np.ndarray, color="red
 def main(args)->None:
     """Plot Observations.
     """
-    obs_file=args.filename[0]
-    if len(args.filename) == 2:
-        plot_file=args.filename[1]
-    else:
-        plot_file="plot_obs.png"
-
-    if not os.path.exists(obs_file):
-        raise FileNotFoundError( errno.ENOENT, os.strerror(errno.ENOENT), obs_file)
-    filter_mask = grid_filter.read_h5data(obs_file, 'DerivedValue', 'LAMDomainCheck')
-    latc = grid_filter.read_h5data(obs_file, 'MetaData', 'latitude')
-    lonc = grid_filter.read_h5data(obs_file, 'MetaData', 'longitude')
-   
-    if args.mask_obs == True:
-        print("Plotting masked observation plots.")
-        ax = plot_obs(latc, lonc, filter_mask)
-    else:
-        print("Plotting full observation point set.")
-        ax = plot_obs(latc, lonc)
-
-    if args.static_file is not None:
-        print("Plotting static file points")
-        mpg = grid_filter.MPASGrid(args.static_file)
-        pts = 180.0/np.pi*np.array(mpg.cell_points())
-        print(f"np.shape(pts): {np.shape(pts)} type: {type(pts)}")
-        overplot_points(ax, pts[:,0], pts[:,1])
-
-    plt.savefig(plot_file)
+    if not os.path.exists(args.obs_file):
+        raise FileNotFoundError( errno.ENOENT, os.strerror(errno.ENOENT), args.obs_file)
+    filter_mask = grid_filter.read_h5data(args.lam_file, 'DerivedValue', 'LAMDomainCheck')
+    latc = grid_filter.read_h5data(args.obs_file, 'MetaData', 'latitude')
+    lonc = grid_filter.read_h5data(args.obs_file, 'MetaData', 'longitude')
+    print("Plotting masked observation plots.")
+    ax = plot_obs(latc, lonc, filter_mask)
+    plt.savefig('lam_domain.png')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-                        prog='plot_obs',
-                        description='Plot the filter observations.',
-                        epilog='plot_obs')
-    parser.add_argument('filename',
-                        nargs=argparse.REMAINDER,
+                        prog='plot_filter_obs',
+                        description='Plot the grid_filter-ed observations.',
+                        epilog='plot_filter_obs')
+    parser.add_argument('obs_file',
                         help="Observation file (HDF5)")
-    parser.add_argument('--static-file',
-                        help="Regional MPAS Grid file (NetCDF).",
-                        required=False)
-    parser.add_argument('--mask-obs', 
-                        action=argparse.BooleanOptionalAction,
-                        default=False,
-                        required=False)
+    parser.add_argument('lam_file',
+                        help="Regional MPAS Grid file (NetCDF).")
     args = parser.parse_args()
     print('args.mask-obs: ', args)
     main(args)
