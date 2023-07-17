@@ -91,7 +91,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("static_file", help="MPAS regional static file (NetCDF).")
     parser.add_argument("obs_file", help="Observation file (HDF5).")
-    parser.add_argument("save_file", help="Output mask save file (HDF5).", default='lam_mask.h5')
+    parser.add_argument("lam_mask_file", help="Output mask save file (HDF5).", default='lam_mask.h5')
     args = parser.parse_args()
 
     if not os.path.exists(args.static_file):
@@ -102,4 +102,4 @@ if __name__ == "__main__":
         ERR_TXT = "Could not find HDF5 file: {filename}"
         sys.exit(ERR_TXT.format(filename=args.obs_file))
    
-    main(args.static_file, args.obs_file, args.save_file)
+    main(args.static_file, args.obs_file, args.lam_mask_file)
