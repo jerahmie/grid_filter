@@ -5,6 +5,8 @@ from .obs_data import read_h5data, obs_points
 from .grid_util import *
 from .graph_data import *
 from .kdtree import *
+from .lam_domain_filter import *
+
 from visualization.plot_grid import plot_mpas_grid, overplot_mpas_grid
 from visualization.kdtree_display import KDTreeDisplay
 

@@ -6,31 +6,19 @@ import os
 import sys
 import time
 from typing import List, Tuple
+from collections import namedtuple
 from random import uniform
+import concurrent
+from multiprocessing import shared_memory
+import multiprocessing
+from concurrent.futures.process import ProcessPoolExecutor
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 import grid_filter as gf
 from grid_filter import KDTree2D, Node2D, MPASGrid
 
-def grid_filter(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray) -> np.ndarray:
-    """ grid_filter: generate observation point mask.
-
-    Keyword arguments:
-    kd2d -- 2D KDTree 
-    obs  -- Numpy observation array.
-    """
-    mask = np.zeros(np.shape(obs)[0],dtype=int)
-    print(f"[grid_filter] len(bdy_cells): {len(bdy_cells)}")
-    for i, pt in enumerate(obs):
-        if i%1000 == 0:
-            print(f"[grid_filter] {i}") 
-        cell_id =  kd2d.nearest_cell(pt)
-        cell_type = bdy_cells[cell_id]
-        if cell_type < 7:
-            mask[i] = 1
-    
-    return mask
+Obsinfo = namedtuple("Obsinfo", "shape data_type")
 
 def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray) -> None:
     """Save the dataset to a hdf5 file.
@@ -46,11 +34,47 @@ def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray) ->
     else:
         grp = fh.get('/')
     grp.create_dataset(dset_name, data=dset) 
-    fh.close()        
+    fh.close()
 
-def main(static_file: str, obs_file: str, save_file: str) -> None:
-    """Construct KDTree, load observation points, and save mask to data
+def create_shared_memory(data:np.ndarray, shared_name:str) -> shared_memory.SharedMemory:
+    """Create shared memory block for multiprocessing.
     """
+    data_shape = np.shape(data)
+    data_type = data.dtype
+    d_size = np.dtype(data_type).itemsize * np.prod(data_shape)
+    print(f"data_shape: {data_shape}, data_type: {data_type}, d_size: {d_size}")
+    shm = shared_memory.SharedMemory(create=True, size=d_size, name=shared_name)
+    dst = np.ndarray(shape=data_shape, dtype=data_type, buffer=shm.buf)
+    dst[:] = data[:]
+    return shm
+
+def release_shared(name:str) -> None:
+    """Free shared memory block
+    """
+    shm = shared_memory.SharedMemory(name=name)
+    shm.close()
+    shm.unlink()
+
+def lam_domain_filter_mp(name, kd2d, bdy_msk, start, stop, obsinfo):
+    """Function filter subset of observations
+    """
+    shm = shared_memory.SharedMemory(name=name)
+    obs_pts = np.ndarray(obsinfo.shape, dtype=obsinfo.data_type, buffer=shm.buf)
+    print(f"start: {start}, stop: {stop}")
+    obs_pts[start:stop][:] = float(start)
+    #mask = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts)
+    #return obs_pts
+
+def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
+    """Construct KDTree, load observation points, and save mask to data
+    
+    Keyword arguments:
+    static_file --
+    obs_file --
+    save_file -- 
+    nproc -- Number of processes
+    """
+
     print("Read Grid")
     t1 = time.time()
     mpg = MPASGrid(static_file)
@@ -67,23 +91,48 @@ def main(static_file: str, obs_file: str, save_file: str) -> None:
     ptsi = [(180.0/np.pi*pts[i][0], 180.0/np.pi*pts[i][1], i) for i in range(len(pts))]
     ptsi_filtered, _ = gf.filter_bdy_mask_cell(ptsi, bdy_msk, {6,7})
     kd2d = KDTree2D(ptsi_filtered)
+    
     t4 = time.time()
     print(f"build kdtree: {t3-t2:.2f}")
 
     # read observation points
-    obs_pts = gf.obs_points(obs_file)
+    obs_pts = gf.obs_points(obs_file)[0:100]
+
     t5 = time.time()
     print(f"read obs_points: {t5-t4:.2f}")
 
-    mask = grid_filter(kd2d, bdy_msk, obs_pts)
-    t6 = time.time()
-    print(f"filter obs: {t6-t5:.2f}")
+    print(f"setup multiprocessing")
+    futures = []
+    obs_share_name = "obs_pts"
+    obs_shm = create_shared_memory(obs_pts, obs_share_name)
 
+    nobs = np.shape(obs_pts)[0]
+    chunk_size = int(nobs/nproc)
+    obsinfo = Obsinfo(np.shape(obs_pts), type(obs_pts[0][0]))
+
+    # allocate mask space
+    mask = np.zeros(nobs, dtype=int)
+    print(f"shape obs_shm: {np.shape(obs_pts)}, {obs_pts[0]}, chunk_size: {chunk_size}") 
+    t6 = time.time()
+    with ProcessPoolExecutor(max_workers=nproc) as executor:
+        for i in range(0, nproc):
+            start = i*chunk_size
+            print(f"start: {start}")
+            executor.submit(lam_domain_filter_mp, obs_share_name, kd2d, bdy_msk, start, start+chunk_size, obsinfo)
+
+    #mask = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts)
+    #t6 = time.time()
+    #print(f"filter obs: {t6-t5:.2f}")
+
+    c = np.ndarray(np.shape(obs_pts), dtype=type(obs_pts[0][0]), buffer=obs_shm.buf)
+    print(c)
+    
+    release_shared(share_name)
     # save mask data
-    print('Saving Data')
-    save_data(save_file, 'DerivedValue', 'LAMDomainCheck', mask)
-    t7 = time.time()
-    print(f"save_data: {t7-t6:.2f}")
+    #print('Saving Data')
+    #save_data(save_file, 'DerivedValue', 'LAMDomainCheck', mask)
+    #t7 = time.time()
+    #print(f"save_data: {t7-t6:.2f}")
 
 if __name__ == "__main__":
     import argparse
@@ -102,4 +151,4 @@ if __name__ == "__main__":
         ERR_TXT = "Could not find HDF5 file: {filename}"
         sys.exit(ERR_TXT.format(filename=args.obs_file))
    
-    main(args.static_file, args.obs_file, args.lam_mask_file)
+    main(args.static_file, args.obs_file, args.lam_mask_file, multiprocessing.cpu_count())
