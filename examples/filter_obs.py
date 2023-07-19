@@ -77,12 +77,13 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     t1 = time.time()
     mpg = MPASGrid(static_file)
     t2 = time.time()
-    print(f"read mpas_grid: {t2-t1:.2f}")
+    t_read_mpas_grid = t2 - t1
+    print(f"read mpas_grid: {t_read_mpas_grid:.2f}")
     # cell grid points (lat, lon)
     pts = mpg.cell_points()
     bdy_msk = mpg.bdy_mask_cells
     t3 = time.time()
-    print(f"prepare cell_points: {t2-t1:.2f}")
+    print(f"prepare cell_points: {t3-t2:.2f}")
     
     print('Build KDTree2D')
     # cell grid points with index (lat, lon, i)
@@ -91,13 +92,15 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     kd2d = KDTree2D(ptsi_filtered)
     
     t4 = time.time()
-    print(f"build kdtree: {t3-t2:.2f}")
+    t_build_kdtree = t4-t3
+    print(f"build kdtree: {t_build_kdtree:.2f}")
 
     # read observation points
     obs_pts = gf.obs_points(obs_file)
 
     t5 = time.time()
-    print(f"read obs_points: {t5-t4:.2f}")
+    t_read_obs = t5 - t4
+    print(f"read obs_points: {t_read_obs:.2f}")
 
     print(f"setup multiprocessing")
     futures = []
@@ -117,7 +120,6 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     mask_shm = create_shared_memory(mask, mask_share_name)
 
     print(f'shape obs_shm: {np.shape(obs_pts)}, {obs_pts[0]}, chunk_size: {chunk_size}') 
-    t6 = time.time()
     with ProcessPoolExecutor(max_workers=nproc) as executor:
         for i in range(0, nproc):
             start = i*chunk_size
@@ -125,15 +127,27 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
             executor.submit(lam_domain_filter_mp, obs_share_name, mask_share_name, kd2d, bdy_msk, start, start+chunk_size, obsinfo)
 
     mask_out = np.ndarray(np.shape(mask), dtype=type(mask[0]), buffer=mask_shm.buf)
+    t7 = time.time()
+    t_obs_filter = t7-t5
     print(f'shape: {np.shape(mask_out)}, sum: {np.sum(mask_out)}')
-    print(f'filter data: {t6-t5:.2f}') 
+    print(f'filter data: {t_obs_filter:.2f}') 
     release_shared(obs_share_name)
     # save mask data
     print('Saving Data')
     save_data(save_file, 'DerivedValue', 'LAMDomainCheck', mask_out)
     release_shared(mask_share_name)
-    t7 = time.time()
-    print(f'save_data: {t7-t6:.2f}')
+    t8 = time.time()
+    t_save_mask = t8-t7
+    print(f'save_data: {t_save_mask:.2f}')
+    print('')
+    print('              === Timing Summary===')
+    print(f'MPAS Regional Domain Cells .. {len(pts)}')
+    print(f'    Number of Observations .. {nobs}')
+    print(f'     Read MPAS Static File .. {t_read_mpas_grid:.2f} sec')
+    print(f'         Read Observations .. {t_read_obs:.2f} sec')
+    print(f'          Construct KDTree .. {t_build_kdtree:.2f} sec')
+    print(f'       Filter Observations .. {t_obs_filter:.2f} sec')
+    print(f'                 Save Mask .. {t_save_mask:.2f} sec')
 
 
 if __name__ == "__main__":
