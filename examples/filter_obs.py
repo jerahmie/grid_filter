@@ -13,25 +13,6 @@ import h5py
 import grid_filter as gf
 from grid_filter import KDTree2D, Node2D, MPASGrid
 
-def grid_filter(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray) -> np.ndarray:
-    """ grid_filter: generate observation point mask.
-
-    Keyword arguments:
-    kd2d -- 2D KDTree 
-    obs  -- Numpy observation array.
-    """
-    mask = np.zeros(np.shape(obs)[0],dtype=int)
-    print(f"[grid_filter] len(bdy_cells): {len(bdy_cells)}")
-    for i, pt in enumerate(obs):
-        if i%1000 == 0:
-            print(f"[grid_filter] {i}") 
-        cell_id =  kd2d.nearest_cell(pt)
-        cell_type = bdy_cells[cell_id]
-        if cell_type < 7:
-            mask[i] = 1
-    
-    return mask
-
 def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray) -> None:
     """Save the dataset to a hdf5 file.
 
@@ -48,7 +29,7 @@ def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray) ->
     grp.create_dataset(dset_name, data=dset) 
     fh.close()        
 
-def main(static_file: str, obs_file: str, save_file: str) -> None:
+def main(static_file: str, obs_file: str, save_file: str ) -> None:
     """Construct KDTree, load observation points, and save mask to data
     """
     print("Read Grid")
@@ -75,7 +56,7 @@ def main(static_file: str, obs_file: str, save_file: str) -> None:
     t5 = time.time()
     print(f"read obs_points: {t5-t4:.2f}")
 
-    mask = grid_filter(kd2d, bdy_msk, obs_pts)
+    mask = gf.gen_obs_mask(kd2d, bdy_msk, obs_pts)
     t6 = time.time()
     print(f"filter obs: {t6-t5:.2f}")
 
