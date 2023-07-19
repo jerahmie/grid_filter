@@ -19,7 +19,7 @@ class TestObsDataMP(unittest.TestCase):
         """Make sure test setup is correct.  This should always pass."""
         self.assertTrue(True)
 
-    def test
+    #def test
     
     def tearDown(self):
         pass

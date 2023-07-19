@@ -22,7 +22,6 @@ Obsinfo = namedtuple("Obsinfo", "shape data_type")
 
 def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray) -> None:
     """Save the dataset to a hdf5 file.
-
     Keyword arguments
     filename --
     grp_name --
@@ -55,26 +54,25 @@ def release_shared(name:str) -> None:
     shm.close()
     shm.unlink()
 
-def lam_domain_filter_mp(name, kd2d, bdy_msk, start, stop, obsinfo):
+def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, obsinfo):
     """Function filter subset of observations
     """
-    shm = shared_memory.SharedMemory(name=name)
+    shm = shared_memory.SharedMemory(name=shm_name)
+    mask_shm = shared_memory.SharedMemory(name=mask_shm_name)
     obs_pts = np.ndarray(obsinfo.shape, dtype=obsinfo.data_type, buffer=shm.buf)
+    mask = np.ndarray(obsinfo.shape[0], dtype=int, buffer=mask_shm.buf)
     print(f"start: {start}, stop: {stop}")
-    obs_pts[start:stop][:] = float(start)
-    #mask = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts)
-    #return obs_pts
+    #obs_pts[start:stop][:] = float(start)
+    mask[start:stop] = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts[start:stop])
 
 def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     """Construct KDTree, load observation points, and save mask to data
-    
     Keyword arguments:
     static_file --
     obs_file --
     save_file -- 
     nproc -- Number of processes
     """
-
     print("Read Grid")
     t1 = time.time()
     mpg = MPASGrid(static_file)
@@ -96,7 +94,7 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     print(f"build kdtree: {t3-t2:.2f}")
 
     # read observation points
-    obs_pts = gf.obs_points(obs_file)[0:100]
+    obs_pts = gf.obs_points(obs_file)
 
     t5 = time.time()
     print(f"read obs_points: {t5-t4:.2f}")
@@ -106,33 +104,37 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     obs_share_name = "obs_pts"
     obs_shm = create_shared_memory(obs_pts, obs_share_name)
 
+    t6 = time.time()
+    print(f"filter obs: {t6-t5:.2f}")
+
     nobs = np.shape(obs_pts)[0]
     chunk_size = int(nobs/nproc)
     obsinfo = Obsinfo(np.shape(obs_pts), type(obs_pts[0][0]))
 
     # allocate mask space
+    mask_share_name = 'mask_pts'
     mask = np.zeros(nobs, dtype=int)
-    print(f"shape obs_shm: {np.shape(obs_pts)}, {obs_pts[0]}, chunk_size: {chunk_size}") 
+    mask_shm = create_shared_memory(mask, mask_share_name)
+
+    print(f'shape obs_shm: {np.shape(obs_pts)}, {obs_pts[0]}, chunk_size: {chunk_size}') 
     t6 = time.time()
     with ProcessPoolExecutor(max_workers=nproc) as executor:
         for i in range(0, nproc):
             start = i*chunk_size
-            print(f"start: {start}")
-            executor.submit(lam_domain_filter_mp, obs_share_name, kd2d, bdy_msk, start, start+chunk_size, obsinfo)
+            print(f'start: {start}')
+            executor.submit(lam_domain_filter_mp, obs_share_name, mask_share_name, kd2d, bdy_msk, start, start+chunk_size, obsinfo)
 
-    #mask = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts)
-    #t6 = time.time()
-    #print(f"filter obs: {t6-t5:.2f}")
-
-    c = np.ndarray(np.shape(obs_pts), dtype=type(obs_pts[0][0]), buffer=obs_shm.buf)
-    print(c)
-    
-    release_shared(share_name)
+    mask_out = np.ndarray(np.shape(mask), dtype=type(mask[0]), buffer=mask_shm.buf)
+    print(f'shape: {np.shape(mask_out)}, sum: {np.sum(mask_out)}')
+    print(f'filter data: {t6-t5:.2f}') 
+    release_shared(obs_share_name)
     # save mask data
-    #print('Saving Data')
-    #save_data(save_file, 'DerivedValue', 'LAMDomainCheck', mask)
-    #t7 = time.time()
-    #print(f"save_data: {t7-t6:.2f}")
+    print('Saving Data')
+    save_data(save_file, 'DerivedValue', 'LAMDomainCheck', mask_out)
+    release_shared(mask_share_name)
+    t7 = time.time()
+    print(f'save_data: {t7-t6:.2f}')
+
 
 if __name__ == "__main__":
     import argparse
