@@ -68,20 +68,15 @@ def overplot_points(ax: plt.axes, lats: np.ndarray, lons: np.ndarray, color="red
 def main(args)->None:
     """Plot Observations.
     """
-    obs_file=args.filename[0]
-    if len(args.filename) == 2:
-        plot_file=args.filename[1]
-    else:
-        plot_file="plot_obs.png"
+    if not os.path.exists(args.filename):
+        raise FileNotFoundError( errno.ENOENT, os.strerror(errno.ENOENT), args.filename)
 
-    if not os.path.exists(obs_file):
-        raise FileNotFoundError( errno.ENOENT, os.strerror(errno.ENOENT), obs_file)
-    filter_mask = grid_filter.read_h5data(obs_file, 'DerivedValue', 'LAMDomainCheck')
-    latc = grid_filter.read_h5data(obs_file, 'MetaData', 'latitude')
-    lonc = grid_filter.read_h5data(obs_file, 'MetaData', 'longitude')
+    latc = grid_filter.read_h5data(args.filename, 'MetaData', 'latitude')
+    lonc = grid_filter.read_h5data(args.filename, 'MetaData', 'longitude')
    
-    if args.mask_obs == True:
+    if os.path.exists(args.mask_obs):
         print("Plotting masked observation plots.")
+        filter_mask = grid_filter.read_h5data(args.mask_obs, 'DerivedValue', 'LAMDomainCheck')
         ax = plot_obs(latc, lonc, filter_mask)
     else:
         print("Plotting full observation point set.")
@@ -94,7 +89,7 @@ def main(args)->None:
         print(f"np.shape(pts): {np.shape(pts)} type: {type(pts)}")
         overplot_points(ax, pts[:,0], pts[:,1])
 
-    plt.savefig(plot_file)
+    plt.savefig(args.output)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -102,15 +97,18 @@ if __name__ == "__main__":
                         description='Plot the filter observations.',
                         epilog='plot_obs')
     parser.add_argument('filename',
-                        nargs=argparse.REMAINDER,
-                        help="Observation file (HDF5)")
+                        help='Observation file (HDF5)')
     parser.add_argument('--static-file',
-                        help="Regional MPAS Grid file (NetCDF).",
+                        help='Regional MPAS Grid file (NetCDF).',
                         required=False)
     parser.add_argument('--mask-obs', 
-                        action=argparse.BooleanOptionalAction,
-                        default=False,
+                        help='Mask File (HDF5)',
                         required=False)
+    parser.add_argument('--output',
+                        help='Output image file.',
+                        default='plot_obs.png',
+                        required=False)
+
     args = parser.parse_args()
     print('args.mask-obs: ', args)
     main(args)
