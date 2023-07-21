@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Print the KD-tree 
 """
+import sys
 import os
-from typing import List, Tuple
 from grid_filter import MPASGrid, KDTree2D, KDTreeDisplay
 
 if __name__ == "__main__":

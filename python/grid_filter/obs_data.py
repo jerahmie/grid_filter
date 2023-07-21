@@ -1,12 +1,9 @@
 """
 Helper functions to read and process observation points.
 """
-import os
-from typing import List
 import numpy as np
 import h5py
 from .kdtree import KDTree2D
-from .mpas_grid import MPASGrid
 
 def read_h5data(filename: str, group: str, dataset: str)->np.ndarray:
     """ Return the filtered mask as a numpy ndarray.
@@ -22,7 +19,7 @@ def read_h5data(filename: str, group: str, dataset: str)->np.ndarray:
 
 
 def obs_points(file_name: str) -> np.ndarray:
-    """Return the observation points from dataset as a 2 by N numpy array.2 by N numpy array. 
+    """Return the observation points from dataset as a 2 by N numpy array."
 
     Keyword Arguments
     file_name: String representing valid path to hdf5 file

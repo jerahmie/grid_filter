@@ -77,7 +77,7 @@ def main(args)->None:
     latc = grid_filter.read_h5data(obs_file, 'MetaData', 'latitude')
     lonc = grid_filter.read_h5data(obs_file, 'MetaData', 'longitude')
    
-    if args.mask_obs:
+    if args.mask_file:
         print("Plotting masked observation plots.")
         filter_mask = grid_filter.read_h5data(args.mask_file,
                 'DerivedValue', 'LAMDomainCheck')
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
                         prog='plot_obs',
                         description='Plot the filter observations.',
-                        epilog='')
+                        epilog='EXAMPLE\n\t$ ./plot_obs.py ')
     parser.add_argument('filename',
                         help='Observation file (HDF5)')
     parser.add_argument('--output',
@@ -109,17 +109,12 @@ if __name__ == "__main__":
     parser.add_argument('--static-file',
                         help='Regional MPAS Grid file (NetCDF).',
                         required=False)
-    parser.add_argument('--mask-obs', 
-                        action=argparse.BooleanOptionalAction,
-                        default=False,
-                        required=False)
     parser.add_argument('--mask-file',
                         help='Mask file. (HDF5)',
                         required=False)
-    
     args = parser.parse_args()
-    if args.mask_file is None and args.mask_obs:
-        raise Exception("--mask file is required if --mask-obs")
+    #if args.mask_obs is None and args.mask_obs:
+    #    raise Exception("mask file is required if --mask-obs")
 
     print('args.mask-obs: ', args)
     main(args)
