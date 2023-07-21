@@ -13,10 +13,9 @@ from multiprocessing import shared_memory
 import multiprocessing
 from concurrent.futures.process import ProcessPoolExecutor
 import numpy as np
-import matplotlib.pyplot as plt
 import h5py
 import grid_filter as gf
-from grid_filter import KDTree2D, Node2D, MPASGrid
+from grid_filter import KDTree2D, MPASGrid
 
 Obsinfo = namedtuple("Obsinfo", "shape data_type")
 
@@ -154,9 +153,13 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("static_file", help="MPAS regional static file (NetCDF).")
-    parser.add_argument("obs_file", help="Observation file (HDF5).")
-    parser.add_argument("lam_mask_file", help="Output mask save file (HDF5).", default='lam_mask.h5')
+    parser.add_argument("static_file",
+                        help="MPAS regional static file (NetCDF).")
+    parser.add_argument("obs_file",
+                        help="Observation file (HDF5).")
+    parser.add_argument("lam_mask_file",
+                        help="Output mask save file (HDF5).",
+                        default='lam_mask.h5')
     args = parser.parse_args()
 
     if not os.path.exists(args.static_file):

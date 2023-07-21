@@ -5,7 +5,6 @@ import os
 import sys
 import errno
 import argparse
-import h5py 
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -18,7 +17,8 @@ def plot_obs(latc: np.ndarray, lonc: np.ndarray, mask: np.ndarray = None) -> plt
     nlats = np.size(latc)
     nlons = np.size(lonc)
     if (nlats != nlons):
-        sys.exit(f'Number of latitude and longitude points must agree. ({nlats} != {nlons})') 
+        sys.exit('Number of latitude and longitude points must agree. ' + \
+                '({} != {})'.format(nlats, nlons)) 
     if mask is not None :
         mask_id = np.nonzero(mask)
     else:
@@ -44,7 +44,8 @@ def plot_obs(latc: np.ndarray, lonc: np.ndarray, mask: np.ndarray = None) -> plt
                    edgecolor='black',
                    linewidth=0.5)
     for i in mask_id:
-        ax.plot(lonc[i], latc[i], color='blue', linestyle='None', marker='o', markersize=1, transform=ccrs.Geodetic())
+        ax.plot(lonc[i], latc[i], color='blue', linestyle='None',
+                marker='o', markersize=1, transform=ccrs.Geodetic())
     return ax
     
 def overplot_points(ax: plt.axes, lats: np.ndarray, lons: np.ndarray, color="red") -> plt.axes:
@@ -61,27 +62,25 @@ def overplot_points(ax: plt.axes, lats: np.ndarray, lons: np.ndarray, color="red
     if len(lats) != len(lons):
         sys.exit(f"Latitude {len(lats)} and Longitudes {len(lons)} not equal.")
     for i in range(len(lats)):
-        ax.plot(lons[i], lats[i], color=color, linestyle='None', marker='o', markersize=1, transform=ccrs.Geodetic())
+        ax.plot(lons[i], lats[i], color=color, linestyle='None',
+                marker='o', markersize=1, transform=ccrs.Geodetic())
 
     return ax
 
 def main(args)->None:
     """Plot Observations.
     """
-    obs_file=args.filename[0]
-    if len(args.filename) == 2:
-        plot_file=args.filename[1]
-    else:
-        plot_file="plot_obs.png"
+    obs_file=args.filename
 
     if not os.path.exists(obs_file):
         raise FileNotFoundError( errno.ENOENT, os.strerror(errno.ENOENT), obs_file)
-    filter_mask = grid_filter.read_h5data(obs_file, 'DerivedValue', 'LAMDomainCheck')
     latc = grid_filter.read_h5data(obs_file, 'MetaData', 'latitude')
     lonc = grid_filter.read_h5data(obs_file, 'MetaData', 'longitude')
    
-    if args.mask_obs == True:
+    if args.mask_file:
         print("Plotting masked observation plots.")
+        filter_mask = grid_filter.read_h5data(args.mask_file,
+                'DerivedValue', 'LAMDomainCheck')
         ax = plot_obs(latc, lonc, filter_mask)
     else:
         print("Plotting full observation point set.")
@@ -94,23 +93,29 @@ def main(args)->None:
         print(f"np.shape(pts): {np.shape(pts)} type: {type(pts)}")
         overplot_points(ax, pts[:,0], pts[:,1])
 
-    plt.savefig(plot_file)
+    plt.savefig(args.output)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
                         prog='plot_obs',
                         description='Plot the filter observations.',
-                        epilog='plot_obs')
+                        epilog='EXAMPLE\n\t$ ./plot_obs.py ')
     parser.add_argument('filename',
-                        nargs=argparse.REMAINDER,
-                        help="Observation file (HDF5)")
-    parser.add_argument('--static-file',
-                        help="Regional MPAS Grid file (NetCDF).",
+                        help='Observation file (HDF5)')
+    parser.add_argument('--output',
+                        help="Output file name",
+                        default="output_obs.png", 
                         required=False)
-    parser.add_argument('--mask-obs', 
-                        action=argparse.BooleanOptionalAction,
-                        default=False,
+    parser.add_argument('--static-file',
+                        help='Regional MPAS Grid file (NetCDF).',
+                        required=False)
+    parser.add_argument('--mask-file',
+                        help='Mask file. (HDF5)',
                         required=False)
     args = parser.parse_args()
+    #if args.mask_obs is None and args.mask_obs:
+    #    raise Exception("mask file is required if --mask-obs")
+
     print('args.mask-obs: ', args)
     main(args)
+
