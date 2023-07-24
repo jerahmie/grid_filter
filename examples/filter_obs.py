@@ -51,7 +51,15 @@ def release_shared(name:str) -> None:
     shm.unlink()
 
 def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, obsinfo):
-    '''Function filter subset of observations
+    '''Filter subset of observations.
+    Keyword arguments:
+    shm_name -- Observation data, shared memory region visible to all processes
+    mask_shm_name -- Mask data, shared memory region, visible to all processes
+    kd2d -- 2D kdtree of MPAS regional domain
+    bdy_msk -- boundary mask cells types
+    start -- start index
+    stop -- stop index
+    obsinfo -- tuple containing shared memory size, data type
     '''
     shm = shared_memory.SharedMemory(name=shm_name)
     mask_shm = shared_memory.SharedMemory(name=mask_shm_name)
