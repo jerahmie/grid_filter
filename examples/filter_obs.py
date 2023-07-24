@@ -16,14 +16,18 @@ from grid_filter import KDTree2D, MPASGrid
 
 Obsinfo = namedtuple('Obsinfo', 'shape data_type')
 
-def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray) -> None:
+def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray, mode: str='w') -> None:
     '''Save the dataset to a hdf5 file.
     Keyword arguments
     filename --
     grp_name --
     dset_name --
+    mode -- h5py mode (default='w')
     '''
-    fh = h5py.File(filename, 'w') 
+    if mode not in ['w', 'a']: 
+        raise Exception('Invalid h5py write mode.')
+
+    fh = h5py.File(filename, mode) 
     if grp_name != '':
         grp = fh.create_group('/'+grp_name)
     else:
