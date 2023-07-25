@@ -7,6 +7,8 @@ import h5py
 import netCDF4
 import numpy as np
 
+PRECISION = 0.0001
+
 class TestKDTreeValidation(unittest.TestCase):
     '''Validation of KDTree filtering'''
     @classmethod
@@ -77,7 +79,10 @@ class TestKDTreeValidation(unittest.TestCase):
                 node_stack.append(curr_node.right)
 
         print(f'kd_minlat {kd_minlat :.2f}, kd_maxlat {kd_maxlat :.2f} , kd_minlon {kd_minlon :.2f}, kd_maxlon {kd_maxlon :.2f}')
-
+        self.assertTrue(np.abs(kd_minlat-min_lat) < PRECISION)
+        self.assertTrue(np.abs(kd_maxlat-max_lat) < PRECISION)
+        self.assertTrue(np.abs(kd_minlon-min_lon) < PRECISION)
+        self.assertTrue(np.abs(kd_maxlon-max_lon) < PRECISION)
 
     def tearDown(self):
         pass

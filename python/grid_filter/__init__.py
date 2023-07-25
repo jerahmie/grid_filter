@@ -1,3 +1,4 @@
+from .kdnode import *
 from .kdtree_util import * 
 from .grid_filter import *
 from .mpas_grid import MPASGrid

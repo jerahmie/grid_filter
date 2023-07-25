@@ -39,3 +39,4 @@ def euclidean_1d_distance_sq(p1: Tuple[float, float], p2: Tuple[float, float], d
     else:
         raise RuntimeError(f'Invalid dimension: {dim}')
     return dist_sq
+
