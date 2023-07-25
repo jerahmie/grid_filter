@@ -84,6 +84,20 @@ class TestKDTreeValidation(unittest.TestCase):
         self.assertTrue(np.abs(kd_minlon-min_lon) < PRECISION)
         self.assertTrue(np.abs(kd_maxlon-max_lon) < PRECISION)
 
+
+    def test_find_tree_min_max(self):
+        ''' Use find_tree_min_max function to find min/max
+        '''
+        max_lat = max([pt[0] for pt in self.pts[:]])
+        min_lat = min([pt[0] for pt in self.pts[:]])
+        max_lon = max([pt[1] for pt in self.pts[:]])
+        min_lon = min([pt[1] for pt in self.pts[:]])
+        print(gf.find_tree_min_max(self.kd2d.root))
+        self.assertTrue(np.abs(gf.find_tree_min_max(self.kd2d.root)[0][0] - min_lat) < PRECISION)
+        self.assertTrue(np.abs(gf.find_tree_min_max(self.kd2d.root)[0][1] - max_lat) < PRECISION)
+        self.assertTrue(np.abs(gf.find_tree_min_max(self.kd2d.root)[1][0] - min_lon) < PRECISION)
+        self.assertTrue(np.abs(gf.find_tree_min_max(self.kd2d.root)[1][1] - max_lon) < PRECISION)
+
     def tearDown(self):
         pass
 

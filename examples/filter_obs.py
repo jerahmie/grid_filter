@@ -54,7 +54,7 @@ def release_shared(name:str) -> None:
     shm.close()
     shm.unlink()
 
-def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, obsinfo, stats_shm_name=None):
+def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, obsinfo, min_max_lat_lon = None, stats_shm_name=None):
     '''Filter subset of observations.
     Keyword arguments:
     shm_name -- Observation data, shared memory region visible to all processes
@@ -74,7 +74,7 @@ def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, ob
         stats = np.ndarray(obsinfo.shape[0], dtype=int, buffer=stats_shm.buf)
     else:
         stats = np.ndarray(stop-start+1, dtype=int)
-    mask[start:stop], stats[start:stop] = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts[start:stop])
+    mask[start:stop], stats[start:stop] = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts[start:stop], min_max_lat_lon)
 
 def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     '''Construct KDTree, load observation points, and save mask to data
@@ -102,6 +102,7 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     ptsi_filtered, _ = gf.filter_bdy_mask_cell(ptsi, bdy_msk, {6,7})
     kd2d = KDTree2D(ptsi_filtered)
     
+    min_max = gf.find_tree_min_max(kd2d.root)
     t4 = time.time()
     t_build_kdtree = t4-t3
     print(f'build kdtree: {t_build_kdtree:.2f}')
@@ -114,7 +115,6 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     print(f'read obs_points: {t_read_obs:.2f}')
 
     print('setup multiprocessing')
-    #futures = []
     obs_share_name = 'obs_pts'
     create_shared_memory(obs_pts, obs_share_name)
 
@@ -144,7 +144,7 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
             print(f'start: {start}')
             executor.submit(lam_domain_filter_mp, obs_share_name,
                             mask_share_name, kd2d, bdy_msk, start,
-                            start+chunk_size, obsinfo, stats_share_name)
+                            start+chunk_size, obsinfo, min_max, stats_share_name)
 
     mask_out = np.ndarray(np.shape(mask), dtype=type(mask[0]), buffer=mask_shm.buf)
     ncompares = np.ndarray(np.shape(stats), dtype=type(stats[0]), buffer=stats_shm.buf)
