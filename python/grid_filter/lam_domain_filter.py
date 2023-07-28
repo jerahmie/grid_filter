@@ -3,9 +3,11 @@ grid_filter: LAM Domain observation filter routines.
 '''
 from typing import Tuple
 import numpy as np
-from grid_filter import KDTree2D, find_tree_min_max
+from grid_filter import KDTree2D
 
-def lam_domain_filter(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray, min_max:Tuple[Tuple[float, float], Tuple[float, float]]=None) -> Tuple[np.ndarray, np.ndarray]:
+def lam_domain_filter(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray, \
+        min_max:Tuple[Tuple[float, float], Tuple[float, float]]=None) \
+        -> Tuple[np.ndarray, np.ndarray]:
     ''' lam_domain_filter: generate observation point mask.
 
     Keyword arguments:
@@ -32,7 +34,8 @@ def lam_domain_filter(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray, mi
     for i, pt in enumerate(obs):
         if i%1000 == 0:
             print(f'[grid_filter] {i}')
-        if prefilter and ((min_lat >= pt[0]) or (max_lat <= pt[0]) and (min_lon >= pt[1]) or (max_lon <= pt[1])):
+        if prefilter and ((min_lat >= pt[0]) or (max_lat <= pt[0]) \
+                and (min_lon >= pt[1]) or (max_lon <= pt[1])):
             pass
         else:
             cell_id =  kd2d.nearest_cell(pt)

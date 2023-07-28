@@ -2,7 +2,8 @@
 """
 from typing import Tuple, List
 
-def sort_points(pts: List[Tuple[float, float, int]], dim: int) -> List[Tuple[float, float, int]]:
+def sort_points(pts: List[Tuple[float, float, int]], dim: int) \
+        -> List[Tuple[float, float, int]]:
     """Return a list of sorted points by dimension.
 
     Keyword arguments:
@@ -17,7 +18,8 @@ def sort_points(pts: List[Tuple[float, float, int]], dim: int) -> List[Tuple[flo
         raise RuntimeError("Could not sort on index: {dim}".format(dim=dim))
     return pts
 
-def median_point_id(pts: List[Tuple[float, float, int]]) -> Tuple[Tuple[float, float, int], int]:
+def median_point_id(pts: List[Tuple[float, float, int]]) \
+        -> Tuple[Tuple[float, float, int], int]:
     """Return the index, point of the median point in list of sorted points.
 
     Keyword arguments:
@@ -28,11 +30,13 @@ def median_point_id(pts: List[Tuple[float, float, int]]) -> Tuple[Tuple[float, f
 
     return pts[idx], idx
 
-def euclidean_2d_distance_sq(p1: Tuple[float, float], p2: Tuple[float, float]) -> float:
+def euclidean_2d_distance_sq(p1: Tuple[float, float], p2: Tuple[float, float]) \
+        -> float:
     """Calculate the Euclidean squared distance between 2D points, p1 and p2"""
     return (p2[0]-p1[0])**2 + (p2[1]-p1[1])**2
 
-def euclidean_1d_distance_sq(p1: Tuple[float, float], p2: Tuple[float, float], dim) -> float:
+def euclidean_1d_distance_sq(p1: Tuple[float, float], p2: Tuple[float, float], dim) \
+        -> float:
     """Calculate the x- or y- projected squared distance between two points"""
     if (dim == 0) or (dim == 1):
         dist_sq = (p2[dim] - p1[dim])**2

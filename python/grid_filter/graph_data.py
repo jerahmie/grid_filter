@@ -1,7 +1,7 @@
 """graph_data.py
 Data classes and helper functions to represent meshes and edges of MPAS grid.
 """
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 import numpy as np
 from netCDF4 import Dataset

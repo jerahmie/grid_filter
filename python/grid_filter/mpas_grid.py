@@ -80,7 +80,8 @@ class MPASGrid():
             n_cells_on_cell = len_non_zero(ds.variables["cellsOnCell"][cell_id])
             n_vertices_on_cell = len_non_zero(ds.variables["verticesOnCell"][cell_id])
             self._edges_per_vertices.append(n_cells_on_cell/n_vertices_on_cell)
-        self._border_cell_ids = list(border_cell_ids_from_cells_per_vertices(self._edges_per_vertices))
+        self._border_cell_ids = \
+                list(border_cell_ids_from_cells_per_vertices(self._edges_per_vertices))
 
     @property
     def border_cell_ids(self)->List[int]:

@@ -26,6 +26,7 @@ def obs_points(file_name: str) -> np.ndarray:
     """
     latc = read_h5data(file_name, 'MetaData', 'latitude')
     lonc = read_h5data(file_name, 'MetaData', 'longitude')
+    lonc[np.argwhere(lonc<0.0)] += 360.0
     return np.transpose(np.stack((latc, lonc)))
 
 def gen_obs_mask(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray) -> np.ndarray:

@@ -1,9 +1,7 @@
 """
 Unittests for Multiprocessing obsfiltering.
 """
-import os
 import unittest
-import grid_filter as gf
 
 class TestObsDataMP(unittest.TestCase):
     """Test class for multiprocessing features.

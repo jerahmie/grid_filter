@@ -2,7 +2,8 @@
 '''
 from typing import List, Tuple
 from .kdnode import Node2D
-from .kdtree_util import sort_points, median_point_id, euclidean_2d_distance_sq, euclidean_1d_distance_sq
+from .kdtree_util import sort_points, median_point_id, \
+        euclidean_2d_distance_sq, euclidean_1d_distance_sq
 
 def build_tree(pts, depth=0) -> Node2D:
     '''Helper function to build a 2D kd tree.
@@ -114,7 +115,8 @@ class KDTree2D():
         '''Return the depth of the KD tree'''
         return self._max_depth
     
-    def _nearest_cell(self, qpt: Tuple[float, float], node: Node2D, depth:int) -> Tuple[float, int]:
+    def _nearest_cell(self, qpt: Tuple[float, float], node: Node2D, depth:int) \
+            -> Tuple[float, int]:
         '''Descent tree find point closes to given 2D point.
 
         Keyword arguments:
@@ -166,8 +168,10 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-                if euclidean_1d_distance_sq(qpt, node.data, dim) < w and node.right is not None:
-                    w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.right, depth)
+                if euclidean_1d_distance_sq(qpt, node.data, dim) < w \
+                        and node.right is not None:
+                    w_test_alt, nearest_cell_test_alt \
+                            = self._nearest_cell(qpt, node.right, depth)
                     if w_test_alt < w:
                         w = w_test_alt
                         nearest_cell = nearest_cell_test_alt
@@ -180,14 +184,16 @@ class KDTree2D():
                 else:
                     w = w_node
                     nearest_cell = node.data[2]
-                if euclidean_1d_distance_sq(qpt, node.data, dim) < w and node.left is not None:
-                    w_test_alt, nearest_cell_test_alt = self._nearest_cell(qpt, node.left, depth)
+                if euclidean_1d_distance_sq(qpt, node.data, dim) < w \
+                        and node.left is not None:
+                    w_test_alt, nearest_cell_test_alt \
+                            = self._nearest_cell(qpt, node.left, depth)
                     if w_test_alt < w:
                         w = w_test_alt
                         nearest_cell = nearest_cell_test_alt
 
             else:
-                print('!!!!! TODO: both search paths. qpt[dim] is at bisecion point !!!!')
+                print('!!!!! TODO: both search paths. qpt[dim] is at bisecion point!')
 
             return w, nearest_cell
 

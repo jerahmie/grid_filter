@@ -16,7 +16,8 @@ from grid_filter import KDTree2D, MPASGrid
 
 Obsinfo = namedtuple('Obsinfo', 'shape data_type')
 
-def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray, mode: str='w') -> None:
+def save_data(filename: str, grp_name: str, dset_name: str, \
+        dset: np.ndarray, mode: str='w') -> None:
     '''Save the dataset to a hdf5 file.
     Keyword arguments
     filename -- output file name string 
@@ -35,14 +36,15 @@ def save_data(filename: str, grp_name: str, dset_name: str, dset: np.ndarray, mo
     grp.create_dataset(dset_name, data=dset) 
     fh.close()
 
-def create_shared_memory(data:np.ndarray, shared_name:str) -> shared_memory.SharedMemory:
+def create_shared_memory(data:np.ndarray, \
+        shared_name:str) -> shared_memory.SharedMemory:
     '''Create shared memory block for multiprocessing.
     '''
     data_shape = np.shape(data)
     data_type = data.dtype
     d_size = np.dtype(data_type).itemsize * np.prod(data_shape)
-    print(f"data_shape: {data_shape}, data_type: {data_type}, d_size: {d_size}")
-    shm = shared_memory.SharedMemory(create=True, size=d_size, name=shared_name)
+    print(f'data_shape: {data_shape},data_type: {data_type},d_size: {d_size}')
+    shm = shared_memory.SharedMemory(create=True,size=d_size,name=shared_name)
     dst = np.ndarray(shape=data_shape, dtype=data_type, buffer=shm.buf)
     dst[:] = data[:]
     return shm
@@ -54,7 +56,7 @@ def release_shared(name:str) -> None:
     shm.close()
     shm.unlink()
 
-def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, obsinfo, min_max_lat_lon = None, stats_shm_name=None):
+def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, obsinfo, min_max=None, stats_shm_name=None):
     '''Filter subset of observations.
     Keyword arguments:
     shm_name -- Observation data, shared memory region visible to all processes
@@ -64,6 +66,8 @@ def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, ob
     start -- start index
     stop -- stop index
     obsinfo -- tuple containing shared memory size, data type
+    min_max -- prefilter lat/lon range ((min_lat, max_lat), (min_lon, max_lon)
+    stats_shm_name -- search statistics shared mem name (optional)
     '''
     shm = shared_memory.SharedMemory(name=shm_name)
     mask_shm = shared_memory.SharedMemory(name=mask_shm_name)
@@ -74,7 +78,8 @@ def lam_domain_filter_mp(shm_name, mask_shm_name, kd2d, bdy_msk, start, stop, ob
         stats = np.ndarray(obsinfo.shape[0], dtype=int, buffer=stats_shm.buf)
     else:
         stats = np.ndarray(stop-start+1, dtype=int)
-    mask[start:stop], stats[start:stop] = gf.lam_domain_filter(kd2d, bdy_msk, obs_pts[start:stop], min_max_lat_lon)
+    mask[start:stop], stats[start:stop] = \
+            gf.lam_domain_filter(kd2d, bdy_msk, obs_pts[start:stop], min_max)
 
 def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
     '''Construct KDTree, load observation points, and save mask to data
@@ -147,6 +152,7 @@ def main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
                             start+chunk_size, obsinfo, min_max, stats_share_name)
 
     mask_out = np.ndarray(np.shape(mask), dtype=type(mask[0]), buffer=mask_shm.buf)
+
     ncompares = np.ndarray(np.shape(stats), dtype=type(stats[0]), buffer=stats_shm.buf)
     t7 = time.time()
     t_obs_filter = t7-t5

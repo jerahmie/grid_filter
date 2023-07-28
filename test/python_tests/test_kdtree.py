@@ -2,7 +2,8 @@
 import os
 import unittest
 from random import uniform
-from grid_filter import * 
+from grid_filter import KDTree2D, Node2D, MPASGrid, \
+                        sort_points, median_point_id, build_tree
 
 def dist2(p1, p2):
     """return 2D Euclidean squared distance between two points"""
@@ -75,14 +76,16 @@ class TestKDTree2D(unittest.TestCase):
         nroot = Node2D((1.0, 2.0, 0))
         self.assertTrue(isinstance(nroot, Node2D))
         self.assertEqual('((1.0, 2.0, 0))', str(nroot))
-        self.assertEqual('(Node2D, \'(1.0, 2.0, 0)\', left=None, right=None)', repr(nroot))
+        self.assertEqual('(Node2D, \'(1.0, 2.0, 0)\', left=None, right=None)', \
+                repr(nroot))
 
     #@unittest.skip
     def test_build_tree(self):
         """Test the construction of a kd tree."""
         pts = [(0.0, 1.1, 0), (1.1, -1.0, 1), (2.2, -1.1, 2), (3.3, 4.4, 3)]
         a = build_tree(pts)
-        self.assertEqual("(Node2D, '(1.1, -1.0, 1)', left=((0.0, 1.1, 0)), right=((2.2, -1.1, 2)))", repr(a))
+        self.assertEqual("(Node2D, '(1.1, -1.0, 1)', left=((0.0, 1.1, 0)), "+ \
+                "right=((2.2, -1.1, 2)))", repr(a))
 
     #@unittest.skip
     def test_build_big_tree(self):
@@ -92,7 +95,10 @@ class TestKDTree2D(unittest.TestCase):
         self.assertEqual(len(pts), 441)
         ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
         kdtree = build_tree(ptsi)
-        self.assertEqual(repr(kdtree), '(Node2D, \'(0.7671914100646973, 4.665992736816406, 302)\', left=((0.7320756316184998, 4.751560211181641, 154)), right=((0.8601444363594055, 4.75323486328125, 225)))')
+        self.assertEqual(repr(kdtree), \
+                "(Node2D, '(0.7671914100646973, 4.665992736816406, 302)', " + \
+                "left=((0.7320756316184998, 4.751560211181641, 154)), " + \
+                "right=((0.8601444363594055, 4.75323486328125, 225)))")
 
     #@unittest.skip
     def test_KDTree2D(self):
@@ -158,7 +164,8 @@ class TestKDTree2D(unittest.TestCase):
         nearest_pt = [1, 1, 1, 1, 1, 0, 0, 1, 0, 0]
         for i,qtest in enumerate(qpts):
             nearest_kd = kd2_2_right.nearest_cell(qtest)
-            print(f'i: {i}, nearest_kd: {nearest_kd}, nearest_bf: {nearest_pt[i]}, qtest: {qtest}')
+            print(f'i: {i}, nearest_kd: {nearest_kd}, nearest_bf: {nearest_pt[i]}, \
+                    qtest: {qtest}')
             self.assertEqual(nearest_kd, nearest_pt[i])
 
         # Tree with root and left element
@@ -169,7 +176,6 @@ class TestKDTree2D(unittest.TestCase):
         for i,qtest in enumerate(qpts):
             self.assertEqual(kd2_2_left.nearest_cell(qtest), nearest_pt[i])
         # distacncees kd2_2lr
-        #[(1.8338771714919206, 34.94655844541884, 0.7159489773353201), (21.20121345668877, 74.21670702368372, 6.130451318202207), (5.6709789907056924, 43.74940994502449, 8.542019770312796), (21.70721343550944, 70.09093138899738, 7.042038699106828), (16.80537090658436, 42.803478487334125, 9.519555130556194), (17.16063486184893, 2.1442912893718535, 38.83344768066127), (31.399851517934948, 1.5227133693448789, 57.655320774170164), (38.76956644810987, 36.377090545420124, 37.994913538972206), (9.016619351525573, 2.9659799539363525, 24.89384942811568), (8.40427186710033, 5.136122394856561, 19.690413265048576)]
         nearest_pt = [2, 2, 0, 2, 2, 1, 1, 1, 1, 1]
         kd2_2lr = KDTree2D([(0.5, 2.2, 0), (-1.1, -2.2, 1), (2.3, 3.4, 2)])
         for i,qtest in enumerate(qpts):
@@ -216,11 +222,13 @@ class TestKDTree2D(unittest.TestCase):
         self.assertEqual(kd2_8pt.max_depth, 3)
         i = 4
         idx_nearest= kd2_8pt.nearest_cell(qpts[i])
-        print(f'qpt: {qpts[4]}, nearest cell: {tree_pts[idx_nearest]}, {tree_pts[dmi[i]]}')
+        print(f'qpt: {qpts[4]}, nearest cell: {tree_pts[idx_nearest]}, \
+                {tree_pts[dmi[i]]}')
         self.assertEqual(tree_pts[idx_nearest][2], dmi[i])
         for i,qpt in enumerate(qpts):
             idx_nearest= kd2_8pt.nearest_cell(qpt)
-            print(f'qpt: {qpt}, nearest cell: {tree_pts[idx_nearest]}, {tree_pts[dmi[i]]}')
+            print(f'qpt: {qpt}, nearest cell: {tree_pts[idx_nearest]}, \
+                    {tree_pts[dmi[i]]}')
             self.assertEqual(tree_pts[idx_nearest][2], dmi[i])
 
     #@unittest.skip

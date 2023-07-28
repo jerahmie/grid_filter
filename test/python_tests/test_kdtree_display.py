@@ -1,7 +1,7 @@
 """Unittests with 2D KD tree on MPAS regional data."""
 import os
 import unittest
-from grid_filter import MPASGrid, KDTree2D, KDTreeDisplay
+from grid_filter import MPASGrid, KDTree2D
 
 class TestKDTreeDisplay(unittest.TestCase):
     """Test cases for compiling statistics about KD Tree Display"""

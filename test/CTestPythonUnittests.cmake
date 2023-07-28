@@ -3,7 +3,8 @@
 message("Executing python tests.")
 set(pytest_list test_mytest.py test_mpasgrid.py test_maponly.py
     test_kdtree.py test_graph_data.py test_grid_perimeter.py 
-    test_kdtree_regional.py)
+    test_kdtree_regional.py test_kdtree_validation.py
+    test_obs_data.py)
 
 foreach(pt IN LISTS pytest_list)
   set(pytest_file ${CMAKE_CURRENT_SOURCE_DIR}/python_tests/${pt})
