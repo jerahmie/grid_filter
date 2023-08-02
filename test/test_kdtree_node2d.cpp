@@ -1,7 +1,9 @@
 #include <iostream>
 #include <algorithm>
+#include <memory>
 #include <catch2/catch_test_macros.hpp>
 #include "kdtree_node.h"
+
 
 std::vector<nodeData> node_vec3{{0.12, 3.45, 2},
                                 {0.24, 6.8, 1},
@@ -28,7 +30,6 @@ std::vector<nodeData> node_vec20{{0.56, 1.71, 0},
                                  {0.5, 1.05, 18},
                                  {0.59, 1.77, 19}};
 
-
 TEST_CASE("TEST Catch2 Setup", "[test_kdtree_node]") {
   // Test the unit testing environment.  (This should always pass.)
   CHECK(42 == 42);
@@ -44,13 +45,13 @@ TEST_CASE("CREATE Test Node Data", "[test_kdtree_node]") {
 
 TEST_CASE("Create KDTree node.", "[test_kdtree_node]") {
   // Create a 2D KDTree leaf node containing sample data.
-  const nodeData nd{0.12, 3.45, 1};
-  KDTreeNode2D kd2 {NULL, NULL, nd};
+  std::shared_ptr<nodeData> nds = std::make_shared<nodeData>(nodeData {0.12, 3.45, 1});
+  KDTreeNode2D kd2 {NULL, NULL, nds};
   REQUIRE(kd2.getLeft() == NULL);
   REQUIRE(kd2.getRight() == NULL);
-  REQUIRE(kd2.getData().cell_index == 1); 
-  REQUIRE(kd2.getData().lat == 0.12);
-  REQUIRE(kd2.getData().lon == 3.45);
+  REQUIRE((*kd2.getData()).cell_index == 1); 
+  REQUIRE((*kd2.getData()).lat == 0.12);
+  REQUIRE((*kd2.getData()).lon == 3.45);
 }
 
 TEST_CASE("Split vector by given dimension.", "[test_kdtree_node]") {
@@ -93,6 +94,7 @@ TEST_CASE("Test sorting list of node data.", "[test_kdtree_node]") {
     REQUIRE((*iter2).lat <= (*next_item).lat);
   }
 }
+
 TEST_CASE("Test node compare of nodes via == operator", "[test_kdtree_node]") {
   const nodeData test_node1{0.35, 4.66, 0};
   const nodeData test_node2{0.35, 4.66, 0};

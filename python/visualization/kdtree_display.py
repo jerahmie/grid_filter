@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """Print the KD-tree 
 """
-import os
-from typing import List, Tuple
+from typing import List
 from grid_filter import KDTree2D
 
 class KDTreeDisplay():

@@ -13,7 +13,8 @@ def dist2d(p1: Tuple[float, float], p2: Tuple[float, float]) -> float:
     """Calculate the 2D distance between two points"""
     return sqrt((p2[0] - p1[0])**2 + (p2[1]-p1[1])**2)
 
-def nearest_bf(pt: Tuple[float, float], grid_pts: List[Tuple[float, float, int]]) -> Tuple[float, float, int]:
+def nearest_bf(pt: Tuple[float, float],
+               grid_pts: List[Tuple[float, float, int]]) -> Tuple[float, float, int]:
     """Brute force calculation of nearest point in grid"""
 
     def dist2d_pt(grid_pt): 
@@ -67,14 +68,17 @@ class TestKDTree2DStats(unittest.TestCase):
             cell_kd2 = self.kd2.nearest_cell(qpt)
             cell_bf = nearest_bf(qpt, self.ptsi)[2]
             if cell_kd2 != cell_bf:
-                cell_lat = np.array([self.ptsi[i][0] for i in range(len(self.ptsi))], dtype=float)
-                cell_lon = np.array([self.ptsi[i][1] for i in range(len(self.ptsi))], dtype=float)
+                cell_lat = np.array([self.ptsi[i][0] for i in range(len(self.ptsi))],
+                                    dtype=float)
+                cell_lon = np.array([self.ptsi[i][1] for i in range(len(self.ptsi))],
+                                    dtype=float)
                 ax = gf.plot_mpas_grid(cell_lat, cell_lon)
                 gf.overplot_mpas_grid(ax, np.array([qpt[0]]), np.array([qpt[1]]))
                 gf.overplot_mpas_grid(ax, np.array([self.ptsi[cell_kd2][0]]), 
                                       np.array([self.ptsi[cell_kd2][1]]), color='blue')
                 gf.overplot_mpas_grid(ax, np.array([self.ptsi[cell_bf][0]]), 
-                                      np.array([self.ptsi[cell_bf][1]]), color='magenta')
+                                      np.array([self.ptsi[cell_bf][1]]),
+                                      color='magenta')
 
                 plt.savefig('failed_query.png')
             self.assertEqual(cell_kd2, cell_bf)

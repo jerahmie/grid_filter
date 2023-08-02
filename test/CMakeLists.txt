@@ -11,16 +11,19 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(unit_tests
+add_executable(unittests
   test_kdtree_node2d.cpp
   test_kdtree.cpp)  # add additional cpp files to test
 
-target_link_libraries(unit_tests PRIVATE
+target_link_libraries(unittests PRIVATE
   kdtree Catch2::Catch2WithMain)
+
+target_compile_options(unittests PRIVATE
+	$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:-Wall>)
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(Catch)
-catch_discover_tests(unit_tests)
+catch_discover_tests(unittests)
 
 
 # Python unit tests

@@ -1,5 +1,11 @@
-#ifndef _KDTREE_NODE_H_
-#define _KDTREE_NODE_H_
+/*
+ * File - kdtree_node.h
+ * 2D KDTreeNode definitions
+ */
+
+#pragma once
+
+#include <memory>
 
 struct nodeData {
   double lat;
@@ -18,17 +24,16 @@ bool compare_node_lon(nodeData n1, nodeData n2);
 
 class KDTreeNode2D {
   private:
-    KDTreeNode2D* left;
-    KDTreeNode2D* right;
-    nodeData node_data;
+    std::shared_ptr<KDTreeNode2D> node_left;
+    std::shared_ptr<KDTreeNode2D> node_right;
+    std::shared_ptr<nodeData> node_data;
   public:
-    KDTreeNode2D(KDTreeNode2D*, KDTreeNode2D*,nodeData);
-    KDTreeNode2D* getLeft(void);
-    KDTreeNode2D* getRight(void);
-    nodeData getData(void);
+    KDTreeNode2D(std::shared_ptr<KDTreeNode2D>, std::shared_ptr<KDTreeNode2D>,std::shared_ptr<nodeData>);
+    std::shared_ptr<KDTreeNode2D> getLeft(void);
+    std::shared_ptr<KDTreeNode2D> getRight(void);
+    std::shared_ptr<nodeData> getData(void);
     friend std::ostream& operator<<(std::ostream& os, const KDTreeNode2D& kd2);
 
     //~KDTreeNode2D();
 };
 
-#endif /* _KDTREE_NODE_H_ */

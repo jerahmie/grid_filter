@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <tuple>
+#include <memory>
 #include <catch2/catch_test_macros.hpp>
 #include "kdtree_node.h"
 #include "kdtree.h"
@@ -16,6 +17,11 @@
                                       {0.07, 0.39, 7},
                                       {0.03, 0.84, 8},
                                       {0.81, 0.06, 9} };
+
+  std::vector<std::unique_ptr<nodeData>> node_data_up; 
+
+
+ 
 TEST_CASE("TEST Catch2 Setup", "[test_kdtree]") {
   CHECK(42 == 42);
 }

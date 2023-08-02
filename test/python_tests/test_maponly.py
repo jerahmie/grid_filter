@@ -55,7 +55,7 @@ class TestGraphicsPackages(unittest.TestCase):
         see: shorturl.at/mpsHN
         """
         # create figure and set size
-        fig = plt.figure(figsize=(8, 8))
+        plt.figure(figsize=(8, 8))
 
         # set global axes with orthographic projection
         proj = ccrs.Orthographic(central_longitude=270, central_latitude=45)

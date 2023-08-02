@@ -1,6 +1,7 @@
 """Unit testing for MPASGrid Class"""
 import os
 import unittest
+import numpy as np
 from grid_filter import MPASGrid
 
 class TestMPASGrid(unittest.TestCase):
@@ -36,6 +37,15 @@ class TestMPASGrid(unittest.TestCase):
         self.assertEqual(len(pts[0]), 2)
         self.assertEqual(str(type(pts[0][0])), '<class \'float\'>')
         self.assertEqual(str(type(pts[0][1])), '<class \'float\'>')
+
+    def test_MPASGrid_bdy_mask_cell(self):
+        """Test the extraction of MPAS grid boundary mask cells"""
+        bdy_cells = self.mpg.bdy_mask_cells
+        self.assertEqual(str(type(bdy_cells)), '<class \'list\'>')
+        self.assertEqual(str(type(bdy_cells[0])), '<class \'int\'>')
+        self.assertTrue(min(bdy_cells) >= 0)
+        self.assertTrue(max(bdy_cells) <= 7)
+        self.assertEqual(np.shape(np.array(bdy_cells)), (441,))
 
     def tearDown(self):
         pass

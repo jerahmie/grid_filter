@@ -3,7 +3,6 @@
 Plot the MPAS grid.
 """
 import numpy as np
-from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
@@ -59,7 +58,8 @@ def plot_mpas_grid(lats: np.ndarray, lons: np.ndarray) -> plt.axes:
 
     return ax
 
-def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, lons: np.ndarray, color="red") -> None:
+def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, \
+                       lons: np.ndarray, color="red") -> None:
     """Plot points over an existing matplotlib axes.
     
     Keyword arguments:
