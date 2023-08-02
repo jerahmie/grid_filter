@@ -2,10 +2,9 @@
 
 Python module to extract the perimeter cells of a MPAS regional grid.
 
-![](doc/pt_exterior1.png) | ![](doc/pt_interior2.png)
-
-Regional Grid | Regional Grid Perimeter Cells
+KDTree search|
 :---------:|:-----------:
+![](doc/pt_exterior1.png) | ![](doc/pt_interior2.png)
 
 # Required Python modules
 - numpy
@@ -43,5 +42,7 @@ Example:
 Plot Filtered Observations:
 
 ```$ examples/plot_obs.py satwind_obs_2019050100.h5 --mask-file lam_domain.h5 --output lam_domain.png```
+
+No Filter   Filter
 
 ![](doc/plot_obs_nomask.png) | ![](doc/plot_obs_masked.png)
