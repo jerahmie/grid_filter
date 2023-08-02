@@ -2,9 +2,10 @@
 
 Python module to extract the perimeter cells of a MPAS regional grid.
 
+![](doc/pt_exterior2.png) | ![](doc/pt_interior2.png)
+
 Regional Grid | Regional Grid Perimeter Cells
 :---------:|:-----------:
-![](doc/pt_exterior1.png) | ![](doc/pt_interior2.png)
 
 # Required Python modules
 - numpy
@@ -36,6 +37,8 @@ LAM Domain Filter an observation file against a MPAS regional domain.
 ```$ filter_obs.py <static_file> <obs_file lam_mask_file> ```
 
 Example:
+
+![](doc/plot_obs_nomask.png) | ![](doc/plot_obs_masked.png)
 
 ```$ filter_obs.py conus_15km.static.nc satwind_obs_2019050100.h5 lam_domain.h5```
 
