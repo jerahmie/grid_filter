@@ -2,7 +2,7 @@
 
 Python module to extract the perimeter cells of a MPAS regional grid.
 
-![](doc/pt_exterior2.png) | ![](doc/pt_interior2.png)
+![](doc/pt_exterior1.png) | ![](doc/pt_interior2.png)
 
 Regional Grid | Regional Grid Perimeter Cells
 :---------:|:-----------:
