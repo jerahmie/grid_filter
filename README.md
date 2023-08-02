@@ -33,7 +33,7 @@ An example of using the grid_perimeter module to generate the above plots:
 
 LAM Domain Filter an observation file against a MPAS regional domain.
 
-```$ filter_obs.py static_file obs_file lam_mask_file ```
+```$ filter_obs.py <static_file> <obs_file lam_mask_file> ```
 
 Example:
 
