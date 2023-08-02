@@ -1,5 +1,6 @@
 /*
- *
+ * File - kdtree_node.h
+ * 2D KDTreeNode definitions
  */
 
 #pragma once
