@@ -36,7 +36,6 @@ LAM Domain Filter an observation file against a MPAS regional domain.
 ```$ filter_obs.py static_file obs_file lam_mask_file ```
 
 Example:
-```$ filter_obs.py conus_15km.static.nc satwind_obs_2019050100.h5 lam_domain.h5```
 
 ```$ filter_obs.py conus_15km.static.nc satwind_obs_2019050100.h5 lam_domain.h5```
 
