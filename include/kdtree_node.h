@@ -7,6 +7,7 @@
 
 #include <memory>
 
+// Data within a given KDTreenode: latitude, longitude and MPAS-grid cell index.
 struct nodeData {
   double lat;
   double lon;
@@ -22,6 +23,8 @@ bool compare_node_lat(nodeData n1, nodeData n2);
 // compare node data along dimension
 bool compare_node_lon(nodeData n1, nodeData n2);
 
+
+// Node within 2D KDTree.
 class KDTreeNode2D {
   private:
     std::shared_ptr<KDTreeNode2D> node_left;
@@ -33,7 +36,6 @@ class KDTreeNode2D {
     std::shared_ptr<KDTreeNode2D> getRight(void);
     std::shared_ptr<nodeData> getData(void);
     friend std::ostream& operator<<(std::ostream& os, const KDTreeNode2D& kd2);
-
-    //~KDTreeNode2D();
+  
 };
 

@@ -63,7 +63,28 @@ TEST_CASE("Test small kdtree construction.", "[test_kdtree]") {
   int med_id = std::get<1>(median_point_id(node_data10));
   std::cout << "med_id: " << med_id << '\n';
   KDTreeNode2D kd2d_root {NULL, NULL, std::make_shared<nodeData>(node_data10[med_id])};
+  std::unique_ptr<KDTreeNode2D> kd2d_p = std::make_unique<KDTreeNode2D>(kd2d_root);
   REQUIRE(kd2d_root.getLeft() == NULL);
   REQUIRE(kd2d_root.getRight() == NULL);
+  REQUIRE(kd2d_p->getData()->cell_index == 5);
+}
+
+TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
+  // tree with single point
+  std::vector<nodeData> pts0 { {0.0, 1.1, 0} };
+  auto pts0_p = std::make_shared<std::vector<nodeData>>(pts0);
+  KDTreeNode2D kd2d_0 = build_tree(pts0_p, 0); 
+  REQUIRE(kd2d_0.getLeft() == NULL);
+  REQUIRE(kd2d_0.getRight() == NULL);
+  REQUIRE((*kd2d_0.getData()).cell_index == 0);
+
+  std::vector<nodeData> pts { {0.0, 1.1, 0}, {1.1, -1.0, 1}, {2.2, -1.2, 2}, {3.3, 4.4, 3}};
+  auto pts_p = std::make_shared<std::vector<nodeData>>(pts); 
+  REQUIRE(pts.size() == 4);
+  std::unique_ptr<KDTreeNode2D> kd2d = std::make_unique<KDTreeNode2D>(build_tree(pts_p, 0));
+  REQUIRE(kd2d->getLeft() == NULL);
+  REQUIRE(kd2d->getRight() == NULL);
+  REQUIRE(kd2d->getData()->cell_index == 0);
 
 }
+

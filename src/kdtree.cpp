@@ -2,7 +2,9 @@
 #include <vector>
 #include <tuple>
 #include "kdtree_node.h"
+#include "kdtree_util.h"
 #include "kdtree.h"
+
 
 // Return the median data and index of a list
 std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd) {
@@ -11,4 +13,11 @@ std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd) {
   return std::tuple<nodeData, int>(median_node);
 }
 
+// Build a KDTree from nodeData vector
+KDTreeNode2D build_tree(std::shared_ptr<std::vector<nodeData>> nd, int depth) {
+  nodeData ndr  {0.0, 0.0, 0};
 
+  KDTreeNode2D tree_root = {NULL, NULL, std::make_shared<nodeData>(ndr)} ;
+
+  return tree_root;
+};

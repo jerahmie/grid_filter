@@ -25,14 +25,12 @@ class TestKDTree2D(unittest.TestCase):
         pts = mpg.cell_points()
         self.ptsi = [(pts[i][0], pts[i][1], i) for i in range(len(pts))]
 
-    #@unittest.skip
     def test_kdtree2d(self):
         """Test create kdtree"""
         p = [(1.1, 2.2, 0), (3.3, 4.4, 1)]
         a = KDTree2D(p)
         self.assertTrue(isinstance(a, KDTree2D))
 
-    #@unittest.skip
     def test_sort_points(self):
         """Test ability to sort points over x- or y- points."""
         spx = [(-6.6, 7.7, 3), (-1.1, 2.2, 2), (1.1, -2.2, 0), (3.3, 4.4, 1)]
@@ -52,7 +50,6 @@ class TestKDTree2D(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             sort_points(self.p,2)
 
-    #@unittest.skip
     def test_median_point_id(self):
         """Test find media point from sorted list."""
         self.assertEqual(((-1.1, 2.2, 2), 1), median_point_id(sort_points(self.p, 0)))
@@ -63,14 +60,12 @@ class TestKDTree2D(unittest.TestCase):
         self.assertEqual(((-1.1, 2.2, 2), 0), median_point_id([(-1.1, 2.2, 2)]))
         self.assertEqual(((0, 0, 0), 0), median_point_id([(0, 0, 0)]))
    
-    #@unittest.skip
     def test_median_point_medium(self):
         """Test median point on medium sized data set."""
         mpg = MPASGrid(self.grid_file)
         pts = mpg.cell_points()
         self.assertEqual(len(pts), 441)
 
-    #@unittest.skip
     def test_kdtree2d_node(self):
         """Test the constuction of kdtree node"""
         nroot = Node2D((1.0, 2.0, 0))
@@ -79,7 +74,6 @@ class TestKDTree2D(unittest.TestCase):
         self.assertEqual('(Node2D, \'(1.0, 2.0, 0)\', left=None, right=None)', \
                 repr(nroot))
 
-    #@unittest.skip
     def test_build_tree(self):
         """Test the construction of a kd tree."""
         pts = [(0.0, 1.1, 0), (1.1, -1.0, 1), (2.2, -1.1, 2), (3.3, 4.4, 3)]
@@ -87,7 +81,6 @@ class TestKDTree2D(unittest.TestCase):
         self.assertEqual("(Node2D, '(1.1, -1.0, 1)', left=((0.0, 1.1, 0)), "+ \
                 "right=((2.2, -1.1, 2)))", repr(a))
 
-    #@unittest.skip
     def test_build_big_tree(self):
         """Test building a meaningful tree from data."""
         mpg = MPASGrid(self.grid_file)
