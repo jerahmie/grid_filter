@@ -15,9 +15,13 @@ std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd) {
 
 // Build a KDTree from nodeData vector
 KDTreeNode2D build_tree(std::shared_ptr<std::vector<nodeData>> nd, int depth) {
-  nodeData ndr  {0.0, 0.0, 0};
+  if (nd->size() == 1) {
+    return KDTreeNode2D(NULL, NULL, std::make_shared<nodeData>((*nd)[0]));
+  } else {
 
+  nodeData ndr  {0.0, 0.0, 0};
   KDTreeNode2D tree_root = {NULL, NULL, std::make_shared<nodeData>(ndr)} ;
 
   return tree_root;
+  }
 };

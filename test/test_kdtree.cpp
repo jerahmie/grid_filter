@@ -72,11 +72,16 @@ TEST_CASE("Test small kdtree construction.", "[test_kdtree]") {
 TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
   // tree with single point
   std::vector<nodeData> pts0 { {0.0, 1.1, 0} };
+  std::vector<nodeData> pts1 { {1.2, 3.4, 1} };
   auto pts0_p = std::make_shared<std::vector<nodeData>>(pts0);
   KDTreeNode2D kd2d_0 = build_tree(pts0_p, 0); 
   REQUIRE(kd2d_0.getLeft() == NULL);
   REQUIRE(kd2d_0.getRight() == NULL);
   REQUIRE((*kd2d_0.getData()).cell_index == 0);
+  KDTreeNode2D kd2d_1 = build_tree(std::make_shared<std::vector<nodeData>>(pts1), 0);
+  REQUIRE(kd2d_1.getLeft() == NULL);
+  REQUIRE(kd2d_1.getRight() == NULL);
+  REQUIRE((*kd2d_1.getData()).cell_index == 1);
 
   std::vector<nodeData> pts { {0.0, 1.1, 0}, {1.1, -1.0, 1}, {2.2, -1.2, 2}, {3.3, 4.4, 3}};
   auto pts_p = std::make_shared<std::vector<nodeData>>(pts); 
@@ -85,6 +90,13 @@ TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
   REQUIRE(kd2d->getLeft() == NULL);
   REQUIRE(kd2d->getRight() == NULL);
   REQUIRE(kd2d->getData()->cell_index == 0);
+   
+}
+
+TEST_CASE("Test build_tree.", "[test_kdtree]") {
+  std::vector<nodeData> pts { {0.0, 1.1, 0}, {1.1, -1.0, 1}, {2.2, -1.2, 2}, {3.3, 4.4, 3}};
+  std::vector<nodeData> pts1 { {0.0, 1.1, 0} };
+  REQUIRE(137 == 137);
 
 }
 
