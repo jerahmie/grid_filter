@@ -8,6 +8,6 @@ include_directories(${HDF5_INCLUDE_DIRS})
 add_executable(myh5dump myh5dump.cpp)
 target_link_libraries(myh5dump ${HDF5_CXX_LIBRARIES})
 
-add_library(kdtree STATIC kdtree_node.cpp kdtree_util.cpp kdtree.cpp)
+add_library(kdtree STATIC kdtree_node.cpp build_tree.cpp kdtree_util.cpp kdtree.cpp)
 
 target_include_directories(kdtree PUBLIC .)

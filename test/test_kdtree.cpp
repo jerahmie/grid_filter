@@ -4,6 +4,8 @@
 #include <memory>
 #include <catch2/catch_test_macros.hpp>
 #include "kdtree_node.h"
+#include "kdtree_util.h"
+#include "build_tree.h"
 #include "kdtree.h"
 
 
@@ -71,17 +73,17 @@ TEST_CASE("Test small kdtree construction.", "[test_kdtree]") {
 
 TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
   // tree with single point
- // std::vector<nodeData> pts0 { {0.0, 1.1, 0} };
- // std::vector<nodeData> pts1 { {1.2, 3.4, 1} };
+  std::vector<nodeData> pts0 { {0.0, 1.1, 0} };
+  std::vector<nodeData> pts1 { {1.2, 3.4, 1} };
   //auto pts0_p = std::make_shared<std::vector<nodeData>>(pts0);
-//  KDTreeNode2D kd2d_0 = build_tree(pts0, pts0.begin(), pts0.end(), 0); 
-//  REQUIRE(kd2d_0.getLeft() == NULL);
-//  REQUIRE(kd2d_0.getRight() == NULL);
-//  REQUIRE((*kd2d_0.getData()).cell_index == 0);
-//  KDTreeNode2D kd2d_1 = build_tree(pts1, pts1.begin(), pts1.end(), 0);
-//  REQUIRE(kd2d_1.getLeft() == NULL);
-//  REQUIRE(kd2d_1.getRight() == NULL);
-//  REQUIRE((*kd2d_1.getData()).cell_index == 1);
+  KDTreeNode2D kd2d_0 = build_tree(pts0, pts0.begin(), pts0.end(), 0); 
+  REQUIRE(kd2d_0.getLeft() == NULL);
+  REQUIRE(kd2d_0.getRight() == NULL);
+  REQUIRE((*kd2d_0.getData()).cell_index == 0);
+  KDTreeNode2D kd2d_1 = build_tree(pts1, pts1.begin(), pts1.end(), 0);
+  REQUIRE(kd2d_1.getLeft() == NULL);
+  REQUIRE(kd2d_1.getRight() == NULL);
+  REQUIRE((*kd2d_1.getData()).cell_index == 1);
 
   std::vector<nodeData> pts { {0.0, 1.1, 0}, {1.1, -1.0, 1}, {2.2, -1.2, 2}, {3.3, 4.4, 3}};
   auto pts_p = std::make_shared<std::vector<nodeData>>(pts); 
@@ -96,18 +98,3 @@ TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
   REQUIRE(kd2d->getRight()->getRight() == NULL);
   REQUIRE(kd2d->getRight()->getLeft() == NULL);
 }
-
-TEST_CASE("Test build_tree.", "[test_kdtree]") {
-  std::vector<nodeData> pts1 { {0.0, 1.1, 0} };
-  KDTreeNode2D kd2d_pts1 = build_tree(pts1, pts1.begin(), pts1.end(), 0); 
-  REQUIRE(kd2d_pts1.getLeft() == NULL);
-  REQUIRE(kd2d_pts1.getRight() == NULL);
-  REQUIRE((*kd2d_pts1.getData()).cell_index == 0);
-
-  std::vector<nodeData> pts4 { {0.0, 1.1, 0}, {1.1, -1.0, 1}, {2.2, -1.2, 2}, {3.3, 4.4, 3}};
-  KDTreeNode2D kd2d_pts4 = build_tree(pts4, pts4.begin(), pts4.end(), 0); 
-  REQUIRE(kd2d_pts4.getLeft() == NULL);
-  REQUIRE(kd2d_pts4.getRight() == NULL);
-  REQUIRE((*kd2d_pts4.getData()).cell_index == 2);
-}
-

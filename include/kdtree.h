@@ -5,16 +5,17 @@
 #pragma once
 
 #include <memory>
+#include <tuple>
 #include "kdtree_node.h"
-#include "tuple"
+#include "build_tree.h"
 
-std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd);
+//std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd);
 
 //KDTreeNode2D build_tree(std::vector<nodeData>&, int);
 
-KDTreeNode2D build_tree(std::vector<nodeData>&,
-                        std::vector<nodeData>::iterator,
-                        std::vector<nodeData>::iterator, int);
+//KDTreeNode2D build_tree(std::vector<nodeData>&,
+//                        std::vector<nodeData>::iterator,
+//                        std::vector<nodeData>::iterator, int);
 
 class KDTree {
   private:
