@@ -10,7 +10,11 @@
 
 std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd);
 
-KDTreeNode2D build_tree(std::shared_ptr<std::vector<nodeData>>, int);
+//KDTreeNode2D build_tree(std::vector<nodeData>&, int);
+
+KDTreeNode2D build_tree(std::vector<nodeData>&,
+                        std::vector<nodeData>::iterator,
+                        std::vector<nodeData>::iterator, int);
 
 class KDTree {
   private:
@@ -20,5 +24,7 @@ class KDTree {
     KDTree(std::unique_ptr<nodeData> nd) : nd(std::move(nd)){}
     ~KDTree()=default;
     friend std::tuple<nodeData, int> median_point_id(const std::vector<nodeData>);
-    friend KDTreeNode2D build_tree(std::shared_ptr<std::vector<nodeData>> , int);
+    friend KDTreeNode2D build_tree(std::vector<nodeData>&,
+                                   std::vector<nodeData>::iterator,
+                                   std::vector<nodeData>::iterator, int);
 };

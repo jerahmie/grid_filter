@@ -31,7 +31,9 @@ class KDTreeNode2D {
     std::shared_ptr<KDTreeNode2D> node_right;
     std::shared_ptr<nodeData> node_data;
   public:
-    KDTreeNode2D(std::shared_ptr<KDTreeNode2D>, std::shared_ptr<KDTreeNode2D>,std::shared_ptr<nodeData>);
+    KDTreeNode2D() = default;
+    //KDTreeNode2D(std::shared_ptr<KDTreeNode2D>, std::shared_ptr<KDTreeNode2D>,std::shared_ptr<nodeData>);
+    KDTreeNode2D(std::shared_ptr<KDTreeNode2D>, std::shared_ptr<KDTreeNode2D>, std::shared_ptr<nodeData>);
     std::shared_ptr<KDTreeNode2D> getLeft(void);
     std::shared_ptr<KDTreeNode2D> getRight(void);
     std::shared_ptr<nodeData> getData(void);
