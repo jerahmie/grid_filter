@@ -15,10 +15,10 @@ add_executable(unittests
   test_kdtree_node2d.cpp
   test_kdtree.cpp
   test_kdtree_util.cpp
-  test_mpas_grid.cpp)  # add additional cpp files to test
+  test_mpas_file.cpp)  # add additional cpp files to test
 
 target_link_libraries(unittests PRIVATE
-  kdtree Catch2::Catch2WithMain)
+  kdtree Catch2::Catch2WithMain netcdf)
 
 target_compile_options(unittests PRIVATE
 	$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:-Wall>)

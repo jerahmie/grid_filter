@@ -91,4 +91,5 @@ int main(int argc, char* argv[])
     exit(EXIT_FAILURE);
   }
   print_header(filename);
+  
 }
