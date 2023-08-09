@@ -4,6 +4,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "kdtree_node.h"
 #include "kdtree_util.h"
+#include "mpas_file.h"
 
 TEST_CASE("Test catch2 setup.", "[test_kdtree_util]") {
   REQUIRE(42 == 42);

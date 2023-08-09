@@ -23,3 +23,4 @@ std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd) {
   std::tuple<nodeData, int> median_node{nd.at(median_id), median_id};
   return std::tuple<nodeData, int>(median_node);
 }
+

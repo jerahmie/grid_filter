@@ -13,7 +13,7 @@ add_executable(myncdump myncdump.cpp)
 target_link_libraries(myncdump netcdf)
 
 add_library(kdtree STATIC kdtree_node.cpp build_tree.cpp
-                          kdtree_util.cpp mpas_file.cpp
-                          kdtree.cpp)
+                          kdtree_util.cpp mpas_util.cpp 
+                          mpas_file.cpp kdtree.cpp)
 
 target_include_directories(kdtree PUBLIC .)

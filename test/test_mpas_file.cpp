@@ -1,12 +1,12 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <string>
 #include <fstream>
 #include <unistd.h>
 #include <linux/limits.h>
 #include <catch2/catch_test_macros.hpp>
 #include "mpas_file.h"
+#include "mpas_util.h"
 
 // relative location of MPAS Regional Static file.
 #define STATIC_FILE "/../../test/python_tests/Manitowoc.static.nc"
@@ -42,5 +42,4 @@ TEST_CASE("Test read lats and lons.", "[test_load_regional_data]") {
   REQUIRE(ncells == 441);
   std::vector<float> lats_radians = mpf.read_var_1d_float("latCell", ncells);
   std::vector<float> lons_radians = mpf.read_var_1d_float("lonCell", ncells);
-  
 }
