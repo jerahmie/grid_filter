@@ -39,5 +39,4 @@ TEST_CASE("Test merge_lat_lon values.", "[test_mpas_util]") {
    REQUIRE(nd[i].lon == lons[i]);
    REQUIRE(nd[i].cell_index == i+1);
  }
-
 }

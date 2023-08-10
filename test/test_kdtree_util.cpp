@@ -40,3 +40,25 @@ TEST_CASE("Test kdtree_util compare_lon.", "[test_kdtree_util]") {
     lon_prev = pt.lon;
   }
 }
+TEST_CASE("Test median point helper function.", "[test_kdtree_util]") {
+  const std::vector<nodeData> node_data0 { }; // empty
+  const std::vector<nodeData> node_data1 { {0.12, 3.45, 0}};
+  const std::vector<nodeData> node_data2 { {0.12, 3.45, 0},
+                                           {0.24, 6.8, 1} };
+  const std::vector<nodeData> node_data3 { {0.12, 3.45, 0},
+                                           {0.24, 6.8, 1},
+                                           {0.46, 5.3, 2} };
+  const std::vector<nodeData> node_data4 { {0.12, 3.45, 0},
+                                           {0.24, 6.8, 1},
+                                           {0.46, 5.3, 2},
+                                           {0.58, 7.1, 3} };
+  int nd_len = node_data1.size();
+  double half_len_float = nd_len/2.0;
+  int half_len_int = int(half_len_float);
+  std::cout << "<-> " << std::get<1>(median_point_id(node_data1)) << '\n';
+  REQUIRE(std::get<0>(median_point_id(node_data1)) == node_data1[0]);
+  REQUIRE(std::get<1>(median_point_id(node_data1)) == 0);
+  REQUIRE(std::get<1>(median_point_id(node_data2)) == 1);
+  REQUIRE(std::get<1>(median_point_id(node_data3)) == 1);
+  REQUIRE(std::get<1>(median_point_id(node_data4)) == 2);
+}

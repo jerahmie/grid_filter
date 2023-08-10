@@ -77,6 +77,7 @@ class TestKDTree2D(unittest.TestCase):
     def test_build_tree(self):
         """Test the construction of a kd tree."""
         pts = [(0.0, 1.1, 0), (1.1, -1.0, 1), (2.2, -1.1, 2), (3.3, 4.4, 3)]
+        
         a = build_tree(pts)
         self.assertEqual("(Node2D, '(1.1, -1.0, 1)', left=((0.0, 1.1, 0)), "+ \
                 "right=((2.2, -1.1, 2)))", repr(a))

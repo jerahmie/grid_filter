@@ -4,6 +4,7 @@
  */
 
 #include <memory>
+#include <cmath>
 #include "kdtree_node.h"
 #include "kdtree_util.h"
 
@@ -19,7 +20,7 @@ bool compare_lon(nodeData d1, nodeData d2) {
 
 // Return the median data and index of a list
 std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd) {
-  int median_id = int(nd.size()/2);
+  int median_id = floor(nd.size()/2);
   std::tuple<nodeData, int> median_node{nd.at(median_id), median_id};
   return std::tuple<nodeData, int>(median_node);
 }

@@ -2,6 +2,7 @@
 #include <memory>
 #include <tuple>
 #include <algorithm>
+#include <cmath>
 #include "kdtree_node.h"
 #include "kdtree_util.h"
 #include "build_tree.h"
@@ -10,19 +11,19 @@
 KDTreeNode2D build_tree(std::vector<nodeData> &nd,
                         std::vector<nodeData>::iterator data_begin,
                         std::vector<nodeData>::iterator data_end, int depth) {
-
-  if (std::distance(data_begin, data_end) == 1) {
+  std::size_t data_len = std::distance(data_begin, data_end);
+  if (data_len == 1) {
     std::size_t index = std::distance(std::begin(nd), data_begin);
     return KDTreeNode2D(NULL, NULL, std::make_shared<nodeData>(nd[index]));
   } else {
     int dim = depth % KD_DIM;
     std::sort(data_begin, data_end, (dim == 0)? compare_lat : compare_lon);
     depth++;
-    std::size_t data_mid = std::distance(data_begin, data_end)/2;
-    std::size_t mid_id = std::distance(std::begin(nd), data_begin + data_mid);
+    std::size_t data_mid = round(((double)data_len)/2.0);
+    std::size_t mid_id = std::distance(std::begin(nd), data_begin + data_mid - 1);
     std::vector<nodeData>::iterator end_left, begin_right;
-    end_left = data_begin + data_mid;
-    begin_right = data_begin + data_mid + 1;
+    end_left = data_begin + data_mid - 1;
+    begin_right = data_begin + data_mid;
     KDTreeNode2D left_subtree, right_subtree ;
     std::shared_ptr<KDTreeNode2D> left_subtree_p = std::make_shared<KDTreeNode2D>(left_subtree);
     std::shared_ptr<KDTreeNode2D> right_subtree_p = std::make_shared<KDTreeNode2D>(right_subtree);
