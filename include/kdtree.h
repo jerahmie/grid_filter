@@ -12,9 +12,11 @@
 class KDTree {
   private:
     int depth;
-    std::unique_ptr<nodeData> nd;
+    std::vector<nodeData> nd;
+    KDTreeNode2D root;
   public:
-    KDTree(std::unique_ptr<nodeData> nd) : nd(std::move(nd)){}
+    //KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {};
+    KDTree(std::vector<nodeData> nd);
     ~KDTree()=default;
     friend std::tuple<nodeData, int> median_point_id(const std::vector<nodeData>);
     friend KDTreeNode2D build_tree(std::vector<nodeData>&,

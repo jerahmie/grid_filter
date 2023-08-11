@@ -19,7 +19,11 @@
 //                                   std::vector<nodeData>::iterator, int);
 //};
 
-//KDTree::KDTree(std::unique_ptr<nodeData>nd) : nd(std::move(nd)) {
+//KDTree::KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {
+KDTree::KDTree(std::vector<nodeData> nd) : nd (nd) {
+  root = build_tree(nd, nd.begin(), nd.end(), 0);
+  std::cout << "Root: " << root.getData()->cell_index << '\n';
+}
 
 //}
 

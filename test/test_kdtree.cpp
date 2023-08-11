@@ -154,3 +154,21 @@ TEST_CASE("Test kdtree from file.", "[test_kdtree]") {
   REQUIRE(kd2d->getRight()->getData()->cell_index == 226);
 }
 
+TEST_CASE("KDTree Constructor","[test_kdtree]") {
+  // Set MPAS Static File.
+  std::string static_file = "/../../test/python_tests/Manitowoc.static.nc";
+  char curr_dir[PATH_MAX];
+  char* result = getcwd(curr_dir, sizeof(curr_dir));
+  REQUIRE(result != NULL);
+  std::string mpas_loc(curr_dir);
+  mpas_loc += static_file;
+  // Read MPAS Static file data and merge to create lat, lon, cell_index data.
+  MPASFile mpf = MPASFile(mpas_loc);
+  int ncells = mpf.read_dim("nCells");
+  std::vector<float> lats_radians = mpf.read_var_1d_float("latCell", ncells);
+  std::vector<float> lons_radians = mpf.read_var_1d_float("lonCell", ncells);
+  std::vector<nodeData> ptsi = merge_lat_lon(lats_radians, lons_radians);
+  
+  KDTree kd2d = KDTree(ptsi);
+
+}
