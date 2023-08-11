@@ -41,14 +41,11 @@ if __name__ == "__main__":
 
     mpg = MPASGrid(args.filename)
     pts = mpg.cell_points()
-#    ptsi = [(4.4, 1.9, 0), (4.2, -2.0, 1), (-2.3, -2.3, 2),
-#           (-2.1, -2.5, 3), (-1.4, 2.5, 4), (4.6, -4.2, 5)]
-    #       (-4.0, 4.3, 6)]
     ptsi = [(pts[i][0], pts[i][1], i+1) for i in range(len(pts))]
     kd2 = KDTree2D(ptsi)
     bfs = traverse_bfs(kd2.root) 
     with open('bfs.txt','w') as fh:
         for nd in bfs:
-            fh.write(f'{nd.data[0]}, {nd.data[1]}, {nd.data[2]}\n')
+            fh.write(f'{nd.data[0]:.6f}, {nd.data[1]:.6f}, {nd.data[2]}\n')
 
 

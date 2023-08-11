@@ -7,4 +7,4 @@ add_executable(kd2_node kd2_node.cpp)
 target_link_libraries(kd2_node kdtree)
 
 add_executable(kdtree_bfs kdtree_bfs.cpp)
-target_link_libraries(kdtree_bfs kdtree)
+target_link_libraries(kdtree_bfs kdtree netcdf)
