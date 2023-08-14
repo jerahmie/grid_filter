@@ -6,24 +6,12 @@
 #include "kdtree_util.h"
 #include "kdtree.h"
 
-//class KDTree {
-//  private:
-//    int depth;
-//    std::unique_ptr<nodeData> nd;
-//  public:
-//    KDTree(std::unique_ptr<nodeData> nd) : nd(std::move(nd)){}
-//    ~KDTree()=default;
-//    friend std::tuple<nodeData, int> median_point_id(const std::vector<nodeData>);
-//    friend KDTreeNode2D build_tree(std::vector<nodeData>&,
-//                                   std::vector<nodeData>::iterator,
-//                                   std::vector<nodeData>::iterator, int);
-//};
-
 //KDTree::KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {
 KDTree::KDTree(std::vector<nodeData> nd) : nd (nd) {
   root = build_tree(nd, nd.begin(), nd.end(), 0);
-  std::cout << "Root: " << root.getData()->cell_index << '\n';
 }
 
-//}
-
+// Find the nearest cell index given a pair of lat/lon values.
+int KDTree::nearest_cell(float lat, float lon){
+  return 0; 
+}

@@ -6,6 +6,8 @@
 #include "kdtree_util.h"
 #include "mpas_file.h"
 
+#define EPS 0.001
+
 TEST_CASE("Test catch2 setup.", "[test_kdtree_util]") {
   REQUIRE(42 == 42);
 }
@@ -62,3 +64,16 @@ TEST_CASE("Test median point helper function.", "[test_kdtree_util]") {
   REQUIRE(std::get<1>(median_point_id(node_data3)) == 1);
   REQUIRE(std::get<1>(median_point_id(node_data4)) == 2);
 }
+
+TEST_CASE("Test 1d distance function.", "[test_kdtree_util]") {
+  nodeData a {1.0, 1.0, 0};
+  nodeData b {2.0, 6.0, 1};
+  float dist1d_sq_lat = euclidean_1d_distance_sq(a, b, 0);
+  float dist1d_sq_lon = euclidean_1d_distance_sq(a, b, 1);
+  REQUIRE(abs(dist1d_sq_lat - 1.0) < EPS);
+  REQUIRE(abs(dist1d_sq_lon - 25.0) < EPS);
+
+  float dist2d_sq_lat = euclidean_2d_distance_sq(a, b);
+  REQUIRE(abs(dist2d_sq_lat - 26.0) < EPS);
+}
+

@@ -18,6 +18,7 @@ class KDTree {
     //KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {};
     KDTree(std::vector<nodeData> nd);
     ~KDTree()=default;
+    int nearest_cell(float, float);
     friend std::tuple<nodeData, int> median_point_id(const std::vector<nodeData>);
     friend KDTreeNode2D build_tree(std::vector<nodeData>&,
                                    std::vector<nodeData>::iterator,

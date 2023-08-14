@@ -67,8 +67,6 @@ TEST_CASE("Test small kdtree construction.", "[test_kdtree]") {
   REQUIRE(kd2d_p->getData()->cell_index == 5);
 }
 
-
-
 TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
   // tree with single point
   std::vector<nodeData> pts0 { {0.0, 1.1, 0} };
@@ -94,7 +92,6 @@ TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
   REQUIRE(kd2d->getLeft()->getLeft() == NULL);
   REQUIRE(kd2d->getRight()->getData()->cell_index == 2);
   REQUIRE(kd2d->getRight()->getRight()->getData()->cell_index == 3);
-//  REQUIRE(kd2d->getRight()->getLeft() == NULL);
 }
 
 TEST_CASE("Test balanced tree.", "[test_kdtree]") {
@@ -115,7 +112,6 @@ TEST_CASE("Test balanced tree.", "[test_kdtree]") {
   REQUIRE(kd.getRight()->getLeft()->getData()->cell_index == 5);
   REQUIRE(kd.getRight()->getRight()->getData()->cell_index == 0);
 }
-
 
 TEST_CASE("Test unbalanced tree.", "[test_kdtree]") {
   std::vector<nodeData> pts { {4.4, 1.9, 0}, 
@@ -170,5 +166,6 @@ TEST_CASE("KDTree Constructor","[test_kdtree]") {
   std::vector<nodeData> ptsi = merge_lat_lon(lats_radians, lons_radians);
   
   KDTree kd2d = KDTree(ptsi);
+  
 
 }
