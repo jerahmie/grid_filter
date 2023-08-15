@@ -7,18 +7,24 @@
 #include <memory>
 #include <tuple>
 #include "kdtree_node.h"
+#include "kdtree_util.h"
 #include "build_tree.h"
 
 class KDTree {
   private:
     int depth;
+    int compares;
     std::vector<nodeData> nd;
-    KDTreeNode2D root;
+    //std::vector<int> visited_points {};
+  
   public:
     //KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {};
+    KDTreeNode2D root;
+    std::shared_ptr<KDTreeNode2D> rootp;
     KDTree(std::vector<nodeData> nd);
     ~KDTree()=default;
-    int nearest_cell(float, float);
+    std::tuple<double, int> nearest_cell_recursive(point2D&, std::shared_ptr<KDTreeNode2D>, int);
+    int find_nearest_cell_id(double, double); 
     friend std::tuple<nodeData, int> median_point_id(const std::vector<nodeData>);
     friend KDTreeNode2D build_tree(std::vector<nodeData>&,
                                    std::vector<nodeData>::iterator,

@@ -5,13 +5,15 @@
 #include <tuple>
 #include "kdtree_node.h"
 
+struct point2D { double lat; double lon; };
+
 bool compare_lat(nodeData, nodeData);
 
 bool compare_lon(nodeData, nodeData);
 
 std::tuple<nodeData, int> median_point_id(const std::vector<nodeData>&);
 
-float euclidean_1d_distance_sq(nodeData, nodeData, int);
+double euclidean_1d_distance_sq(point2D, point2D, int);
 
-float euclidean_2d_distance_sq(nodeData, nodeData);
+double euclidean_2d_distance_sq(point2D, point2D);
 

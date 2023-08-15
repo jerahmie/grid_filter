@@ -166,6 +166,10 @@ TEST_CASE("KDTree Constructor","[test_kdtree]") {
   std::vector<nodeData> ptsi = merge_lat_lon(lats_radians, lons_radians);
   
   KDTree kd2d = KDTree(ptsi);
-  
-
+  REQUIRE(kd2d.root.getData()->cell_index == 303);
+  float qlat = 0.86;
+  float qlon = 4.76;
+  int np = kd2d.find_nearest_cell_id(qlat, qlon);
+  REQUIRE(np == 225);
 }
+

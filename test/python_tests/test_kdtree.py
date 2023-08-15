@@ -51,7 +51,7 @@ class TestKDTree2D(unittest.TestCase):
             sort_points(self.p,2)
 
     def test_median_point_id(self):
-        """Test find media point from sorted list."""
+        """Test find median point from sorted list."""
         self.assertEqual(((-1.1, 2.2, 2), 1), median_point_id(sort_points(self.p, 0)))
         p5 = self.p
         p5.append((-10.0, -10.0))

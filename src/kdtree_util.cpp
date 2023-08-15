@@ -25,18 +25,18 @@ std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd) {
   return std::tuple<nodeData, int>(median_node);
 }
 
-float euclidean_1d_distance_sq(nodeData n1, nodeData n2, int dim) {
-  float dist_sq = 0.0;
+double euclidean_1d_distance_sq(point2D p1, point2D p2, int dim) {
+  double dist_sq = 0.0;
   if (dim == 0) {
-    dist_sq = pow((n2.lat - n1.lat),2.0);  
+    dist_sq = pow((p2.lat - p1.lat),2.0);  
   } else if (dim == 1) {
-    dist_sq = pow((n2.lon - n1.lon),2.0);
+    dist_sq = pow((p2.lon - p1.lon),2.0);
   } else {
     dist_sq = -1.0; 
   }
   return dist_sq;
 }
 
-float euclidean_2d_distance_sq(nodeData n1, nodeData n2) {
-  return pow((n2.lat-n1.lat),2.0) + pow((n2.lon-n1.lon),2.0);
+double euclidean_2d_distance_sq(point2D p1, point2D p2) {
+  return pow((p2.lat-p1.lat),2.0) + pow((p2.lon-p1.lon),2.0);
 }

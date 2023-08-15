@@ -66,8 +66,8 @@ TEST_CASE("Test median point helper function.", "[test_kdtree_util]") {
 }
 
 TEST_CASE("Test 1d distance function.", "[test_kdtree_util]") {
-  nodeData a {1.0, 1.0, 0};
-  nodeData b {2.0, 6.0, 1};
+  point2D a {1.0, 1.0};
+  point2D b {2.0, 6.0};
   float dist1d_sq_lat = euclidean_1d_distance_sq(a, b, 0);
   float dist1d_sq_lon = euclidean_1d_distance_sq(a, b, 1);
   REQUIRE(abs(dist1d_sq_lat - 1.0) < EPS);
@@ -76,4 +76,3 @@ TEST_CASE("Test 1d distance function.", "[test_kdtree_util]") {
   float dist2d_sq_lat = euclidean_2d_distance_sq(a, b);
   REQUIRE(abs(dist2d_sq_lat - 26.0) < EPS);
 }
-
