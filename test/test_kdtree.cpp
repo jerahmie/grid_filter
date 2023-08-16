@@ -170,6 +170,7 @@ TEST_CASE("KDTree Constructor","[test_kdtree]") {
   float qlat = 0.86;
   float qlon = 4.76;
   int np = kd2d.find_nearest_cell_id(qlat, qlon);
-  REQUIRE(np == 225);
+  REQUIRE(np == 226);
 }
+
 

@@ -25,7 +25,6 @@ std::tuple<double, int> KDTree::nearest_cell_recursive(point2D &qpt,
   
   //visited_points.push_back(node.cell_index);
   double w_node = euclidean_2d_distance_sq(qpt, node_pt);
-  std::cout << "w_node: " << w_node << '\n'; 
   if ( ( node->getLeft() == NULL ) and (node->getRight() == NULL ) ) {
     // Leaf node
     return std::tuple<double, int>(w_node, node->getData()->cell_index);

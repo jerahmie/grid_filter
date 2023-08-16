@@ -232,6 +232,7 @@ class TestKDTree2D(unittest.TestCase):
         test_pt1 = (0.86, 4.76)
         nearest_cell_id = kd2.nearest_cell(test_pt1)
         self.assertEqual(nearest_cell_id, 225)
+        print(f"test_pt1 : {test_pt1} nearest_cell: {self.ptsi[0]} root: {kd2.root}")
 
     def tearDown(self):
         pass
