@@ -65,7 +65,6 @@ std::tuple<double, int> KDTree::nearest_cell_recursive(point2D &qpt,
     double w = 0.0;
     double qpt_dim, nd_dim;
     int nearest_cell;
-
     if (dim == 0) {
       qpt_dim = qpt.lat;
       nd_dim = node->getData()->lat;
@@ -73,7 +72,6 @@ std::tuple<double, int> KDTree::nearest_cell_recursive(point2D &qpt,
       qpt_dim = qpt.lon;
       nd_dim = node->getData()->lon;
     }
-
     if (qpt_dim < nd_dim) {
       std::tuple<double, int> nearest_cell_left = nearest_cell_recursive(qpt, node->getLeft(), depth);
       double w_left = std::get<0>(nearest_cell_left);
@@ -96,7 +94,6 @@ std::tuple<double, int> KDTree::nearest_cell_recursive(point2D &qpt,
           nearest_cell = nearest_cell_id_alt;
         }
       }
-
     } else {
       std::tuple<double, int> nearest_cell_right = nearest_cell_recursive(qpt, node->getRight(), depth);
       double w_right = std::get<0>(nearest_cell_right);
