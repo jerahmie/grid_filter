@@ -22,6 +22,7 @@ class KDTree {
     KDTreeNode2D root;
     std::shared_ptr<KDTreeNode2D> rootp;
     KDTree(std::vector<nodeData> nd);
+    KDTree(std::string);
     ~KDTree()=default;
     std::tuple<double, int> nearest_cell_recursive(point2D&, std::shared_ptr<KDTreeNode2D>, int);
     int find_nearest_cell_id(double, double); 

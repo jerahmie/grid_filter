@@ -6,7 +6,6 @@
 #include "mpas_util.h"
 #include "kdtree_node.h"
 
-
 std::vector<float> lats{ 0.77, 0.51, 0.82, 0.89, 0.53,
                          0.34, 0.67, 0.99, 0.92, 0.15 };
 
@@ -14,7 +13,7 @@ std::vector<float> lons{ 0.69, 0.31, 0.90, 0.75, 0.02,
                          0.18, 0.17, 0.09, 0.90, 0.39 };
 float eps = 0.0001; // a small number for comparison
 
-TEST_CASE("Test_mpas_util catch2 setup.", "[test_mpas_util]") {
+TEST_CASE("Test catch2 setup.", "[test_mpas_util]") {
   REQUIRE(42 == 42);
 }
 

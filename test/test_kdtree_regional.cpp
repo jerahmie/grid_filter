@@ -32,7 +32,7 @@ int nearest_bf(point2D &qpt, std::vector<nodeData> &ptsi) {
   return min_index;
 }
 
-TEST_CASE("Test Catch2 Setup", "[test_kdtree_regional]") {
+TEST_CASE("Test catch2 setup.", "[test_kdtree_regional]") {
   REQUIRE(42 == 42);
 }
 

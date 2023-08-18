@@ -2,12 +2,35 @@
 #include <vector>
 #include <tuple>
 #include <algorithm>
+#include <cmath>
+#include <string>
+#include "mpas_file.h"
+#include "mpas_util.h"
 #include "kdtree_node.h"
 #include "kdtree_util.h"
 #include "kdtree.h"
 
+// radians to degrees conversion factor
+constexpr float rad_to_deg(float &r) {
+  return (float)(r*180.0/(atan(1.0)*4.0));
+}
+
 //KDTree::KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {
+// Construct KDTree from vector of node data.
 KDTree::KDTree(std::vector<nodeData> nd) : nd (nd) {
+  root = build_tree(nd, nd.begin(), nd.end(), 0);
+  rootp = std::make_shared<KDTreeNode2D>(root);
+}
+
+// Construct KDTree from MPAS Static File.
+KDTree::KDTree(std::string filename){
+  MPASFile mpf = MPASFile(filename);
+  int ncells = mpf.read_dim("nCells");
+  std::vector<float> lats = mpf.read_var_1d_float("latCell", ncells);
+  for (auto i = lats.begin(); i < lats.end(); i++ ) {*i = rad_to_deg(*i);}
+  std::vector<float> lons = mpf.read_var_1d_float("lonCell", ncells);
+  for (auto i = lons.begin(); i < lons.end(); i++ ) {*i = rad_to_deg(*i);}
+  nd = merge_lat_lon(lats, lons);
   root = build_tree(nd, nd.begin(), nd.end(), 0);
   rootp = std::make_shared<KDTreeNode2D>(root);
 }

@@ -11,16 +11,25 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
+find_package(HDF5 REQUIRED COMPONENTS CXX HL)
+
 add_executable(unittests
   test_kdtree_node2d.cpp
   test_kdtree.cpp
   test_kdtree_util.cpp
   test_mpas_file.cpp
   test_mpas_util.cpp
-  test_kdtree_regional.cpp)  # add additional cpp files to test
+  test_kdtree_regional.cpp
+  test_obs_data.cpp)  # add additional cpp files to test
+
+include_directories(${HDF5_INCLUDE_DIRS})
 
 target_link_libraries(unittests PRIVATE
-  kdtree Catch2::Catch2WithMain netcdf)
+  kdtree
+  Catch2::Catch2WithMain
+  netcdf
+  ${HDF5_CXX_LIBRARIES}
+  )
 
 target_compile_options(unittests PRIVATE
 	$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:-Wall>)

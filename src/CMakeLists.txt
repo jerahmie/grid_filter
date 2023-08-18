@@ -18,12 +18,15 @@ find_package(netCDF CONFIG REQUIRED)
 find_package(HDF5 COMPONENTS CXX HL)
 
 add_library(kdtree STATIC kdtree_node.cpp build_tree.cpp
-                          kdtree_util.cpp mpas_util.cpp 
-                          mpas_file.cpp kdtree.cpp)
+                          kdtree_util.cpp mpas_util.cpp
+                          obs_util.cpp mpas_file.cpp
+                          kdtree.cpp)
 
 target_include_directories(kdtree PUBLIC .)
 
 add_executable(grid_filter grid_filter.cpp)
+
+include_directories(${HDF5_INCLUDE_DIRS})
 
 target_link_libraries(grid_filter 
     cxxopts

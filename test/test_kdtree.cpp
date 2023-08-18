@@ -28,7 +28,7 @@ std::vector<std::unique_ptr<nodeData>> node_data_up;
 
 
  
-TEST_CASE("TEST Catch2 Setup", "[test_kdtree]") {
+TEST_CASE("Test Catch2 setup.", "[test_kdtree]") {
   CHECK(42 == 42);
 }
 
@@ -173,4 +173,19 @@ TEST_CASE("KDTree Constructor","[test_kdtree]") {
   REQUIRE(np == 226);
 }
 
-
+TEST_CASE("KDTree Constructor From File","[test_kdtree]") {
+  // Set MPAS Static File.
+  std::string static_file = "/../../test/python_tests/Manitowoc.static.nc";
+  char curr_dir[PATH_MAX];
+  char* result = getcwd(curr_dir, sizeof(curr_dir));
+  REQUIRE(result != NULL);
+  std::string mpas_loc(curr_dir);
+  mpas_loc += static_file;
+  
+  KDTree kd2d = KDTree(mpas_loc);
+  REQUIRE(kd2d.root.getData()->cell_index == 303);
+  float qlat = 0.86*180.0/3.14159;
+  float qlon = 4.76*180.0/3.14159;
+  int np = kd2d.find_nearest_cell_id(qlat, qlon);
+  REQUIRE(np == 226);
+}
