@@ -148,7 +148,6 @@ int KDTree::find_nearest_cell_id(double lat, double lon){
   // return the nearest cell in our kdtree.
   point2D q {lat, lon};
   std::tuple<double, int> nearest = nearest_cell_recursive(q, rootp, 0);
-
   int nearest_cell_id = std::get<1>(nearest);
   return nearest_cell_id; 
 }

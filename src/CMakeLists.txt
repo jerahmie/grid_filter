@@ -20,7 +20,7 @@ find_package(HDF5 COMPONENTS CXX HL)
 add_library(kdtree STATIC kdtree_node.cpp build_tree.cpp
                           kdtree_util.cpp mpas_util.cpp
                           obs_util.cpp mpas_file.cpp
-                          kdtree.cpp)
+                          lam_domain_filter.cpp kdtree.cpp)
 
 target_include_directories(kdtree PUBLIC .)
 

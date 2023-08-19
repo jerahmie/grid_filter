@@ -30,6 +30,7 @@ int MPASFile::read_dim(std::string dimname) {
  return static_cast<int>(dimval);
 }
 
+// TODO: Template read_var_1d_float and read_var_1d_int to a single function
 // Return vector of float data.
 std::vector<float> MPASFile::read_var_1d_float(std::string varname, int n) {
   int varid;
@@ -37,6 +38,17 @@ std::vector<float> MPASFile::read_var_1d_float(std::string varname, int n) {
   if (retval = nc_inq_varid(ncid, varname.c_str(), &varid)) { mperr(retval); }
   if (retval = nc_get_var_float(ncid, varid, &data[0])) { mperr(retval); }
   std::vector<float> var_1d(data, data+n);
+
+  return var_1d;
+}
+
+// Return vector of integer data.
+std::vector<int> MPASFile::read_var_1d_int(std::string varname, int n) {
+  int varid;
+  int data[n];
+  if (retval = nc_inq_varid(ncid, varname.c_str(), &varid)) { mperr(retval); }
+  if (retval = nc_get_var_int(ncid, varid, &data[0])) { mperr(retval); }
+  std::vector<int> var_1d(data, data+n);
 
   return var_1d;
 }

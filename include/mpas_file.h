@@ -20,5 +20,6 @@ class MPASFile {
   ~MPASFile();
   int read_dim(std::string);
   std::vector<float> read_var_1d_float(std::string, int);
+  std::vector<int> read_var_1d_int(std::string, int);
 
 };

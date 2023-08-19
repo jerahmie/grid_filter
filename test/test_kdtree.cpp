@@ -189,3 +189,20 @@ TEST_CASE("KDTree Constructor From File","[test_kdtree]") {
   int np = kd2d.find_nearest_cell_id(qlat, qlon);
   REQUIRE(np == 226);
 }
+
+TEST_CASE("KDTree Constructor Boundary Cells","[test_kdtree]") {
+  // Set MPAS Static File.
+  const std::string static_file = "/../../test/python_tests/Manitowoc.static.nc";
+  char curr_dir[PATH_MAX];
+  char* result = getcwd(curr_dir, sizeof(curr_dir));
+  REQUIRE(result != NULL);
+  std::string mpas_loc(curr_dir);
+  mpas_loc += static_file;
+  
+  KDTree kd2d = KDTree(mpas_loc);
+  REQUIRE(kd2d.root.getData()->cell_index == 303);
+  float qlat = 0.86*180.0/3.14159;
+  float qlon = 4.76*180.0/3.14159;
+  int np = kd2d.find_nearest_cell_id(qlat, qlon);
+  REQUIRE(np == 226);
+}

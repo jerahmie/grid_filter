@@ -42,4 +42,9 @@ TEST_CASE("Test read lats and lons.", "[test_load_regional_data]") {
   REQUIRE(ncells == 441);
   std::vector<float> lats_radians = mpf.read_var_1d_float("latCell", ncells);
   std::vector<float> lons_radians = mpf.read_var_1d_float("lonCell", ncells);
+  std::vector<int> bdy_cells = mpf.read_var_1d_int("bdyMaskCell", ncells); 
+  REQUIRE(bdy_cells.size() == (long unsigned int)ncells);
+  for (auto bc : bdy_cells) {
+    REQUIRE(((bc >= 0) && ( bc <= 7)));
+  }
 }

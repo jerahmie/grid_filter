@@ -10,3 +10,8 @@
 
 std::vector<nodeData> merge_lat_lon(std::vector<float> &,
                                     std::vector<float> &);
+
+std::vector<nodeData> filter_bdy_mask_cell(std::vector<nodeData> &,
+                                           std::vector<int> &,
+                                           std::vector<int> &);
+

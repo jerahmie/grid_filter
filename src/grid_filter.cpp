@@ -5,11 +5,9 @@
 #include <string>
 #include "cxxopts.hpp"
 #include "mpas_file.h"
+#include "obs_util.h"
+#include "lam_domain_filter.h"
 #include "kdtree.h"
-
-
-//std::vector<int> lam_domain_filter(vector ) {
-//}
 
 int main(int argc, char* argv[]) {
   std::cout << "Grid Filter: " << argv[0] <<   std::endl;
@@ -43,6 +41,9 @@ int main(int argc, char* argv[]) {
   std::cout << parser["output"].as<std::string>() << '\n';
     
   KDTree kd2d = KDTree(parser["static_file"].as<std::string>());
+  std::string obs_file = parser["obs_file"].as<std::string>();
+  std::vector<point2D> obs = read_obs_points(obs_file);
+  std::vector<int> obs_mask = lam_domain_filter(kd2d, obs.begin(), obs.end());
 
   return 0;
 }

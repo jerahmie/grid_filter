@@ -103,5 +103,6 @@ TEST_CASE("Test obs_util read_h5data.", "[test_obs_data]") {
 TEST_CASE("Test read_obs_points.", "[test_obs_data]") {
   std::string obs_file_str = gen_obs_file_path(OBS_FILE_REL);
   std::vector<point2D> obs_points = read_obs_points(obs_file_str);
-  REQUIRE(obs_points.size() == NELEMENTS));
+  REQUIRE(obs_points.size() == NELEMENTS);
 }
+
