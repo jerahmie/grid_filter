@@ -15,6 +15,7 @@ class KDTree {
     int depth;
     int compares;
     std::vector<nodeData> nd;
+    int nd_size;
     //std::vector<int> visited_points {};
   
   public:
@@ -23,7 +24,9 @@ class KDTree {
     std::shared_ptr<KDTreeNode2D> rootp;
     KDTree(std::vector<nodeData> nd);
     KDTree(std::string);
+    KDTree(std::string, std::vector<int>);
     ~KDTree()=default;
+    int size(void) {return nd_size;}
     std::tuple<double, int> nearest_cell_recursive(point2D&, std::shared_ptr<KDTreeNode2D>, int);
     int find_nearest_cell_id(double, double); 
     friend std::tuple<nodeData, int> median_point_id(const std::vector<nodeData>);

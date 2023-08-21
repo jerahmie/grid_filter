@@ -18,6 +18,7 @@ constexpr float rad_to_deg(float &r) {
 //KDTree::KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {
 // Construct KDTree from vector of node data.
 KDTree::KDTree(std::vector<nodeData> nd) : nd (nd) {
+  nd_size = nd.size();
   root = build_tree(nd, nd.begin(), nd.end(), 0);
   rootp = std::make_shared<KDTreeNode2D>(root);
 }
@@ -31,6 +32,25 @@ KDTree::KDTree(std::string filename){
   std::vector<float> lons = mpf.read_var_1d_float("lonCell", ncells);
   for (auto i = lons.begin(); i < lons.end(); i++ ) {*i = rad_to_deg(*i);}
   nd = merge_lat_lon(lats, lons);
+  nd_size = nd.size();
+  root = build_tree(nd, nd.begin(), nd.end(), 0);
+  rootp = std::make_shared<KDTreeNode2D>(root);
+}
+
+// Construct KDTree from MPAS Static File and filter by boundary cell type.
+KDTree::KDTree(std::string filename, std::vector<int> bdy_cell_type){
+  // Read cells
+  MPASFile mpf = MPASFile(filename);
+  int ncells = mpf.read_dim("nCells");
+  std::vector<float> lats = mpf.read_var_1d_float("latCell", ncells);
+  for (auto i = lats.begin(); i < lats.end(); i++ ) {*i = rad_to_deg(*i);}
+  std::vector<float> lons = mpf.read_var_1d_float("lonCell", ncells);
+  for (auto i = lons.begin(); i < lons.end(); i++ ) {*i = rad_to_deg(*i);}
+  std::vector<int> bdy_cells = mpf.read_var_1d_int("bdyMaskCell", ncells);
+  // create and filter nodes by cell type
+  std::vector<nodeData> nd_unfiltered = merge_lat_lon(lats, lons);
+  nd = filter_bdy_mask_cell(nd_unfiltered, bdy_cells, bdy_cell_type); 
+  nd_size = nd.size(); 
   root = build_tree(nd, nd.begin(), nd.end(), 0);
   rootp = std::make_shared<KDTreeNode2D>(root);
 }

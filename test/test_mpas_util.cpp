@@ -39,3 +39,18 @@ TEST_CASE("Test merge_lat_lon values.", "[test_mpas_util]") {
    REQUIRE(nd[i].cell_index == i+1);
  }
 }
+
+TEST_CASE("Test filter_bdy_mask_cell.", "[test_mpas_util]"){
+  std::vector<nodeData> nd = merge_lat_lon(lats, lons);
+  std::vector<int> bdy_cells = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  std::vector<int> bdy_cell_type = {6, 7};
+  std::vector<nodeData> nd_filtered = filter_bdy_mask_cell( nd, bdy_cells, bdy_cell_type);
+  for (auto &nf : nd_filtered) {
+    std::cout << "Filtered nodes: " << nf << '\n';
+  }
+  REQUIRE(nd_filtered.size() == 2);
+  REQUIRE(nd_filtered[0].cell_index == 7);
+  REQUIRE(nd_filtered[1].cell_index == 8);
+  
+  
+}

@@ -3,13 +3,17 @@
 #include <memory>
 #include <cmath>
 #include <string>
+#include <chrono>
 #include "cxxopts.hpp"
 #include "mpas_file.h"
 #include "obs_util.h"
 #include "lam_domain_filter.h"
 #include "kdtree.h"
 
+using namespace std::chrono; // use chrono for timing.
+
 int main(int argc, char* argv[]) {
+
   std::cout << "Grid Filter: " << argv[0] <<   std::endl;
   cxxopts::Options options(std::string(argv[0]), "- Filter observations points to be within MPAS regional grid.");
   options.positional_help("static_file obs_file output").show_positional_help();
@@ -18,8 +22,7 @@ int main(int argc, char* argv[]) {
     ("static_file", "MPAS static file (NetCDF).", cxxopts::value<std::string>())
     ("obs_file", "Observations file (HDF5).", cxxopts::value<std::string>())
     ("output", "Output mask save file (HDF5).",
-       cxxopts::value<std::string>()->default_value("lam_mask.h5"))
-    ;
+       cxxopts::value<std::string>()->default_value("lam_mask.h5"));
   options.parse_positional({"static_file", "obs_file", "output"});
   auto parser = options.parse(argc, argv);
 
@@ -41,9 +44,17 @@ int main(int argc, char* argv[]) {
   std::cout << parser["output"].as<std::string>() << '\n';
     
   KDTree kd2d = KDTree(parser["static_file"].as<std::string>());
+  
+  auto start = high_resolution_clock::now();
+  std::vector<int> bdy_cell_types = {6,7};
+  //KDTree kd2d = KDTree(parser["static_file"].as<std::string>(), bdy_cell_types);
+  auto stop = high_resolution_clock::now();
+  std::cout << "kd2d size: " << kd2d.size() << '\n';
+  auto duration_build_tree = duration_cast<microseconds>(stop - start);
+  std::cout << "Build tree time: " << build_tree << '\n';
   std::string obs_file = parser["obs_file"].as<std::string>();
   std::vector<point2D> obs = read_obs_points(obs_file);
-  std::vector<int> obs_mask = lam_domain_filter(kd2d, obs.begin(), obs.end());
+  //std::vector<int> obs_mask = lam_domain_filter(kd2d, obs.begin(), obs.end());
 
   return 0;
 }
