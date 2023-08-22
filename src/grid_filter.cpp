@@ -10,7 +10,6 @@
 #include "lam_domain_filter.h"
 #include "kdtree.h"
 
-using namespace std::chrono; // use chrono for timing.
 
 int main(int argc, char* argv[]) {
 
@@ -43,18 +42,26 @@ int main(int argc, char* argv[]) {
   }
   std::cout << parser["output"].as<std::string>() << '\n';
     
-  KDTree kd2d = KDTree(parser["static_file"].as<std::string>());
+  auto t1 = std::chrono::high_resolution_clock::now();
+  //KDTree kd2d = KDTree(parser["static_file"].as<std::string>());
   
-  auto start = high_resolution_clock::now();
   std::vector<int> bdy_cell_types = {6,7};
-  //KDTree kd2d = KDTree(parser["static_file"].as<std::string>(), bdy_cell_types);
-  auto stop = high_resolution_clock::now();
+  KDTree kd2d = KDTree(parser["static_file"].as<std::string>(), bdy_cell_types);
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto duration_build_tree = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+  std::cout << "Build tree time: " << duration_build_tree.count() << '\n';
   std::cout << "kd2d size: " << kd2d.size() << '\n';
-  auto duration_build_tree = duration_cast<microseconds>(stop - start);
-  std::cout << "Build tree time: " << build_tree << '\n';
+  
   std::string obs_file = parser["obs_file"].as<std::string>();
   std::vector<point2D> obs = read_obs_points(obs_file);
-  //std::vector<int> obs_mask = lam_domain_filter(kd2d, obs.begin(), obs.end());
+
+  auto t3 = std::chrono::high_resolution_clock::now();
+  auto duration_read_obs = std::chrono::duration_cast<std::chrono::milliseconds>(t3-t2);
+  std::cout << "Read observation points " << duration_read_obs.count() << '\n';
+  std::vector<int> obs_mask = lam_domain_filter(kd2d, obs.begin(), obs.end());
+  auto t4 = std::chrono::high_resolution_clock::now();
+  auto duration_lam_filter = std::chrono::duration_cast<std::chrono::milliseconds>(t4-t3);
+  std::cout << "filter obs: " << duration_lam_filter.count() << '\n';
 
   return 0;
 }
