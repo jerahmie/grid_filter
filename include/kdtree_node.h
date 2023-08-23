@@ -12,6 +12,7 @@ struct nodeData {
   double lat;
   double lon;
   int cell_index;
+  int bdy_cell_type;
   friend bool operator==(const nodeData& lhs, const nodeData& rhs);
   friend bool operator!=(const nodeData& lhs, const nodeData& rhs);
   friend std::ostream& operator<<(std::ostream& os, const nodeData& nd);

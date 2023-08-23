@@ -26,6 +26,23 @@ std::vector<nodeData> merge_lat_lon(std::vector<float>& lat,
   return nd;
 }
 
+// Merge latitude and longitude data into vector of node data.
+std::vector<nodeData> merge_lat_lon(std::vector<float>& lat,
+                                    std::vector<float>& lon, 
+                                    std::vector<int>& bdy_cell) {
+  std::vector<nodeData> nd;
+  if ( lat.size() != lon.size() ) {
+    throw std::invalid_argument("Input vectors must be same length.");
+  } 
+
+  int ncells = lat.size(); 
+  for (int i = 0; i < ncells; i++) {
+    nd.push_back({lat[i], lon[i], i+1, bdy_cell[i]});
+  }
+  return nd;
+}
+
+
 // Filter nodes by boundary cell type.
 std::vector<nodeData> filter_bdy_mask_cell(std::vector<nodeData> &nodes,
                                            std::vector<int> &bdy_cells,

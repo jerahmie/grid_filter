@@ -10,7 +10,6 @@
 #include "lam_domain_filter.h"
 #include "kdtree.h"
 
-
 int main(int argc, char* argv[]) {
 
   std::cout << "Grid Filter: " << argv[0] <<   std::endl;
@@ -62,6 +61,10 @@ int main(int argc, char* argv[]) {
   auto t4 = std::chrono::high_resolution_clock::now();
   auto duration_lam_filter = std::chrono::duration_cast<std::chrono::milliseconds>(t4-t3);
   std::cout << "filter obs: " << duration_lam_filter.count() << '\n';
+  std::string outputfilename = parser["output"].as<std::string>();
+  std::string testgroup = "/DerivedValue";
+  std::string testdata =  "LAMDomainCheck";
+  write_h5data_1d<int>(outputfilename, testgroup, testdata, obs_mask);
 
   return 0;
 }

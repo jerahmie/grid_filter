@@ -2,7 +2,7 @@
  * file - obs_util.cpp
  * Read and preprocess observations.
  */
-
+#include <iostream>
 #include <vector>
 #include <string>
 #include "H5Cpp.h"
@@ -33,6 +33,7 @@ std::vector<float> read_h5data(std::string &filename,
   hdataset.read( data_buf, H5::PredType::NATIVE_FLOAT, memspace, dataspace);
   std::vector<float> data_out;
   data_out.assign(data_buf, data_buf+nelements);
+  h5file.close();
 
   return data_out;
 }
