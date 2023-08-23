@@ -30,7 +30,7 @@ std::vector<nodeData> node_vec20{{0.56, 1.71, 0},
                                  {0.5, 1.05, 18},
                                  {0.59, 1.77, 19}};
 
-TEST_CASE("TEST Catch2 Setup", "[test_kdtree_node]") {
+TEST_CASE("Test catch2 setup.", "[test_kdtree_node]") {
   // Test the unit testing environment.  (This should always pass.)
   CHECK(42 == 42);
 }
