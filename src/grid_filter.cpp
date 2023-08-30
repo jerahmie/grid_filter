@@ -3,6 +3,7 @@
 #include <memory>
 #include <cmath>
 #include <string>
+#include <numeric>
 #include <chrono>
 #include "cxxopts.hpp"
 #include "mpas_file.h"
@@ -24,7 +25,6 @@ int main(int argc, char* argv[]) {
   options.parse_positional({"static_file", "obs_file", "output"});
   auto parser = options.parse(argc, argv);
 
-  //std::cout << result.count("static_file") << '\n';
   if (parser.count("help")) {
     std::cout << options.help() << std::endl;
     return 0;
@@ -42,7 +42,6 @@ int main(int argc, char* argv[]) {
   std::cout << parser["output"].as<std::string>() << '\n';
     
   auto t1 = std::chrono::high_resolution_clock::now();
-  //KDTree kd2d = KDTree(parser["static_file"].as<std::string>());
   
   std::vector<int> bdy_cell_types = {6,7};
   KDTree kd2d = KDTree(parser["static_file"].as<std::string>(), bdy_cell_types);
@@ -58,13 +57,16 @@ int main(int argc, char* argv[]) {
   auto duration_read_obs = std::chrono::duration_cast<std::chrono::milliseconds>(t3-t2);
   std::cout << "Read observation points " << duration_read_obs.count() << '\n';
   std::vector<int> obs_mask = lam_domain_filter(kd2d, obs.begin(), obs.end());
+  long mask_sum = std::reduce(obs_mask.begin(), obs_mask.end());
+  std::cout << "Number of elements in mask: " << mask_sum  << '\n';
   auto t4 = std::chrono::high_resolution_clock::now();
   auto duration_lam_filter = std::chrono::duration_cast<std::chrono::milliseconds>(t4-t3);
   std::cout << "filter obs: " << duration_lam_filter.count() << '\n';
   std::string outputfilename = parser["output"].as<std::string>();
   std::string testgroup = "/DerivedValue";
   std::string testdata =  "LAMDomainCheck";
-  write_h5data_1d<int>(outputfilename, testgroup, testdata, obs_mask);
+
+  write_mask(outputfilename, testgroup, testdata, obs_mask);
 
   return 0;
 }
