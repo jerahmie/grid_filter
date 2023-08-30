@@ -22,12 +22,13 @@ add_executable(unittests
   test_kdtree_regional.cpp
   test_obs_data.cpp)  # add additional cpp files to test
 
-## include_directories(${HDF5_INCLUDE_DIRS})
+include_directories(${HDF5_INCLUDE_DIRS})
 
 target_link_libraries(unittests PRIVATE
   kdtree
   Catch2::Catch2WithMain
   netcdf
+  ${HDF5_LIBRARIES}
   )
 
 ##${HDF5_CXX_LIBRARIES}

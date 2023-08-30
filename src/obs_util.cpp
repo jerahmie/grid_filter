@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "H5Cpp.h"
+#include <hdf5.h>
 #include "kdtree_util.h"
 #include "obs_util.h"
 
@@ -13,27 +13,35 @@
 std::vector<float> read_h5data(std::string &filename,
                                std::string group,
                                std::string dataset) {
-  H5::H5File h5file = H5::H5File(filename, H5F_ACC_RDONLY);
-  H5::Group hgroup = h5file.openGroup(group);
-  H5::DataSet hdataset = hgroup.openDataSet(dataset);
-  H5::DataSpace dataspace = hdataset.getSpace();
-  int rank = dataspace.getSimpleExtentNdims();
+  int status = 0;
+  // Gather observation file metadata.
+  // TODO: check return types and add error handling.
+  hid_t file_id = H5Fopen(filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT); 
+  hid_t group_id = H5Gopen2(file_id, group.c_str(), H5P_DEFAULT);
+  hid_t dataset_id = H5Dopen2(group_id, dataset.c_str(), H5P_DEFAULT);
+  hid_t dataspace_id = H5Dget_space(dataset_id);
+  int rank = H5Sget_simple_extent_ndims(dataspace_id);
+
+  // Gather dataset metadata.
   hsize_t dims_out[rank];
-  int ndims = dataspace.getSimpleExtentDims( dims_out, NULL );
-  int nelements = dims_out[0];
-
-  /* Define memory dataspace. */
+  //int ndims = dataspace.getSimpleExtentDims( dims_out, NULL );
+  int ndims = H5Sget_simple_extent_dims(dataspace_id, dims_out, NULL);
+  H5S_class_t type_class = H5Sget_simple_extent_type(dataspace_id);
+  hssize_t nelements = H5Sget_simple_extent_npoints(dataspace_id);
+   
+  // Define memory dataspace and read data.
   hsize_t dimsm[1];
-  dimsm[0] = nelements;
-  H5::DataSpace memspace ( 1, dimsm );
-
-  H5T_class_t type_class = hdataset.getTypeClass();
+  dimsm[0] = dims_out[0];
   float data_buf[nelements];
   for (int i=0; i<nelements; i++ ) { data_buf[i] = 0; }
-  hdataset.read( data_buf, H5::PredType::NATIVE_FLOAT, memspace, dataspace);
+  status = H5Dread(dataset_id, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, data_buf);
   std::vector<float> data_out;
   data_out.assign(data_buf, data_buf+nelements);
-  h5file.close();
+
+  H5Dclose(dataspace_id);
+  H5Dclose(dataset_id);
+  H5Gclose(group_id);
+  H5Fclose(file_id);
 
   return data_out;
 }

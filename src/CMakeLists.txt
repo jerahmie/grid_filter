@@ -15,7 +15,7 @@ set(CXXOPTS_ENABLE_WARNINGS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(cxxopts)
 
 message(STATUS "${CMAKE_MODULE_DIR}")
-##${HDF5_CXX_LIBRARIES}
+#${HDF5_CXX_LIBRARIES}
 
 find_package(NetCDF MODULE REQUIRED)
 find_package(HDF5 COMPONENTS C HL)
@@ -29,12 +29,13 @@ target_include_directories(kdtree PUBLIC .)
 
 add_executable(filter_obs grid_filter.cpp)
 
-##include_directories(${HDF5_INCLUDE_DIRS})
+include_directories(${HDF5_INCLUDE_DIRS})
 
 target_link_libraries(filter_obs
     cxxopts
     kdtree
     netcdf
+    ${HDF5_LIBRARIES}
     )
 
   ## ${HDF5_CXX_LIBRARIES}
