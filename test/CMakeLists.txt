@@ -11,6 +11,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
+find_package(NetCDF MODULE REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS C HL)
 
 add_executable(unittests
@@ -27,11 +28,10 @@ include_directories(${HDF5_INCLUDE_DIRS})
 target_link_libraries(unittests PRIVATE
   kdtree
   Catch2::Catch2WithMain
-  netcdf
+  ${NETCDF_LIBRARIES} 
   ${HDF5_LIBRARIES}
   )
 
-##${HDF5_CXX_LIBRARIES}
 target_compile_options(unittests PRIVATE
 	$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:-Wall>)
 
