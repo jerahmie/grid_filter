@@ -80,9 +80,6 @@ def find_tree_min_max(node:Node2D) -> Tuple[Tuple[float, float], Tuple[float, fl
             node_stack.append(curr_node.left)
         if curr_node.right is not None:
             node_stack.append(curr_node.right)
-            node_stack.append(curr_node.right)
-            node_stack.append(curr_node.right)
-            node_stack.append(curr_node.right)
 
     return ((min_lat, max_lat),(min_lon, max_lon))
 
