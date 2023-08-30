@@ -16,7 +16,6 @@ Exterior Point | Interior Point
 - geocat-viz
 - geometric_features
 
-
 # Build and Test
 ```$ cmake -B buildtree && cmake --build buildtree```
 
