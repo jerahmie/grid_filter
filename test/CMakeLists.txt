@@ -11,7 +11,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-find_package(HDF5 REQUIRED COMPONENTS CXX HL)
+find_package(NetCDF MODULE REQUIRED)
+find_package(HDF5 REQUIRED COMPONENTS C HL)
 
 add_executable(unittests
   test_kdtree_node2d.cpp
@@ -27,8 +28,8 @@ include_directories(${HDF5_INCLUDE_DIRS})
 target_link_libraries(unittests PRIVATE
   kdtree
   Catch2::Catch2WithMain
-  netcdf
-  ${HDF5_CXX_LIBRARIES}
+  ${NETCDF_LIBRARIES} 
+  ${HDF5_LIBRARIES}
   )
 
 target_compile_options(unittests PRIVATE
@@ -38,16 +39,21 @@ list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(Catch)
 catch_discover_tests(unittests)
 
-
+#set(ENV{PYTHON_UNITTESTS} 1)
+message(STATUS "PYTHON_UNITTESTS: ${PYTHON_UNITTESTS}")
 # Python unit tests
 ##[=[
-find_package (Python COMPONENTS Interpreter Development)
-message("---> ${Python_Interpreter_FOUND}")
-message("---> ${Python_EXECUTABLE}")
+if (${PYTHON_UNITTESTS})
+  message(STATUS "Python Unit Tests ENABLED.")
+  find_package (Python COMPONENTS Interpreter Development)
+  message("---> ${Python_Interpreter_FOUND}")
+  message("---> ${Python_EXECUTABLE}")
 
-if (${Python_Interpreter_FOUND})
-  include(CTestPythonUnittests.cmake)
+  if (${Python_Interpreter_FOUND})
+    include(CTestPythonUnittests.cmake)
+  endif()
+else()
+  message(STATUS "Python Unit Tests DISABLED.")
 endif()
-
 add_test(NAME TestSetup COMMAND true)  # should always pass
 #]=]

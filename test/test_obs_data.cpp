@@ -4,7 +4,7 @@
 #include <fstream>
 #include <linux/limits.h>
 #include <catch2/catch_test_macros.hpp>
-#include "H5Cpp.h"
+#include "hdf5.h"
 #include "obs_util.h"
 
 #define NELEMENTS 287290
@@ -21,7 +21,6 @@ std::string gen_obs_file_path(const std::string &file_rel){
   obs_file += OBS_FILE_REL;
   return obs_file;
 }
-
 
 TEST_CASE("Test catch2 setup.", "[test_obs_data]") {
   REQUIRE(42 == 42);
@@ -45,36 +44,34 @@ TEST_CASE("Test read obs lats and lons.", "[test_obs_data]") {
   char curr_dir[PATH_MAX];
   getcwd(curr_dir, sizeof(curr_dir));
 
-  // Obs file location.
+  // Gather data from observation file.
   std::string obs_filename(curr_dir);
   obs_filename += OBS_FILE_REL;
-  H5::H5File h5file = H5::H5File(obs_filename, H5F_ACC_RDONLY);
-  H5::Group group = h5file.openGroup(GROUPNAME);
-  H5::DataSet dataset = group.openDataSet("longitude"); 
-  H5::DataSpace dataspace = dataset.getSpace();
-  int rank = dataspace.getSimpleExtentNdims();
+  hid_t file_id = H5Fopen(obs_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+  hid_t group_id = H5Gopen2(file_id, GROUPNAME.c_str(), H5P_DEFAULT);
+  hid_t dset_id = H5Dopen2(group_id, "longitude", H5P_DEFAULT);
+  hid_t file_type = H5Dget_type(dset_id);
+  hid_t dspace_id = H5Dget_space(dset_id);
+  int rank = H5Sget_simple_extent_ndims(dspace_id);
+
   hsize_t dims_out[rank];
-  int ndims = dataspace.getSimpleExtentDims( dims_out, NULL);
+  int ndims = H5Sget_simple_extent_dims(dspace_id, dims_out, NULL);
+  H5S_class_t type_class = H5Sget_simple_extent_type(dspace_id); 
+  hssize_t nelements = H5Sget_simple_extent_npoints(dspace_id); 
   
-  /* Define memory dataspace. */
+  // Define memory dataspace and read data into buffer.
   hsize_t dimsm[1];
   dimsm[0] = dims_out[0];
-  H5::DataSpace memspace ( 1, dimsm );
-
-  H5T_class_t type_class = dataset.getTypeClass();
-  if (type_class == H5T_FLOAT) {
-    auto ftype = dataset.getFloatType();
-  }
-  REQUIRE(type_class == H5T_FLOAT);
-  auto lon_storage_size = dataset.getStorageSize();
-  int nelements = dims_out[0];
+  std::cout << "dimsm: " << dims_out[0] <<'\n';
+  float data_out [nelements];
+  int status = H5Dread(dset_id, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, data_out);
+  REQUIRE(status == 0);
+  REQUIRE((int)type_class == (int)H5T_FLOAT);
   REQUIRE(rank == 1);
   REQUIRE(nelements == 287290);
-  float data_out[nelements];
   for (int i=0; i<nelements; i++) {
     data_out[i] = 0.0;
   }
-  dataset.read( data_out, H5::PredType::NATIVE_FLOAT, memspace, dataspace);
   float data_min = data_out[0];
   int min_index = 0;
   float data_max = data_out[0];
@@ -84,9 +81,14 @@ TEST_CASE("Test read obs lats and lons.", "[test_obs_data]") {
   }
   REQUIRE( data_min >= 0.0 );
   REQUIRE( data_max <= 360.0 );
+  H5Dclose(dspace_id);
+  H5Dclose(dset_id);
+  H5Gclose(group_id);
+  H5Fclose(file_id);
   }
 
 TEST_CASE("Test obs_util read_h5data.", "[test_obs_data]") {
+  // Read hdf5 latitude/longitude data using convenience function.
   std::string obs_file = gen_obs_file_path(OBS_FILE_REL);
   std::vector<float> latitude = read_h5data(obs_file, "/MetaData", "latitude");
   REQUIRE(latitude.size() == NELEMENTS);
