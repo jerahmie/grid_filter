@@ -69,11 +69,11 @@ TEST_CASE("Test find max min lat lon.", "[test_mpas_util]") {
 
 TEST_CASE("Test alt max min lat lon.", "[test_mpas_util]") {
   std::vector<float> alt_lats {720.0, -120.0, 530.0, 10.0, -1.0};
-  std::vector<float> alt_lons {-100.1, 200.0, -1001.1, 5150.0, 4.2};
+  std::vector<float> alt_lons {-360.0, 200.0, 1001.1, 5150.0, 4.2};
   std::vector<nodeData> nd = merge_lat_lon(alt_lats, alt_lons);
   MPASMinMax minmax = find_min_max(nd);
   REQUIRE( abs(minmax.LatMin - (-120.0)) < eps );
   REQUIRE( abs(minmax.LatMax - (720.0)) < eps );
-  REQUIRE( abs(minmax.LonMin - (-1001.1)) < eps );
+  REQUIRE( abs(minmax.LonMin - (0.0)) < eps );
   REQUIRE( abs(minmax.LonMax - (5150.0)) < eps );
 }

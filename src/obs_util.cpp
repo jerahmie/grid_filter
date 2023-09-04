@@ -34,15 +34,15 @@ std::vector<float> read_h5data(std::string &filename,
   float data_buf[nelements];
   for (int i=0; i<nelements; i++ ) { data_buf[i] = 0; }
   status = H5Dread(dataset_id, H5T_NATIVE_FLOAT, H5S_ALL, H5S_ALL, H5P_DEFAULT, data_buf);
-  std::vector<float> data_out;
-  data_out.assign(data_buf, data_buf+nelements);
+  std::vector<float> data;
+  data.assign(data_buf, data_buf+nelements);
 
   H5Dclose(dataspace_id);
   H5Dclose(dataset_id);
   H5Gclose(group_id);
   H5Fclose(file_id);
 
-  return data_out;
+  return data;
 }
 
 // Save the mask file to a hdf5 file.
