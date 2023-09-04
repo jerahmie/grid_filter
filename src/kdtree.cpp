@@ -1,4 +1,7 @@
-#include <iostream>
+/*
+ * File - kdtree.cpp
+ */
+
 #include <vector>
 #include <tuple>
 #include <algorithm>
@@ -19,6 +22,11 @@ constexpr float rad_to_deg(float &r) {
 // Construct KDTree from vector of node data.
 KDTree::KDTree(std::vector<nodeData> nd) : nd (nd) {
   nd_size = nd.size();
+  MPASMinMax minmax = find_min_max(nd);
+  lat_min = minmax.LatMin;
+  lat_max = minmax.LatMax;
+  lon_min = minmax.LonMin;
+  lon_max = minmax.LonMax;
   root = build_tree(nd, nd.begin(), nd.end(), 0);
   rootp = std::make_shared<KDTreeNode2D>(root);
 }
@@ -32,6 +40,11 @@ KDTree::KDTree(std::string filename){
   std::vector<float> lons = mpf.read_var_1d_float("lonCell", ncells);
   for (auto i = lons.begin(); i < lons.end(); i++ ) {*i = rad_to_deg(*i);}
   nd = merge_lat_lon(lats, lons);
+  MPASMinMax minmax = find_min_max(nd);
+  lat_min = minmax.LatMin;
+  lat_max = minmax.LatMax;
+  lon_min = minmax.LonMin;
+  lon_max = minmax.LonMax;
   nd_size = nd.size();
   root = build_tree(nd, nd.begin(), nd.end(), 0);
   rootp = std::make_shared<KDTreeNode2D>(root);
@@ -51,6 +64,11 @@ KDTree::KDTree(std::string filename, std::vector<int> bdy_cell_type){
   std::vector<nodeData> nd_unfiltered = merge_lat_lon(lats, lons, bdy_cells);
   nd = filter_bdy_mask_cell(nd_unfiltered, bdy_cells, bdy_cell_type); 
   nd_size = nd.size(); 
+  MPASMinMax minmax = find_min_max(nd);
+  lat_min = minmax.LatMin;
+  lat_max = minmax.LatMax;
+  lon_min = minmax.LonMin;
+  lon_max = minmax.LonMax;
   root = build_tree(nd, nd.begin(), nd.end(), 0);
   rootp = std::make_shared<KDTreeNode2D>(root);
 }

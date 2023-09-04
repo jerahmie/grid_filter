@@ -6,7 +6,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <tuple>
 #include <stdexcept>
+#include <limits>
 #include "kdtree_node.h"
 #include "mpas_util.h"
 
@@ -58,4 +60,20 @@ std::vector<nodeData> filter_bdy_mask_cell(std::vector<nodeData> &nodes,
     }
   }
   return filtered_cells;
+}
+
+// Find the min/max latitude and longitudes
+MPASMinMax find_min_max(std::vector<nodeData> &data_points) {
+  MPASMinMax minmax {std::numeric_limits<double>::max(), 
+                    -1.0*std::numeric_limits<double>::max(),
+                    std::numeric_limits<double>::max(),
+                    -1.0*std::numeric_limits<double>::max()}; 
+  for (auto node : data_points) {
+    if (node.lat < minmax.LatMin) { minmax.LatMin = node.lat;}
+    if (node.lat > minmax.LatMax) { minmax.LatMax = node.lat;}
+    if (node.lon < minmax.LonMin) { minmax.LonMin = node.lon;}
+    if (node.lon > minmax.LonMax) { minmax.LonMax = node.lon;}
+  }
+
+  return minmax;
 }

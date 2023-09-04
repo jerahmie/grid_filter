@@ -25,8 +25,6 @@ std::vector<nodeData> node_data10 { {0.96, 0.72, 0},
                                     {0.81, 0.06, 9} };
 
 std::vector<std::unique_ptr<nodeData>> node_data_up; 
-
-
  
 TEST_CASE("Test Catch2 setup.", "[test_kdtree]") {
   CHECK(42 == 42);
@@ -71,7 +69,6 @@ TEST_CASE("Test construction of kd tree.", "[test_kdtree]") {
   // tree with single point
   std::vector<nodeData> pts0 { {0.0, 1.1, 0} };
   std::vector<nodeData> pts1 { {1.2, 3.4, 1} };
-  //auto pts0_p = std::make_shared<std::vector<nodeData>>(pts0);
   KDTreeNode2D kd2d_0 = build_tree(pts0, pts0.begin(), pts0.end(), 0); 
   REQUIRE(kd2d_0.getLeft() == NULL);
   REQUIRE(kd2d_0.getRight() == NULL);

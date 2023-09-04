@@ -21,7 +21,8 @@ add_executable(unittests
   test_mpas_file.cpp
   test_mpas_util.cpp
   test_kdtree_regional.cpp
-  test_obs_data.cpp)  # add additional cpp files to test
+  test_obs_data.cpp
+  )  # add additional cpp files to test
 
 include_directories(${HDF5_INCLUDE_DIRS})
 
