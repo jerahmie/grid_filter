@@ -24,7 +24,7 @@ do
   mask_filename=mask_"${obs_filename}"
   mask_dirname=$(dirname -- $(dirname -- "${ob}"))/maskOut
   mask_fqn="${mask_dirname}"/"${mask_filename}"
-  ./filter_obs.py "${static_file}" "${ob}" "${mask_fqn}"
+  buildtree/src/filter_obs "${static_file}" "${ob}" "${mask_fqn}"
   
   examples/plot_obs.py "${ob}" --output "${obs_filename_base}".png
   examples/plot_obs.py "${ob}" --mask-file "${mask_fqn}" --output "${obs_filename_base}"_mask.png

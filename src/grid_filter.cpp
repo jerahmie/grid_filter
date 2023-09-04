@@ -53,26 +53,26 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Grid Filter: " << argv[0] <<   std::endl;
   cxxopts::Options options(std::string(argv[0]), "- Filter observations points to be within MPAS regional grid.");
-  options.positional_help("static_file obs_file output").show_positional_help();
+  options.positional_help("static-file obs_file output").show_positional_help();
   options.add_options()
     ("h,help", "Print usage")
-    ("static_file", "MPAS static file (NetCDF).", cxxopts::value<std::string>())
-    ("obs_file", "Observations file (HDF5).", cxxopts::value<std::string>())
+    ("static-file", "MPAS static file (NetCDF).", cxxopts::value<std::string>())
+    ("obs-file", "Observations file (HDF5).", cxxopts::value<std::string>())
     ("output", "Output mask save file (HDF5).",
        cxxopts::value<std::string>()->default_value("lam_mask.h5"));
-  options.parse_positional({"static_file", "obs_file", "output"});
+  options.parse_positional({"static-file", "obs-file", "output"});
   auto parser = options.parse(argc, argv);
 
   if (parser.count("help")) {
     std::cout << options.help() << std::endl;
     return 0;
   }
-  if (!parser.count("static_file")) {
+  if (!parser.count("static-file")) {
     std::cout << "\nStatic File not specified. \n\n";
     std::cout << options.help() << std::endl;
     return 1; 
   }
-  if (!parser.count("obs_file")) {
+  if (!parser.count("obs-file")) {
     std::cout << "\nObservation file not specified. \n\n";
     std::cout << options.help() << std::endl;
     return 1;
@@ -82,11 +82,11 @@ int main(int argc, char* argv[]) {
   auto t1 = std::chrono::high_resolution_clock::now();
   
   std::vector<int> bdy_cell_types = {6,7};
-  KDTree kd2d = KDTree(parser["static_file"].as<std::string>(), bdy_cell_types);
+  KDTree kd2d = KDTree(parser["static-file"].as<std::string>(), bdy_cell_types);
   auto t2 = std::chrono::high_resolution_clock::now();
   auto duration_build_tree = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
   
-  std::string obs_file = parser["obs_file"].as<std::string>();
+  std::string obs_file = parser["obs-file"].as<std::string>();
   std::vector<point2D> obs = read_obs_points(obs_file);
 
   auto t3 = std::chrono::high_resolution_clock::now();
