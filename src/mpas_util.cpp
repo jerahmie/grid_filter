@@ -23,7 +23,6 @@ std::vector<nodeData> merge_lat_lon(std::vector<float>& lat,
 
   int ncells = lat.size(); 
   for (int i = 0; i < ncells; i++) {
-    if (lon[i] < 0.0) { lon[i] += 360.0; }
     nd.push_back({lat[i], lon[i], i+1});
   }
   return nd;
@@ -37,10 +36,8 @@ std::vector<nodeData> merge_lat_lon(std::vector<float>& lat,
   if ( lat.size() != lon.size() ) {
     throw std::invalid_argument("Input vectors must be same length.");
   } 
-
   int ncells = lat.size(); 
   for (int i = 0; i < ncells; i++) {
-    if (lon[i] < 0.0) { lon[i] += 360.0; }
     nd.push_back({lat[i], lon[i], i+1, bdy_cell[i]});
   }
   return nd;

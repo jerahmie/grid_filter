@@ -68,6 +68,9 @@ int write_mask(std::string &filename, std::string& group,
 std::vector<point2D> read_obs_points(std::string &filename) {
   std::vector<float> latitude = read_h5data(filename, "/MetaData", "latitude");
   std::vector<float> longitude = read_h5data(filename, "/MetaData", "longitude");
+  for (int i=0; i<longitude.size(); i++) {
+    if (longitude.at(i) < 0.0) { longitude.at(i) += 360.0; }
+  }
   std::vector<point2D> obs_points;
   int nelements = latitude.size();
   for (int i=0; i<nelements; i++) {
