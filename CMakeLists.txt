@@ -14,7 +14,7 @@ include_directories(include)
 add_subdirectory(src)
 add_subdirectory(examples)
 
-if (CMAKE_CXX_COMPLER_ID STREQUAL "GNU")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 enable_testing()
 add_subdirectory(test)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
