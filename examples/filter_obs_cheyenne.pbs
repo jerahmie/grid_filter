@@ -8,11 +8,12 @@
 #PBS -k eod
 #PBS -m abe
 #PBS -M jradder@ucar.edu
-#PBS -l select=1:ncpus=36:ompprocs=36
+#PBS -l select=1:ompthreads=36
 
 ### Set TMPDIR
 export TMPDIR=/glade/scratch/$USER/temp
 mkdir -p $TMPDIR
-FILTER_OBS=${HOME}/workspace/grid_filter/buildtree/src/filter_obs
-### Run executable
-${FILTER_OBS} --help
+STATIC_FILE=${HOME}/workspace/grid_filter/test/python_tests/conus_15km.static.nc
+OBS_FILE=${HOME}/workspace/grid_filter/test/python_tests/satwind_obs_2019050100.h5
+FILTER_OBS=${HOME}/workspace/grid_filter/buildtree/src/filter_obs ### Run executable
+${FILTER_OBS} --static-file ${STATIC_FILE} --obs-file ${OBS_FILE} --output ${TMPDIR}/filtered.h5
