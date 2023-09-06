@@ -16,7 +16,7 @@ FetchContent_MakeAvailable(cxxopts)
 
 message(STATUS "${CMAKE_MODULE_DIR}")
 
-find_package(NetCDF MODULE REQUIRED)
+find_package(NetCDF MODULE REQUIRED C)
 find_package(HDF5 COMPONENTS C HL)
 find_package(OpenMP REQUIRED)
 

@@ -74,6 +74,6 @@ TEST_CASE("Test alt max min lat lon.", "[test_mpas_util]") {
   MPASMinMax minmax = find_min_max(nd);
   REQUIRE( abs(minmax.LatMin - (-120.0)) < eps );
   REQUIRE( abs(minmax.LatMax - (720.0)) < eps );
-  REQUIRE( abs(minmax.LonMin - (0.0)) < eps );
+  REQUIRE( abs(minmax.LonMin - (-360.0)) < eps );
   REQUIRE( abs(minmax.LonMax - (5150.0)) < eps );
 }
