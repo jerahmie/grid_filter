@@ -13,7 +13,15 @@
 ### Set TMPDIR
 export TMPDIR=/glade/scratch/$USER/temp
 mkdir -p $TMPDIR
-STATIC_FILE=${HOME}/workspace/grid_filter/test/python_tests/conus_15km.static.nc
-OBS_FILE=${HOME}/workspace/grid_filter/test/python_tests/satwind_obs_2019050100.h5
-FILTER_OBS=${HOME}/workspace/grid_filter/buildtree/src/filter_obs ### Run executable
-${FILTER_OBS} --static-file ${STATIC_FILE} --obs-file ${OBS_FILE} --output ${TMPDIR}/filtered.h5
+SCRATCHDIR=/glade/scratch/jradder
+STATIC_FILE=${HOME}/workspaca/grid_filter/test/python_tests/conus_15km.static.nc
+OBSDIR=${SCRATCHDIR}/obs_io_testing/dbIn
+obs_files=(${OBSDIR}/*.h5)
+FILTER_OBS=/grid_filter/buildtree/src/filter_obs ### Run executable
+for ob in "${obs_files[@]}"
+do
+echo Processing: ${ob}
+obs_filename=$(basename -- "${ob}")
+echo obs_filename:  ${obs_filename}
+${FILTER_OBS} --static-file ${STATIC_FILE} --obs-file ${ob} --output ${TMPDIR}/mask_${obs_filename}
+done
