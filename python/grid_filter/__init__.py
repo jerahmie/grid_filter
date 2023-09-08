@@ -1,6 +1,6 @@
 from .kdnode import *
 from .kdtree_util import * 
-from .grid_filter import *
+#from .grid_filter import *
 from .mpas_grid import MPASGrid
 from .regional_data import get_mpas_grid, get_grid_lat_lon
 from .obs_data import read_h5data, obs_points, gen_obs_mask
