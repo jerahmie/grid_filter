@@ -6,7 +6,24 @@ Exterior Point | Interior Point
 :---------:|:-----------:
 ![](doc/pt_exterior1.png) | ![](doc/pt_interior2.png)
 
-# Required Python modules
+
+
+# Build and Test
+```
+$ git clone git@github.com:jerahmie/grid_filter.git
+$ cd grid_filter
+$ mkdir buildtree && cd buildtree
+$ cmake .. && make
+```
+The tests can be run with ctest.
+
+```$ ctest```
+
+To enble Python unittests, set `PYTHON_UNITTESTS=1`:
+```$ cmake -DPYTHON_UNITTESTS=1 .. && ctest ```
+
+# Python Components
+## Required Python modules
 - numpy
 - matplotlib
 - cartopy
@@ -16,20 +33,21 @@ Exterior Point | Interior Point
 - geocat-viz
 - geometric_features
 
-# Build and Test
-```
-$ git clone git@github.com:jerahmie/grid_filter.git
-$ cd grid_filter
-$ mkdir buildtree && cd buildtree
-$ cmake .. && make
-```
-The tests can be run with the following.
+The python grid_filter module is installed locally with pip using the '-e' flag (editable).
 
-```$ ctest```
 
+```$ pip install -e /path/to/grid_filter```
+
+It is recommended to use a virtual environment with the above packages installed.  
 
 ## Notes for Building on Cheyenne
-The the 
+The following configurations have been tested for the following compiler sets and configurations:
+### GNU
+
+### Intel
+
+### Python
+
 
 # Example
 
