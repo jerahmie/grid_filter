@@ -1,4 +1,4 @@
-#grid_perimeter
+# grid_perimeter
 
 Python module to extract the perimeter cells of a MPAS regional grid.
 
@@ -17,11 +17,19 @@ Exterior Point | Interior Point
 - geometric_features
 
 # Build and Test
-```$ cmake -B buildtree && cmake --build buildtree```
-
-```$ cd buildtree```
+```
+$ git clone git@github.com:jerahmie/grid_filter.git
+$ cd grid_filter
+$ mkdir buildtree && cd buildtree
+$ cmake .. && make
+```
+The tests can be run with the following.
 
 ```$ ctest```
+
+
+## Notes for Building on Cheyenne
+The the 
 
 # Example
 
