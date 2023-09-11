@@ -47,3 +47,24 @@ def gen_obs_mask(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray) -> np.n
             mask[i] = 1
 
     return mask
+def save_obs_data(filename: str, grp_name: str, dset_name: str, \
+                dset: np.ndarray, mode: str='w') -> None:
+    '''Save the dataset to a hdf5 file.
+    Keyword arguments
+    filename -- output file name string
+    grp_name -- HDF5 group name
+    dset_name -- HDF5 dataset name
+    mode -- h5py mode (default='w')
+    '''
+    if mode not in ['w', 'a']:
+        raise Exception('Invalid h5py write mode.')
+
+    fh = h5py.File(filename, mode)
+    if grp_name != '':
+        grp = fh.create_group('/'+grp_name)
+    else:
+        grp = fh.get('/')
+    grp.create_dataset(dset_name, data=dset)
+    fh.close()
+
+

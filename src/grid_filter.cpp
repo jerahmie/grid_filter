@@ -97,10 +97,12 @@ int main(int argc, char* argv[]) {
   auto t4 = std::chrono::high_resolution_clock::now();
   auto duration_lam_filter = std::chrono::duration_cast<std::chrono::milliseconds>(t4-t3);
   std::string outputfilename = parser["output"].as<std::string>();
-  std::string testgroup = "/DerivedValue";
-  std::string testdata =  "LAMDomainCheck";
+  
+  //std::string testgroup = "/DerivedValue";
+  //std::string testdata =  "LAMDomainCheck";
 
-  write_mask(outputfilename, testgroup, testdata, obs_mask);
+  //write_mask(outputfilename, testgroup, testdata, obs_mask);
+  
   std::cout << "kd2d size: " << kd2d.size() << "\n";
   std::cout << "Non-zero elements in mask: " << mask_sum  << '\n';
   std::cout << "\n=============== Time Results ================ \n";
