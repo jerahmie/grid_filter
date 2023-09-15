@@ -55,8 +55,8 @@ The following configurations have been tested for the following compiler sets an
 The module was tested using an Anaconda virtual environment:
 ```$ conda create --name myenv
 $ conda activate myenv
-(myenv) $ conda install -c ncar geocat-comp
-(myenv) $ conda install -c netcdf4
+(myenv) $ conda install -c ncar geocat-comp geocat-viz
+(myenv) $ conda install netcdf4 h5py
 (myenv) $ pip install -e /path/to/grid_filter
 ```
 
