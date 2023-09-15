@@ -1,5 +1,6 @@
 """
-Read regional grid data.
+file - regional_data.py
+Hepler functions for reading MPAS regional grid data.
 """
 from typing import Tuple
 import numpy as np

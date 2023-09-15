@@ -1,5 +1,6 @@
 '''
-grid_filter: LAM Domain observation filter routines.
+file - lam_domain_filter.py
+Filter all observations by finding nearest point in KDTree. If nearest point is internal to the MPAS Regional Domain, the binary mask of observations is set.
 '''
 import time
 from typing import Tuple
