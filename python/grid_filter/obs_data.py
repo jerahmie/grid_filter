@@ -130,12 +130,15 @@ def save_ioda_filtered(mask: np.ndarray, obsfile: str, obsfile_filtered: str) ->
 
     # create and populate datasets
     for path in data_paths:
-        dset = fh[path][:]
-        if len(dset) == len(mask):
-            dset_filtered = filter_obs_by_mask(dset, mask)
-            fhout.create_dataset(path, data=dset_filtered)
+        dset_data = fh[path][:]
+        if len(dset_data) == len(mask):
+            dset_filtered = filter_obs_by_mask(dset_data, mask)
+            dset = fhout.create_dataset(path, data=dset_filtered)
         else:
-            fhout.create_dataset(path, data=dset)
+            dset = fhout.create_dataset(path, data=dset_data)
+        # update dataset attributes
+        for attr in fh[path].attrs:
+            dset.attrs[attr] = attr
     
     fhout.close()
     fh.close()
