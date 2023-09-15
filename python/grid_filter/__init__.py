@@ -5,7 +5,6 @@ from .regional_data import get_mpas_grid, get_grid_lat_lon
 from .obs_data import read_h5data, obs_points, gen_obs_mask, save_obs_data, save_ioda_filtered
 from .obs_mask import filter_obs_by_mask
 from .grid_util import *
-from .graph_data import *
 from .kdtree import *
 from .lam_domain_filter import *
 

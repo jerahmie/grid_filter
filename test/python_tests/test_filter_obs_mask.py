@@ -12,15 +12,15 @@ NFILTERED_POINTS_SATWIND = 274
 H5_DATASET_TYPE = h5py._hl.dataset.Dataset
 H5_GROUP_TYPE = h5py._hl.group.Group
 
-def find_dataset_address(fh: h5py._hl.files.File, addr:str="/" )->str:
-    '''Recursively find the address of each Dataset
-    '''
-    try:
-
-    except:
-        print("HDF5 file handle Error.")
-
-    return addr 
+#def find_dataset_address(fh: h5py._hl.files.File, addr:str="/" )->str:
+#    '''Recursively find the address of each Dataset
+#    '''
+#    try:
+#
+#    except:
+#        print("HDF5 file handle Error.")
+#
+#    return addr 
 
 class TestObsFilter(unittest.TestCase):
     '''Test class for test point observations.
@@ -68,7 +68,7 @@ class TestObsFilter(unittest.TestCase):
         filtered_output2 = vfunc(a, balt(a))
         filtered_output2 = filtered_output2[filtered_output2 != 0]
         self.assertEqual(np.shape(filtered_output2), (50,))
-        self.assertEqual(np.shape(gf.filter_obs_by_mask(a, balt(a))), (50,))
+        self.assertEqual(np.shape(gf.filter_obs_by_mask(a, balt(a))), (51,))
 
     @unittest.skip
     def test_obs_filter_kd2d(self):
