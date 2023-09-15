@@ -5,6 +5,7 @@ Generate random points
 import sys
 import os
 import multiprocessing
+import numpy as np
 import grid_filter as gf
 
 if __name__ == '__main__':
@@ -20,9 +21,9 @@ if __name__ == '__main__':
                         help='MPAS regional static file (NetCDF).')
     parser.add_argument('obs_file',
                         help='Observation file (HDF5).')
-    parser.add_argument('lam_mask_file',
-                        help='Output mask save file (HDF5).',
-                        default='lam_mask.h5')
+    parser.add_argument('obsfile_filtered',
+                        help='Filtered observation output file (HDF5).')
+                        
     args = parser.parse_args()
 
     if not os.path.exists(args.static_file):
@@ -33,6 +34,13 @@ if __name__ == '__main__':
         ERR_TXT = 'Could not find HDF5 file: {filename}'
         sys.exit(ERR_TXT.format(filename=args.obs_file))
    
-    gf.filter_main(args.static_file, args.obs_file,
-            args.lam_mask_file,
-            multiprocessing.cpu_count())
+    mask_out = gf.filter_main(args.static_file, args.obs_file,
+                              multiprocessing.cpu_count())
+    #mask_out = gf.filter_main(args.static_file, args.obs_file,1)
+    print(f'{np.shape(mask_out)}, {np.sum(mask_out)}')
+    print(type(mask_out))
+    print(mask_out[mask_out == None])
+    #gf.save_obs_data(args.lam_mask_file, 'DerivedValue', 'LAMDomainCheck', mask_out)
+
+    gf.save_ioda_filtered(mask_out, args.obs_file, args.obsfile_filtered)
+

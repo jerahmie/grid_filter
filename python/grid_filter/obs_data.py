@@ -4,6 +4,10 @@ Helper functions to read and process observation points.
 import numpy as np
 import h5py
 from .kdtree import KDTree2D
+from .obs_mask import filter_obs_by_mask
+
+H5_DATASET_TYPE = h5py._hl.dataset.Dataset
+H5_GROUP_TYPE = h5py._hl.group.Group
 
 def read_h5data(filename: str, group: str, dataset: str)->np.ndarray:
     """ Return the filtered mask as a numpy ndarray.
@@ -47,6 +51,7 @@ def gen_obs_mask(kd2d: KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray) -> np.n
             mask[i] = 1
 
     return mask
+
 def save_obs_data(filename: str, grp_name: str, dset_name: str, \
                 dset: np.ndarray, mode: str='w') -> None:
     '''Save the dataset to a hdf5 file.
@@ -67,4 +72,70 @@ def save_obs_data(filename: str, grp_name: str, dset_name: str, \
     grp.create_dataset(dset_name, data=dset)
     fh.close()
 
+def dfs(fh:h5py._hl.files.File, data_paths:list, path:str='/') -> None:
+    '''Depth-first search of hdf5 file dataset paths.
+    Keyword arguments
+    fh         -- file handle of open hdf5 file.
+    data_paths -- list of file paths, filled recursively, depth-first
+    path       -- current path in hdf5 file.
 
+    '''
+    keys = list(fh[path].keys())
+    for key in keys:
+        new_path  = path + '/' + key    # next path to check in hdf5 file
+        if type(fh[new_path]) == H5_DATASET_TYPE:
+            data_paths.append(fh[new_path].name)
+        elif type(fh[new_path]) == H5_GROUP_TYPE:
+            dfs(fh, data_paths, new_path)
+        else:
+            raise(ValueError("HDF5 file path unknown type."))
+
+
+def save_ioda_filtered(mask: np.ndarray, obsfile: str, obsfile_filtered: str) -> None:
+    '''Apply filter to data in ioda observation file. Save data to obsfile_filtered.
+    
+    Keyword arguments
+    mask    -- mask file for regional domain
+    obsfile -- ioda format hdf5 obsvation file.
+    obsfile_filtered -- output ioda format hdf5 file filtered against mask.
+    '''
+    try: 
+        fh = h5py.File(obsfile, 'r')
+    except IOError as e:
+        print(f'Observation file {obsfile} could not be opened.')
+        raise e
+    try:
+        fhout = h5py.File(obsfile_filtered, 'w')
+    except IOError as e:
+        print(f'Output file {obsfile_filtered} could not be opened.')
+        raise e
+    
+    # copy global attributes
+    attrs = fh.attrs
+    for attr in attrs:
+        fhout['/'].attrs[attr] = fh['/'].attrs[attr]
+
+    # find all datapaths
+    data_paths = []
+    dfs(fh, data_paths)
+
+    # create groups group structure
+    for path in data_paths:
+        groups = path.split('/')[1:-1]
+        current_path = ''
+        for group in groups:
+            current_path += '/' + group
+            if not group in list(fhout.keys()):
+                fhout.create_group(current_path)
+
+    # create and populate datasets
+    for path in data_paths:
+        dset = fh[path][:]
+        if len(dset) == len(mask):
+            dset_filtered = filter_obs_by_mask(dset, mask)
+            fhout.create_dataset(path, data=dset_filtered)
+        else:
+            fhout.create_dataset(path, data=dset)
+    
+    fhout.close()
+    fh.close()

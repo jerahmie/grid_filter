@@ -87,8 +87,8 @@ def lam_domain_filter(kd2d:KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray, \
     ncompares = np.zeros(np.shape(obs)[0], dtype=int)
     print(f'[lam_domain_filter] len(bdy_cells): {len(bdy_cells)}')
     for i, pt in enumerate(obs):
-        if i%1000 == 0:
-            print(f'[grid_filter] {i}')
+        #if i%1000 == 0:
+        #    print(f'[grid_filter] {i}')
         if prefilter and ((min_lat >= pt[0]) or (max_lat <= pt[0]) \
                 and (min_lon >= pt[1]) or (max_lon <= pt[1])):
             pass
@@ -101,7 +101,7 @@ def lam_domain_filter(kd2d:KDTree2D, bdy_cells: np.ndarray, obs: np.ndarray, \
 
     return mask, ncompares
 
-def filter_main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -> None:
+def filter_main(static_file: str, obs_file: str, nproc: int=1) -> np.ndarray:
     '''Construct KDTree, load observation points, and save mask to data
     Keyword arguments:
     static_file -- MPAS regional domain static file (NetCDF)
@@ -169,19 +169,20 @@ def filter_main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -
             executor.submit(gf.lam_domain_filter_mp, obs_share_name,
                             mask_share_name, kd2d, bdy_msk, start,
                             start+chunk_size, obsinfo, min_max, stats_share_name)
-    mask_out = np.ndarray(np.shape(mask), dtype=type(mask[0]), buffer=mask_shm.buf)
+    mask_obs_sh = np.ndarray(np.shape(mask), dtype=type(mask[0]), buffer=mask_shm.buf)
+    mask_out = np.copy(mask_obs_sh)
 
     ncompares = np.ndarray(np.shape(stats), dtype=type(stats[0]), buffer=stats_shm.buf)
     t7 = time.time()
     t_obs_filter = t7-t5
-    print(f'shape: {np.shape(mask_out)}, sum: {np.sum(mask_out)}')
+    print(f'shape: {np.shape(mask_obs_sh)}, sum: {np.sum(mask_obs_sh)}')
     print(f'filter data: {t_obs_filter:.2f}')
     gf.release_shared(obs_share_name)
     # save mask data
     print('Saving Data')
-    gf.save_obs_data(save_file, 'DerivedValue', 'LAMDomainCheck', mask_out, 'w')
+    #gf.save_obs_data(save_file, 'DerivedValue', 'LAMDomainCheck', mask_out, 'w')
     gf.release_shared(mask_share_name)
-    gf.save_obs_data(save_file, 'Statistics', 'ncompares', ncompares, 'a')
+    #gf.save_obs_data(save_file, 'Statistics', 'ncompares', ncompares, 'a')
     gf.release_shared(stats_share_name)
     t8 = time.time()
     t_save_mask = t8-t7
@@ -195,4 +196,6 @@ def filter_main(static_file: str, obs_file: str, save_file: str, nproc: int=1) -
     print(f'          Construct KDTree .. {t_build_kdtree:.2f} sec')
     print(f'       Filter Observations .. {t_obs_filter:.2f} sec')
     print(f'                 Save Mask .. {t_save_mask:.2f} sec')
+
+    return mask_out
 
