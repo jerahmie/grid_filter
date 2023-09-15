@@ -56,6 +56,7 @@ The module was tested using an Anaconda virtual environment:
 ```$ conda create --name myenv
 $ conda activate myenv
 (myenv) $ conda install -c ncar geocat-comp
+(myenv) $ conda install -c netcdf4
 (myenv) $ pip install -e /path/to/grid_filter
 ```
 
