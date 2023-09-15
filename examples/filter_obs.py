@@ -36,11 +36,7 @@ if __name__ == '__main__':
    
     mask_out = gf.filter_main(args.static_file, args.obs_file,
                               multiprocessing.cpu_count())
-    #mask_out = gf.filter_main(args.static_file, args.obs_file,1)
     print(f'{np.shape(mask_out)}, {np.sum(mask_out)}')
-    print(type(mask_out))
-    print(mask_out[mask_out == None])
-    #gf.save_obs_data(args.lam_mask_file, 'DerivedValue', 'LAMDomainCheck', mask_out)
 
     gf.save_ioda_filtered(mask_out, args.obs_file, args.obsfile_filtered)
 

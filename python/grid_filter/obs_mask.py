@@ -7,10 +7,10 @@ import h5py
 def filter_obs_by_mask(obs: np.ndarray, mask: np.ndarray)->np.ndarray:
     ''' Filter observations against mask.
     '''
-    obs_dtype = type(obs[0])
-    vfunc = np.vectorize(lambda x, m: x if m else 0)
-    filtered_output = vfunc(obs, mask)
-    filtered_output = filtered_output[filtered_output != 0]
+    filtered_output_reduced = []
+    for i,m in enumerate(mask):
+        if m :
+            filtered_output_reduced.append(obs[i])
 
-    return filtered_output
+    return np.array(filtered_output_reduced, dtype=obs.dtype)
 
