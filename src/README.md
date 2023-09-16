@@ -3,7 +3,8 @@
 A modern C++-17 implementation of the KDTree library. This project builds *libkdtree* library that is linked into a command line utility *filter_obs*.  This is functionally equivalent to the pure Python implementation, but offers better performance.The nearest observation point search is parallelized using OpenMP for high throughput.
 
 ```bash
-.
+grid_filter/src/
+|
 ├── CMakeLists.txt         # CMake build file
 ├── README.md              # This file
 ├── build_tree.cpp         # Helper functions to construct KDTree
