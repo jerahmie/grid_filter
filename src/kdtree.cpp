@@ -74,8 +74,10 @@ KDTree::KDTree(std::string filename, std::vector<int> bdy_cell_type){
 }
 
 // Find the nearest cell index given a pair of lat/lon values.
+// Recursively determine the nearest cell in regional domanin by descending 
+// 2D KDTree.  
 std::tuple<double, int, int> KDTree::nearest_cell_recursive(point2D &qpt,
-                                                      std::shared_ptr<KDTreeNode2D> node,
+                                              std::shared_ptr<KDTreeNode2D> node,
                                                       int depth) {
   point2D node_pt {node->getData()->lat, node->getData()->lon};
   // update number of compares counter for KD-Tree search.
@@ -86,11 +88,12 @@ std::tuple<double, int, int> KDTree::nearest_cell_recursive(point2D &qpt,
   
   //visited_points.push_back(node.cell_index);
   double w_node = euclidean_2d_distance_sq(qpt, node_pt);
+
   if ( ( node->getLeft() == NULL ) and (node->getRight() == NULL ) ) {
-    // Leaf node
+    // Base case: Leaf node (left and right nodes are empty)
     return std::tuple<double, int, int>(w_node, node->getData()->cell_index, node->getData()->bdy_cell_type);
   } else if ( (node->getLeft() != NULL ) and (node->getRight() == NULL) ) {
-    // Node with right child only.
+    // Base case: Node with right child only.
     double w = 0.0;
     int nearest_cell;
     int nearest_bdy_cell; 
@@ -109,7 +112,7 @@ std::tuple<double, int, int> KDTree::nearest_cell_recursive(point2D &qpt,
     }
     return std::tuple<double, int, int>(w, nearest_cell, nearest_bdy_cell);
   } else if ( (node->getLeft() == NULL ) and (node->getRight() != NULL) ) {
-    // Node with left child only.
+    // Base case: Node with left child only.
     double w = 0.0;
     int nearest_cell;
     int nearest_bdy_cell;
@@ -129,8 +132,9 @@ std::tuple<double, int, int> KDTree::nearest_cell_recursive(point2D &qpt,
     return std::tuple<double, int, int>(w, nearest_cell, nearest_bdy_cell);
   } else {
     // Node with right and left child.
-    //
-    // consider points near cutoff
+    // General case where nearest cell if found for test observation.  
+		// If point is near the split location, the adjacent region needs to be 
+		// checked for nearest neighbor.
     double w = 0.0;
     double qpt_dim, nd_dim;
     int nearest_cell, nearest_bdy_cell;
@@ -209,7 +213,7 @@ int KDTree::find_nearest_cell_id(double lat, double lon){
 }
 
 int KDTree::find_nearest_cell_type(double lat, double lon){
-  // return the nearest cell in our kdtree.
+  // Return the nearest cell in our kdtree.
   point2D q {lat, lon};
   std::tuple<double, int, int> nearest = nearest_cell_recursive(q, rootp, 0);
   int nearest_cell_type = std::get<2>(nearest);

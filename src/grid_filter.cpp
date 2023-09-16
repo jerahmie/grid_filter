@@ -1,57 +1,20 @@
 /*
  * File - grid_filter.cpp
- * Filter observations against regional MPAS domain.
+ * Filter observations against a Limited Area Model domain.
+ * Provides main routine with command line option processing.
  */
 
 #include <iostream>
 #include <vector>
-#include <memory>
-#include <cmath>
 #include <string>
 #include <chrono>
-#include <omp.h>
 #include "cxxopts.hpp"
 #include "mpas_file.h"
 #include "obs_util.h"
 #include "lam_domain_filter.h"
 #include "kdtree.h"
 
-// OpenMP Parallel LAM filtering
-std::vector<int> lam_domain_filter_omp(KDTree kd2d,
-                                      std::vector<point2D>::iterator obs_begin,
-                                      std::vector<point2D>::iterator obs_end){
-  int ithread, chunk_size;
-  int data_size = obs_end - obs_begin;
-  std::vector<int>::iterator obs_mask_begin;
-  std::vector<int> obs_mask(data_size, 0);
-  std::vector<point2D>::iterator chunk_begin, chunk_end;
-
-	// Split observation points among available threads	
-#pragma omp parallel default(shared) private(ithread, chunk_begin, chunk_end, obs_mask_begin)
-  {
-    chunk_size = (int)ceil((double)data_size / (double)omp_get_num_threads()) -1;
-    ithread = omp_get_thread_num();
-    chunk_begin = obs_begin + ithread * chunk_size;
-    std::vector<int>::iterator obs_mask_begin = obs_mask.begin() + ithread*chunk_size;
-    if ((obs_end-chunk_begin) < chunk_size) {
-      chunk_end = obs_end - 1; 
-    } else {
-      chunk_end = chunk_begin + chunk_size;
-    }
-    
-    // get filtered observation subdomain
-    std::vector<int> obs_mask_chunk = lam_domain_filter(kd2d, chunk_begin, chunk_end);
-    #pragma omp critical
-    for (int i = 0; i < obs_mask_chunk.size(); i++) {
-      *(obs_mask_begin + i) = *(obs_mask_chunk.begin() + i);
-    }
-  }
-  return obs_mask;
-}
-
-
 int main(int argc, char* argv[]) {
-
   std::cout << "Grid Filter: " << argv[0] <<   std::endl;
   cxxopts::Options options(std::string(argv[0]), "- Filter observations points to be within MPAS regional grid.");
   options.positional_help("static-file obs_file output").show_positional_help();
@@ -99,10 +62,10 @@ int main(int argc, char* argv[]) {
   auto duration_lam_filter = std::chrono::duration_cast<std::chrono::milliseconds>(t4-t3);
   std::string outputfilename = parser["output"].as<std::string>();
   
-  //std::string testgroup = "/DerivedValue";
-  //std::string testdata =  "LAMDomainCheck";
+  std::string testgroup = "/DerivedValue";
+  std::string testdata =  "LAMDomainCheck";
 
-  //write_mask(outputfilename, testgroup, testdata, obs_mask);
+  write_mask(outputfilename, testgroup, testdata, obs_mask);
   
   std::cout << "kd2d size: " << kd2d.size() << "\n";
   std::cout << "Non-zero elements in mask: " << mask_sum  << '\n';

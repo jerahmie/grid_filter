@@ -20,7 +20,7 @@ The tests can be run with ctest.
 ```$ ctest```
 
 To enble Python unittests, set `PYTHON_UNITTESTS=1`:
-```$ cmake -DPYTHON_UNITTESTS=1 .. && ctest ```
+```$ cmake -DPYTHON_UNITTESTS=1 .. && make -j8 && ctest ```
 
 # Python Components
 ## Required Python modules
