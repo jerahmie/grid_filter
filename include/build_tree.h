@@ -1,3 +1,10 @@
+/*
+ * file - build_tree.h
+ * 
+ * Helper function for constructing 2D KDtree from MPAS static data.
+ */
+
+
 #pragma once
 
 #include <vector>

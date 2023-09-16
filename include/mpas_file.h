@@ -1,6 +1,7 @@
 /*
- * mpas_grid.h
+ * file - mpas_grid.h
  *
+ * Read static data points from MPAS statc NetCDF file.
  */
 
 #pragma once

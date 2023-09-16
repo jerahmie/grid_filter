@@ -1,6 +1,7 @@
 /*
  * file - lam_domain_filter.h
  *
+ * KDTree filter observation points.
  */
 #pragma once
 

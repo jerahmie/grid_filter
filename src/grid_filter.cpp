@@ -25,7 +25,8 @@ std::vector<int> lam_domain_filter_omp(KDTree kd2d,
   std::vector<int>::iterator obs_mask_begin;
   std::vector<int> obs_mask(data_size, 0);
   std::vector<point2D>::iterator chunk_begin, chunk_end;
-  
+
+	// Split observation points among available threads	
 #pragma omp parallel default(shared) private(ithread, chunk_begin, chunk_end, obs_mask_begin)
   {
     chunk_size = (int)ceil((double)data_size / (double)omp_get_num_threads()) -1;
