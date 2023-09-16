@@ -4,7 +4,6 @@ A modern C++-17 implementation of the KDTree library. This project builds *libkd
 
 ```bash
 grid_filter/src/
-|
 ├── CMakeLists.txt         # CMake build file
 ├── README.md              # This file
 ├── build_tree.cpp         # Helper functions to construct KDTree
