@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+#PBS -N filter_obs 
+#PBS -A NMMM0013
+#PBS -l walltime=00:10:00
+#PBS -q regular
+#PBS -j oe
+#PBS -k eod
+#PBS -m abe
+#PBS -M jradder@ucar.edu
+#PBS -l select=1:ompthreads=36
+
+### Set TMPDIR
+export TMPDIR=/glade/scratch/$USER/temp
+mkdir -p $TMPDIR
+SCRATCHDIR=/glade/scratch/jradder
+STATIC_FILE=${SCRATCHDIR}/mpas_tutorial/MPAS-Limited-Area/conus_15km.static.nc
+OBSDIR=${SCRATCHDIR}/obs_io_testing/dbIn
+obs_files=(${OBSDIR}/*.h5)
+FILTER_OBS=${SCRATCHDIR}/grid_filter/buildtree/src/filter_obs # executable
+for ob in "${obs_files[@]}"
+do
+  echo Processing: ${ob}
+  obs_filename=$(basename -- "${ob}")
+  echo obs_filename:  ${obs_filename}
+  if [ -f ${ob} ]; then
+    echo Found ${ob} 
+  else
+    echo ${ob} not found.
+    exit 1
+  fi 
+  if [ -d ${SCRATCHDIR} ]; then 
+    echo Found SCRATCHDIR: ${SCRATCHDIR}
+  else 
+    echo SCRATCHDIR not found.
+    exit 1
+  fi
+  if [ -f ${STATIC_FILE} ]; then
+    echo Found STATIC_FILE ${STATIC_FILE}
+  else
+    echo ${STATIC_FILE} not found.
+    exit 1
+  fi
+  if [ -d ${OBSDIR} ]; then
+    echo Found ${OBSDIR}
+  else
+    echo ${OBSDIR} not found.
+    exit 1
+  fi
+  if [ -f ${FILTER_OBS} ]; then
+    echo Found ${FILTER_OBS}
+  else
+    echo ${FILTER_OBS} not found.
+    exit 1
+  fi
+
+  ${FILTER_OBS} --static-file ${STATIC_FILE} --obs-file ${ob} --output ${TMPDIR}/mask_${obs_filename}
+done

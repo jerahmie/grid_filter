@@ -1,5 +1,6 @@
-""" Utility and helper functions for KD-Tree building
-"""
+'''
+Utility and helper functions for KD-Tree building
+'''
 from typing import Tuple, List
 
 def sort_points(pts: List[Tuple[float, float, int]], dim: int) \

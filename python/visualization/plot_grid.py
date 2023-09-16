@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""
-Plot the MPAS grid.
-"""
+'''
+file - plot_grid.py
+Plot the MPAS grid on a global projection and overplot observation points.
+'''
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -9,25 +10,26 @@ import cartopy.feature as cfeature
 
 
 def pad_max(x, p):
-    """Pad maximum latitude/longitude region"""
+    '''Pad maximum latitude/longitude region'''
     if x > 0.0:
         return (1.0+p)*x
     else:
         return (1.0-p)*x
 
 def pad_min(x, p):
-    """Pad minimum latitude/longitude region"""
+    '''Pad minimum latitude/longitude region'''
     if x > 0.0:
         return (1.0-p)*x
     else:
         return (1.0+p)*x
 
 def plot_mpas_grid(lats: np.ndarray, lons: np.ndarray) -> plt.axes:
-    """ generate a matplotlib plot with grid overlay on map projection
+    '''
+    Generate a matplotlib plot with grid overlay on map projection
     Keyword arguments: 
     lats -- 1D (nCells) numpy array of latitudes (radians)
     lons -- 1D (nCells) numpy array of longitudes (radians)
-    """
+    '''
     print("Plotting interior mesh cell lats/lons")
     lats_deg = 180.0/np.pi*lats
     lons_deg = 180.0/np.pi*lons
@@ -59,14 +61,14 @@ def plot_mpas_grid(lats: np.ndarray, lons: np.ndarray) -> plt.axes:
     return ax
 
 def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, \
-                       lons: np.ndarray, color="red") -> None:
-    """Plot points over an existing matplotlib axes.
+                       lons: np.ndarray, color='red') -> None:
+    ''' Plot points over an existing matplotlib axes.
     
     Keyword arguments:
     ax   --  matplot lib axes to be modified
     lats --  1D (N) numpy array of latitudes (radians)
     lons --  1D (N) numpy array of longitudes (radians)
-    """
+    '''
     print("Plotting perimeter lats and lons.")
     lats_deg = 180.0/np.pi * lats
     lons_deg = 180.0/np.pi * lons
@@ -75,4 +77,4 @@ def overplot_mpas_grid(ax: plt.axes, lats: np.ndarray, \
                 markersize=2, linestyle='solid', linewidth=2, transform=ccrs.Geodetic())
 
 if __name__ == "__main__":
-    print("Display MPAS grid...")
+    print('Display MPAS grid...')

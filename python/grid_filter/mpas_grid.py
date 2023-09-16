@@ -1,4 +1,7 @@
-"""MPAS Grid class"""
+'''
+file - mpas_grid.py
+Class read and store Regional MPAS grid data in a class.
+'''
 import os
 from netCDF4 import Dataset
 from typing import List, Tuple

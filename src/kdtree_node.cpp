@@ -1,3 +1,10 @@
+/*
+ * file - kdtree_node.cpp
+ * KDTree consists of KDTreeNode2D nodes that consists of data (lat, lon, id)
+ * and pointers to left and right nodes.
+ *
+ */
+
 #include <iostream>
 #include <memory>
 #include "kdtree_node.h"

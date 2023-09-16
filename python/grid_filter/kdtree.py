@@ -1,4 +1,7 @@
-'''KD Tree Data structure for MPAS grid Data
+'''
+KD Tree data structure from MPAS grid data.
+
+KD2D class represents an MPAS grid as a 2 dimensional KD Tree.
 '''
 from typing import List, Tuple
 from .kdnode import Node2D

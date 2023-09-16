@@ -6,7 +6,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <tuple>
 #include <stdexcept>
+#include <limits>
 #include "kdtree_node.h"
 #include "mpas_util.h"
 
@@ -34,7 +36,6 @@ std::vector<nodeData> merge_lat_lon(std::vector<float>& lat,
   if ( lat.size() != lon.size() ) {
     throw std::invalid_argument("Input vectors must be same length.");
   } 
-
   int ncells = lat.size(); 
   for (int i = 0; i < ncells; i++) {
     nd.push_back({lat[i], lon[i], i+1, bdy_cell[i]});
@@ -58,4 +59,20 @@ std::vector<nodeData> filter_bdy_mask_cell(std::vector<nodeData> &nodes,
     }
   }
   return filtered_cells;
+}
+
+// Find the min/max latitude and longitudes
+MPASMinMax find_min_max(std::vector<nodeData> &data_points) {
+  MPASMinMax minmax {std::numeric_limits<double>::max(), 
+                    -1.0*std::numeric_limits<double>::max(),
+                    std::numeric_limits<double>::max(),
+                    -1.0*std::numeric_limits<double>::max()}; 
+  for (auto node : data_points) {
+    if (node.lat < minmax.LatMin) { minmax.LatMin = node.lat;}
+    if (node.lat > minmax.LatMax) { minmax.LatMax = node.lat;}
+    if (node.lon < minmax.LonMin) { minmax.LonMin = node.lon;}
+    if (node.lon > minmax.LonMax) { minmax.LonMax = node.lon;}
+  }
+
+  return minmax;
 }

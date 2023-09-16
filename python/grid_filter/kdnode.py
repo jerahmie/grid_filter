@@ -1,4 +1,5 @@
-'''KD Tree Node class
+'''
+KD Tree Node
 Class to representa a node element in a 2D KDTree
 '''
 class Node2D():

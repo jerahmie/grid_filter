@@ -16,8 +16,9 @@ FetchContent_MakeAvailable(cxxopts)
 
 message(STATUS "${CMAKE_MODULE_DIR}")
 
-find_package(NetCDF MODULE REQUIRED)
+find_package(NetCDF MODULE REQUIRED C)
 find_package(HDF5 COMPONENTS C HL)
+find_package(OpenMP REQUIRED)
 
 add_library(kdtree STATIC kdtree_node.cpp build_tree.cpp
                           kdtree_util.cpp mpas_util.cpp
@@ -35,6 +36,6 @@ target_link_libraries(filter_obs
     kdtree
     ${NETCDF_LIBRARIES} 
     ${HDF5_LIBRARIES}
-    )
+    OpenMP::OpenMP_CXX)
 
 set_property(TARGET filter_obs PROPERTY CXX_STANDARD 17)

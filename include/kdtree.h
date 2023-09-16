@@ -1,5 +1,8 @@
 /*
  * File - kdtree.h
+ *
+ * 2D KDTree representation of MPAS latitude and longitude data.
+ *
  */
 
 #pragma once
@@ -16,10 +19,9 @@ class KDTree {
     int compares;
     std::vector<nodeData> nd;
     int nd_size;
-    //std::vector<int> visited_points {};
   
   public:
-    //KDTree(std::vector<nodeData> nd) : nd(std::move(nd)) {};
+    double lat_min, lat_max, lon_min, lon_max;
     KDTreeNode2D root;
     std::shared_ptr<KDTreeNode2D> rootp;
     KDTree(std::vector<nodeData> nd);

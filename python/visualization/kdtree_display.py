@@ -46,7 +46,6 @@ class KDTreeDisplay():
         """call _find_path with starting with root node"""
         path_to_node = []
         self._find_path(self.root, path_to_node, node_number)
-        #print("<<find_path>>", path_to_node)
         return path_to_node
 
     @property

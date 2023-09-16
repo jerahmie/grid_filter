@@ -1,11 +1,7 @@
 """
-grid perimeter caluculation 
+Utility functions for processing MPAS grid values.
 """
 from typing import List, Tuple
-
-#gt_zero = lambda x: x>0      # filter function for integers greater than zero
-#lt_one = lambda ix: ix[1]<1.0     # filter function for values under 1.0
-#mpas_indices = lambda ix: ix[0]   # index from enumerated tuple element
 
 def len_non_zero(values: list) -> int:
     """Helper to find the number of non-zeros in a list"""

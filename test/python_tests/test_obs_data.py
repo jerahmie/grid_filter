@@ -7,7 +7,7 @@ import h5py
 import grid_filter as gf
 
 class TestObsPoints(unittest.TestCase):
-    """Test class for test point observations."""
+    '''Test class for test point observations.'''
     @classmethod
     def setUpClass(cls):
         this_dir = os.path.abspath(os.path.dirname(__file__))
@@ -22,12 +22,14 @@ class TestObsPoints(unittest.TestCase):
         pass
 
     def test_setup_tests(self):
-        """Ensure the test class is configured correctly.
+        '''Ensure the test class is configured correctly.
         This should always pass.
-        """
+        '''
         self.assertTrue(True)
 
     def test_read_obs(self):
+        ''' Test read data from ioda obs file.
+        '''
         self.assertTrue(os.path.exists(self.obsfile))
         lonc = gf.read_h5data(self.obsfile, 'MetaData', 'longitude')
         self.assertEqual(np.size(lonc), self.n_points)
@@ -41,6 +43,13 @@ class TestObsPoints(unittest.TestCase):
         self.assertTrue(np.amax(lat_lon[:,1]) <= 360.0)
         self.assertTrue(np.allclose(lat_lon[:,0], self.latc))
         self.assertTrue(np.allclose(lat_lon[:,1], self.lonc))
+
+    def test_save_ioda_filtered(self):
+        '''Test save filtered ioda data.
+        '''
+        mask = np.ones(100)
+        self.assertRaises(IOError, gf.save_ioda_filtered, mask,
+                          'MissingFile.h5', 'SomeOutputFile.h5')
 
     def tearDown(self):
         pass

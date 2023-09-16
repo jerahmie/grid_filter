@@ -1,3 +1,10 @@
+/*
+ * file - kdtree_util.h
+ *
+ * Helper functions for KDTree filtering.
+ */
+
+
 #pragma once
 
 #include <memory>
