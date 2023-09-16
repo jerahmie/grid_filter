@@ -25,6 +25,7 @@ std::tuple<nodeData, int> median_point_id(const std::vector<nodeData> &nd) {
   return std::tuple<nodeData, int>(median_node);
 }
 
+// Projected distance (squared) between 2D points in given dimension.
 double euclidean_1d_distance_sq(point2D p1, point2D p2, int dim) {
   double dist_sq = 0.0;
   if (dim == 0) {
@@ -37,6 +38,7 @@ double euclidean_1d_distance_sq(point2D p1, point2D p2, int dim) {
   return dist_sq;
 }
 
+// Distance (squared) between 2D points.
 double euclidean_2d_distance_sq(point2D p1, point2D p2) {
   return pow((p2.lat-p1.lat),2.0) + pow((p2.lon-p1.lon),2.0);
 }
